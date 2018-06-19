@@ -46,6 +46,11 @@ public class ORFanFinder {
             printHelp(1);
             return;
         }
+        if (arguments.get("-tax").equals("")) {
+            System.err.println("A taxonomy ID must be provided");
+            printHelp(1);
+            return;
+        }
 
         // Displaying error messages for invalid files
         File blast = new File(arguments.get("-query"));
@@ -63,32 +68,47 @@ public class ORFanFinder {
             System.err.println("Lineage file is invalid.");
             return;
         }
+        int organismTaxID;
+        try {
+            organismTaxID = Integer.parseInt(arguments.get("-tax"));
+        } catch (NumberFormatException e) {
+            System.err.println("Organism TaxID must be an number.");
+            return;
+        }
 
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
-        findNativeGene(arguments, taxTree, taxLineage);
-    }
-
-    private static void findNativeGene(Map<String, String> arguments, TaxTree taxTree, Lineage lineage) {
         try (Stream<String> lines = Files.lines(Paths.get(arguments.get("-query")), Charset.defaultCharset())) {
-            lines.forEachOrdered(line -> processQuery(line, taxTree, lineage));
+            lines.forEachOrdered(line -> processQuery(line, taxTree, taxLineage, organismTaxID));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void processQuery(String line, TaxTree taxTree, Lineage lineage) {
+    private static void processQuery(String line, TaxTree taxTree, Lineage lineage, int organismTaxID) {
         String[] blastResult = line.split("\t");
-        String querySequence = blastResult[0];
-        String subjectSequence = blastResult[1];
+//        String querySequence = blastResult[0];
+//        String subjectSequence = blastResult[1];
 
-        int queryTaxID = extractTaxIDFromSequence(querySequence);
-        TaxNode genusNode = taxTree.getGenusParent(queryTaxID);
+//        int queryTaxID = extractTaxIDFromSequence(querySequence);
+//        TaxNode genusNode = taxTree.getGenusParent(queryTaxID);
 
-        int subjectTaxID = extractTaxIDFromSequence(subjectSequence);
+//        int subjectTaxID = extractTaxIDFromSequence(subjectSequence);
+//        if (lineage.isNodeInLineage(subjectTaxID, genusNode)) {
+//            //TODO: Do something
+//            return;
+//        }
+
+        String taxID = blastResult[9];
+        if (taxID.contains(";")) {
+            // If many tax IDs are obtained from the last result, get the first one
+            String[] taxIDs = taxID.split(";");
+            taxID = taxIDs[0];
+        }
+        int subjectTaxID = Integer.parseInt(taxID);
+        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         if (lineage.isNodeInLineage(subjectTaxID, genusNode)) {
-            //TODO: Do something
-            return;
+
         }
     }
 
@@ -100,13 +120,14 @@ public class ORFanFinder {
     private static void printHelp(int help) {
         if (help == 0) {
             System.err.println("Incorrect number of command line arguments");
-            System.err.println("Usage: ORFanFinder.jar <-query BLAST_Output_filename> <-names taxonomy_to_names_filename> <-nodes nodes_filename>");
+            System.err.println("Usage: ORFanFinder.jar <-query BLAST_Output_filename> <-names taxonomy_to_names_filename> <-nodes nodes_filename> <-tax taxonomy_id>");
         } else if (help < 2) {
             System.err.println("Use --help for more detailed information.");
         } else if (help == 2) {
             System.err.println("<-query BLAST_Output_filename>: The resulting tabular file from a BLAST where the genome was run against the database, such as nr.");
             System.err.println("<-nodes nodes_filename>: Lists the taxonomy ID, the taxonomy ID of its parent, and the taxonomy rank in a tab-delimited file.");
             System.err.println("[-names taxonomy_to_names_filename]: Lists the Taxonomy ID and the name of that rank in a tab-delimited file. If this is provided, extra details are shown.");
+            System.err.println("<-tax taxonomy_id>: The Taxnomy ID of the genome being queried.");
         }
     }
 }
