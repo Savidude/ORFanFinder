@@ -108,7 +108,8 @@ public class ORFanFinder {
         int subjectTaxID = Integer.parseInt(taxID);
         TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         if (lineage.isNodeInLineage(subjectTaxID, genusNode)) {
-
+            System.out.println(subjectTaxID);
+//            return;
         }
     }
 

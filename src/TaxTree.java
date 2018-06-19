@@ -51,8 +51,8 @@ public class TaxTree {
         while (!node.getParent().getRank().equals("genus")){
             node = node.getParent();
         }
-        if (node.getRank().equals("genus")) {
-            return node;
+        if (node.getParent().getRank().equals("genus")) {
+            return node.getParent();
         }
         return null;
     }

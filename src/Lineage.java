@@ -31,17 +31,21 @@ public class Lineage {
         String taxID = taxData[0];
 
         String lineageString = taxData[1];
-        lineageString = lineageString.replace("\t\\|", "");
+        lineageString = lineageString.replace("\t|", "");
         String[] lineage =lineageString.split(" ");
         ArrayList<Integer> lineageList = new ArrayList<>();
         for (String tax: lineage) {
-            lineageList.add(Integer.parseInt(tax));
+            try {
+                lineageList.add(Integer.parseInt(tax));
+            } catch (NumberFormatException e) {
+                //Do nothing
+            }
         }
         this.taxonomies.put(Integer.parseInt(taxID), lineageList);
     }
 
     public boolean isNodeInLineage(int subjectSequence, TaxNode queryGenus) {
-        int queryGenusTaxID = queryGenus.getID();
-        return this.taxonomies.get(queryGenusTaxID).contains(subjectSequence);
+        ArrayList<Integer> lineage = this.taxonomies.get(subjectSequence);
+        return lineage.contains(queryGenus.getID());
     }
 }
