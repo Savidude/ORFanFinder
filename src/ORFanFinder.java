@@ -69,13 +69,12 @@ public class ORFanFinder {
         findNativeGene(arguments, taxTree, taxLineage);
     }
 
-    private static boolean findNativeGene(Map<String, String> arguments, TaxTree taxTree, Lineage lineage) {
+    private static void findNativeGene(Map<String, String> arguments, TaxTree taxTree, Lineage lineage) {
         try (Stream<String> lines = Files.lines(Paths.get(arguments.get("-query")), Charset.defaultCharset())) {
             lines.forEachOrdered(line -> processQuery(line, taxTree, lineage));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     private static void processQuery(String line, TaxTree taxTree, Lineage lineage) {
@@ -88,6 +87,7 @@ public class ORFanFinder {
 
         int subjectTaxID = extractTaxIDFromSequence(subjectSequence);
         if (lineage.isNodeInLineage(subjectTaxID, genusNode)) {
+            //TODO: Do something
             return;
         }
     }
