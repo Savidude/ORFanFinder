@@ -1,3 +1,7 @@
+package com.orfangenes.control;
+
+import com.orfangenes.model.taxonomy.TaxNode;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;

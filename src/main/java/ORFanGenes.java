@@ -1,3 +1,8 @@
+import com.orfangenes.control.Lineage;
+import com.orfangenes.control.Sequence;
+import com.orfangenes.model.BlastResult;
+import com.orfangenes.model.taxonomy.TaxNode;
+import com.orfangenes.model.taxonomy.TaxTree;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

@@ -1,3 +1,5 @@
+package com.orfangenes.control;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class Sequence {
@@ -23,30 +26,30 @@ public class Sequence {
     }
 
     public void generateBlastFile() {
-        String blastCommand = "blastp -db nr -query " + this.sequenceFileName + " -out blastResults2.bl " +
-                "-outfmt \"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids\" " +
-                "-remote -max_target_seqs 1000 -evalue 1e-3";
-
-        StringBuffer output = new StringBuffer();
-        Process process;
-        try {
-            process = Runtime.getRuntime().exec(blastCommand);
-            process.waitFor();
-
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line = "";
-            while ((line = reader.readLine())!= null) {
-                output.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(output.toString());
+//        String blastCommand = "blastp -db nr -query " + this.sequenceFileName + " -out blastResults2.bl " +
+//                "-outfmt \"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids\" " +
+//                "-remote -max_target_seqs 1000 -evalue 1e-3";
+//
+//        StringBuffer output = new StringBuffer();
+//        Process process;
+//        try {
+//            process = Runtime.getRuntime().exec(blastCommand);
+//            process.waitFor();
+//
+//            BufferedReader reader =
+//                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+//
+//            String line = "";
+//            while ((line = reader.readLine())!= null) {
+//                output.append(line + "\n");
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println(output.toString());
     }
 
     public ArrayList<Integer> getGIDs() {

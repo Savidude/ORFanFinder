@@ -1,3 +1,5 @@
+package com.orfangenes.model.taxonomy;
+
 import javafx.util.Pair;
 
 import java.io.File;

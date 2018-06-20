@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package com.orfangenes.model.taxonomy;
 
 public class TaxNode {
 

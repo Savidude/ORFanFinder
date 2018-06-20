@@ -1,3 +1,5 @@
+package com.orfangenes.model;
+
 public class BlastResult {
     private String qseqid;
     private String sseqid;
