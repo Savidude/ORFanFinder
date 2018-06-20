@@ -1,6 +1,9 @@
+package com.orfangenes;
+
 import com.orfangenes.control.Lineage;
 import com.orfangenes.control.Sequence;
 import com.orfangenes.model.BlastResult;
+import com.orfangenes.model.ORFGene;
 import com.orfangenes.model.taxonomy.TaxNode;
 import com.orfangenes.model.taxonomy.TaxTree;
 import org.json.simple.JSONArray;
@@ -78,14 +81,16 @@ public class ORFanGenes {
             return;
         }
 
+        //Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
         sequence.generateBlastFile();
-        ArrayList<Integer> inputIDs = sequence.getGIDs();
 
+        ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
         TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
+        //Generating ORFanGenes result
         Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage);
         generateResult(geneClassification, sequence);
     }
@@ -97,15 +102,13 @@ public class ORFanGenes {
         Iterator it = geneClassification.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
+
+            ORFGene orfGene = new ORFGene(sequence, (Integer)pair.getKey(), (Boolean)pair.getValue());
             JSONObject gene = new JSONObject();
-            gene.put("id", sequence.getSeqenceFromGID(Integer.parseInt(String.valueOf(pair.getKey()))));
-            gene.put("description", sequence.getDescriptionFromGID(Integer.parseInt(String.valueOf(pair.getKey()))));
-            if ((Boolean)pair.getValue()) {
-                gene.put("level", "native gene");
-            } else {
-                gene.put("level", "orfan gene");
-            }
-            gene.put("taxonomy", "species");
+            gene.put("id", orfGene.getId());
+            gene.put("description", orfGene.getDescription());
+            gene.put("level", orfGene.getLevel());
+            gene.put("taxonomy", orfGene.getTaxonomy());
             list.add(gene);
         }
 

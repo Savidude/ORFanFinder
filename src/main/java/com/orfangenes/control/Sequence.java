@@ -1,5 +1,7 @@
 package com.orfangenes.control;
 
+import com.orfangenes.util.Util;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -50,6 +54,47 @@ public class Sequence {
 //        }
 //
 //        System.out.println(output.toString());
+
+        Map<String, String> settings = Util.getSettings();
+        List<String> command = Arrays.asList(
+                settings.get("blast"),
+                "-query",
+                sequenceFileName,
+                "-db",
+                "nr",
+                "-outfmt",
+                "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
+                "-max_target_seqs",
+                settings.get("defalt_maxtargetseq"),
+                "-evalue",
+                settings.get("defalt_maxevalue"),
+                "-out",
+                "blastResults.bl", //TODO: use working directory: settings.get("workingdir") + "blastResults.bl"
+                "-remote"
+        );
+
+        try {
+            // print the blast command to the terminal
+            System.out.println("BLAST Command: " + command.toString());
+            System.out.println("Be patient...This will take 2-15 min...");
+
+            //execute the blast command
+            ProcessBuilder pb = new ProcessBuilder(command);
+            Process p = pb.start();
+
+            // wait until the command get executed
+            if (p.waitFor() != 0) {
+                // error occured
+                throw new RuntimeException("BLAST error occured");
+            } else {
+                System.out.println("BLAST successfully Completed!!");
+            }
+            System.out.println((p.exitValue() == 0) ? "Blast ran Successfully":"Blast Failed with " + p.exitValue() + " value");
+        } catch (IOException ex) {
+            System.err.println("IOError: " + ex.getMessage());
+        } catch (InterruptedException ex) {
+            System.err.println("InterruptedException: " + ex.getMessage());
+        }
     }
 
     public ArrayList<Integer> getGIDs() {
