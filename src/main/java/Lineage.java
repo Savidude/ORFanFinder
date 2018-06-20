@@ -46,6 +46,9 @@ public class Lineage {
 
     public boolean isNodeInLineage(int subjectSequence, TaxNode queryGenus) {
         ArrayList<Integer> lineage = this.taxonomies.get(subjectSequence);
-        return lineage.contains(queryGenus.getID());
+        if (lineage != null) {
+            return lineage.contains(queryGenus.getID());
+        }
+        return false;
     }
 }
