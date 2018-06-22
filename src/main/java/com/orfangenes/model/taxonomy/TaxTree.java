@@ -50,9 +50,10 @@ public class TaxTree {
 
     public TaxNode getGenusParent(int taxID) {
         TaxNode node = nodes.get(taxID);
-        while (!node.getParent().getRank().equals("genus") && node.getParent() != null){
+        while (!node.getParent().getRank().equals("genus") && node.getParent() != null && node.getParent().getID() != 1){
             node = node.getParent();
         }
-        return node.getParent();
+
+        return (node.getParent().getID() == 1) ? null : node.getParent();
     }
 }

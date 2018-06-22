@@ -14,7 +14,7 @@ public class ORFGene {
         if (isNativeGene) {
             this.level = "Native Gene";
         } else {
-            this.level = "Orfan Gene";
+            this.level = "Strict ORFan";
         }
         this.taxonomy = "species";
     }

@@ -83,7 +83,7 @@ public class ORFanGenes {
 
         //Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-        sequence.generateBlastFile();
+//        sequence.generateBlastFile();
 
         ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
@@ -99,24 +99,104 @@ public class ORFanGenes {
         JSONObject result = new JSONObject();
         JSONArray list = new JSONArray();
 
+        Map<String, Integer> orfanGeneCount = new HashMap<>();
+        orfanGeneCount.put("Superkingdom", 0);
+        orfanGeneCount.put("Class", 0);
+        orfanGeneCount.put("Family", 0);
+        orfanGeneCount.put("Phylum", 0);
+        orfanGeneCount.put("Genus", 0);
+        orfanGeneCount.put("Species", 0);
+        orfanGeneCount.put("Strict", 0);
+
         Iterator it = geneClassification.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
             ORFGene orfGene = new ORFGene(sequence, (Integer)pair.getKey(), (Boolean)pair.getValue());
-            JSONObject gene = new JSONObject();
-            gene.put("id", orfGene.getId());
-            gene.put("description", orfGene.getDescription());
-            gene.put("level", orfGene.getLevel());
-            gene.put("taxonomy", orfGene.getTaxonomy());
+//            JSONObject gene = new JSONObject();
+//            gene.put("id", orfGene.getId());
+//            gene.put("description", orfGene.getDescription());
+//            gene.put("level", orfGene.getLevel());
+//            gene.put("taxonomy", orfGene.getTaxonomy());
+//            list.add(gene);
+            JSONArray gene = new JSONArray();
+            gene.add(orfGene.getId());
+            gene.add(orfGene.getDescription());
+            gene.add(orfGene.getLevel());
+            gene.add("Bacteria");
             list.add(gene);
+
+            //TODO: Update to all gene levels
+            switch (orfGene.getLevel()) {
+                case "Strict ORFan": {
+                    int count = orfanGeneCount.get("Strict");
+                    count++;
+                    orfanGeneCount.put("Strict", count);
+                }
+            }
         }
 
         result.put("data", list);
         try {
             StringWriter writer = new StringWriter();
             result.writeJSONString(writer);
+            String orfanGenesData = writer.toString();
             System.out.println(writer.toString());
+
+            PrintWriter printWriter = new PrintWriter("ORFanGenes.json", "UTF-8");
+            printWriter.println(orfanGenesData);
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject result2 = new JSONObject();
+        JSONArray list2 = new JSONArray();
+
+        JSONObject chartJSON = new JSONObject();
+        JSONArray x = new JSONArray();
+        JSONArray y = new JSONArray();
+
+        it = orfanGeneCount.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+
+            JSONArray array = new JSONArray();
+            array.add(pair.getKey());
+            array.add(pair.getValue());
+            list2.add(array);
+
+            x.add(pair.getKey());
+            y.add(pair.getValue());
+        }
+        result2.put("data", list2);
+
+        chartJSON.put("x", x);
+        chartJSON.put("y", y);
+
+        try {
+            StringWriter writer = new StringWriter();
+            result.writeJSONString(writer);
+            String orfanGenesSummary = writer.toString();
+
+            PrintWriter printWriter = new PrintWriter("ORFanGenesSummary.json", "UTF-8");
+            printWriter.println(orfanGenesSummary);
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            StringWriter writer2 = new StringWriter();
+            chartJSON.writeJSONString(writer2);
+            String orfanGenesSummaryChart = writer2.toString();
+            PrintWriter printWriter2 = new PrintWriter("ORFanGenesSummarychart.json", "UTF-8");
+            printWriter2.println(orfanGenesSummaryChart);
+            printWriter2.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
