@@ -29,32 +29,7 @@ public class Sequence {
         this.sequenceFileName = filename;
     }
 
-    public void generateBlastFile() {
-//        String blastCommand = "blastp -db nr -query " + this.sequenceFileName + " -out blastResults2.bl " +
-//                "-outfmt \"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids\" " +
-//                "-remote -max_target_seqs 1000 -evalue 1e-3";
-//
-//        StringBuffer output = new StringBuffer();
-//        Process process;
-//        try {
-//            process = Runtime.getRuntime().exec(blastCommand);
-//            process.waitFor();
-//
-//            BufferedReader reader =
-//                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-//
-//            String line = "";
-//            while ((line = reader.readLine())!= null) {
-//                output.append(line + "\n");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println(output.toString());
-
+    public void generateBlastFile(String out) {
         Map<String, String> settings = Util.getSettings();
         List<String> command = Arrays.asList(
                 settings.get("blast"),
@@ -69,7 +44,7 @@ public class Sequence {
                 "-evalue",
                 settings.get("defalt_maxevalue"),
                 "-out",
-                "blastResults.bl", //TODO: use working directory: settings.get("workingdir") + "blastResults.bl"
+                out + "/blastResults.bl", //TODO: use working directory: settings.get("workingdir") + "blastResults.bl"
                 "-remote"
         );
 

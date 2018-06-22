@@ -56,6 +56,11 @@ public class ORFanGenes {
             printHelp(1);
             return;
         }
+        if (arguments.get("-out").equals("")) {
+            System.err.println("An output directory must be provided");
+            printHelp(1);
+            return;
+        }
 
         // Displaying error messages for invalid files
         File blast = new File(arguments.get("-query"));
@@ -80,10 +85,15 @@ public class ORFanGenes {
             System.err.println("Organism TaxID must be an number.");
             return;
         }
+        File out = new File(arguments.get("-out"));
+        if (!out.exists()) {
+            System.err.println("Output directory is invalid");
+            return;
+        }
 
         //Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-//        sequence.generateBlastFile();
+        sequence.generateBlastFile(arguments.get("-out"));
 
         ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
@@ -91,11 +101,11 @@ public class ORFanGenes {
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
         //Generating ORFanGenes result
-        Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage);
-        generateResult(geneClassification, sequence);
+        Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage, arguments.get("-out"));
+        generateResult(geneClassification, sequence, arguments.get("-out"));
     }
 
-    private static void generateResult (Map<Integer, Boolean> geneClassification, Sequence sequence) {
+    private static void generateResult (Map<Integer, Boolean> geneClassification, Sequence sequence, String out) {
         JSONObject result = new JSONObject();
         JSONArray list = new JSONArray();
 
@@ -141,9 +151,8 @@ public class ORFanGenes {
             StringWriter writer = new StringWriter();
             result.writeJSONString(writer);
             String orfanGenesData = writer.toString();
-            System.out.println(writer.toString());
 
-            PrintWriter printWriter = new PrintWriter("ORFanGenes.json", "UTF-8");
+            PrintWriter printWriter = new PrintWriter(out + "/ORFanGenes.json", "UTF-8");
             printWriter.println(orfanGenesData);
             printWriter.close();
         } catch (IOException e) {
@@ -179,7 +188,7 @@ public class ORFanGenes {
             result.writeJSONString(writer);
             String orfanGenesSummary = writer.toString();
 
-            PrintWriter printWriter = new PrintWriter("ORFanGenesSummary.json", "UTF-8");
+            PrintWriter printWriter = new PrintWriter(out + "/ORFanGenesSummary.json", "UTF-8");
             printWriter.println(orfanGenesSummary);
             printWriter.close();
         } catch (FileNotFoundException e) {
@@ -194,7 +203,7 @@ public class ORFanGenes {
             StringWriter writer2 = new StringWriter();
             chartJSON.writeJSONString(writer2);
             String orfanGenesSummaryChart = writer2.toString();
-            PrintWriter printWriter2 = new PrintWriter("ORFanGenesSummarychart.json", "UTF-8");
+            PrintWriter printWriter2 = new PrintWriter(out + "/ORFanGenesSummarychart.json", "UTF-8");
             printWriter2.println(orfanGenesSummaryChart);
             printWriter2.close();
         } catch (IOException e) {
@@ -203,9 +212,9 @@ public class ORFanGenes {
     }
 
     private static Map<Integer, Boolean> getGeneClassification(int organismTaxID, ArrayList<Integer> inputIDs,
-                                                               TaxNode genusNode, Lineage taxLineage) {
+                                                               TaxNode genusNode, Lineage taxLineage, String out) {
         Map<Integer, Boolean> geneClassification = new HashMap<>();
-        ArrayList<BlastResult> blastResults = getBlastResults(Sequence.BLAST_RESULTS_FILE);
+        ArrayList<BlastResult> blastResults = getBlastResults(out + "/" + Sequence.BLAST_RESULTS_FILE);
         for (int id: inputIDs) {
             boolean isNativeGene = false;
             for (BlastResult result: blastResults) {
