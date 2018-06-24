@@ -8,14 +8,10 @@ public class ORFGene {
     private String level;
     private String taxonomy;
 
-    public ORFGene (Sequence sequence, int geneID, boolean isNativeGene) {
+    public ORFGene (Sequence sequence, int geneID, String level) {
         this.id = geneID;
         this.description = sequence.getDescriptionFromGID(geneID);
-        if (isNativeGene) {
-            this.level = "Native Gene";
-        } else {
-            this.level = "Strict ORFan";
-        }
+        this.level = level;
         this.taxonomy = "species";
     }
 

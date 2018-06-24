@@ -1,5 +1,7 @@
 package com.orfangenes;
 
+import com.orfangenes.constants.Constants;
+import com.orfangenes.control.Classifier;
 import com.orfangenes.control.Lineage;
 import com.orfangenes.control.Sequence;
 import com.orfangenes.model.BlastResult;
@@ -90,66 +92,118 @@ public class ORFanGenes {
             System.err.println("Output directory is invalid");
             return;
         }
+        if ((arguments.get("-out").substring(arguments.get("-out").length() - 1)).equals("/")) {
+            arguments.put("-out", arguments.get("-out").substring(0, arguments.get("-out").length() -1));
+        }
 
-        //Generating BLAST file
+        // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-        sequence.generateBlastFile(arguments.get("-out"));
-
-        ArrayList<Integer> inputIDs = sequence.getGIDs();
+//        sequence.generateBlastFile(arguments.get("-out"));
+//
+//        ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
-        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
+//        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
-        //Generating ORFanGenes result
-        Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage, arguments.get("-out"));
+        // Generating ORFanGenes result
+//        Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage, arguments.get("-out"));
+//        generateResult(geneClassification, sequence, arguments.get("-out"));
+
+        /*
+        1. Get BLAST results.
+        2. Get non-duplicate tax IDs for each gid in sequence
+        3. Get lineage for each tax ID
+        4. For each tax ID's lineage, check where it matches in the input organism's taxonomy hierarchy
+         */
+        Classifier classifier = new Classifier(sequence, taxTree, taxLineage, organismTaxID);
+        Map<Integer, String> geneClassification = classifier.getGeneClassification(arguments.get("-out"));
         generateResult(geneClassification, sequence, arguments.get("-out"));
     }
 
-    private static void generateResult (Map<Integer, Boolean> geneClassification, Sequence sequence, String out) {
-        JSONObject result = new JSONObject();
-        JSONArray list = new JSONArray();
+    private static void generateResult (Map<Integer, String> geneClassification, Sequence sequence, String out) {
+        JSONObject orfanGenes = new JSONObject();
+        JSONArray geneInfo = new JSONArray();
 
-        Map<String, Integer> orfanGeneCount = new HashMap<>();
-        orfanGeneCount.put("Superkingdom", 0);
-        orfanGeneCount.put("Class", 0);
-        orfanGeneCount.put("Family", 0);
-        orfanGeneCount.put("Phylum", 0);
-        orfanGeneCount.put("Genus", 0);
-        orfanGeneCount.put("Species", 0);
-        orfanGeneCount.put("Strict", 0);
+        // ORFan and Native Gene count
+        Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
+        orfanGeneCount.put(Constants.STRICT, 0);
+        orfanGeneCount.put(Constants.PHYLUM, 0);
+        orfanGeneCount.put(Constants.CLASS, 0);
+        orfanGeneCount.put(Constants.ORDER, 0);
+        orfanGeneCount.put(Constants.FAMILY, 0);
+        orfanGeneCount.put(Constants.GENUS, 0);
+        orfanGeneCount.put(Constants.SPECIES, 0);
+        orfanGeneCount.put(Constants.NATIVE, 0);
 
+        // Iterating through every identified gene
         Iterator it = geneClassification.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            ORFGene orfGene = new ORFGene(sequence, (Integer)pair.getKey(), (Boolean)pair.getValue());
-//            JSONObject gene = new JSONObject();
-//            gene.put("id", orfGene.getId());
-//            gene.put("description", orfGene.getDescription());
-//            gene.put("level", orfGene.getLevel());
-//            gene.put("taxonomy", orfGene.getTaxonomy());
-//            list.add(gene);
+            ORFGene orfGene = new ORFGene(sequence, (Integer)pair.getKey(), (String)pair.getValue());
             JSONArray gene = new JSONArray();
             gene.add(orfGene.getId());
             gene.add(orfGene.getDescription());
             gene.add(orfGene.getLevel());
             gene.add("Bacteria");
-            list.add(gene);
+            geneInfo.add(gene);
 
-            //TODO: Update to all gene levels
             switch (orfGene.getLevel()) {
-                case "Strict ORFan": {
-                    int count = orfanGeneCount.get("Strict");
+                case Constants.NATIVE_GENE: {
+                    int count = orfanGeneCount.get(Constants.NATIVE);
                     count++;
-                    orfanGeneCount.put("Strict", count);
+                    orfanGeneCount.put(Constants.NATIVE, count);
+                    break;
+                }
+                case Constants.SPECIES_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.SPECIES);
+                    count++;
+                    orfanGeneCount.put(Constants.SPECIES, count);
+                    break;
+                }
+                case Constants.GENUS_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.GENUS);
+                    count++;
+                    orfanGeneCount.put(Constants.GENUS, count);
+                    break;
+                }
+                case Constants.FAMILY_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.FAMILY);
+                    count++;
+                    orfanGeneCount.put(Constants.FAMILY, count);
+                    break;
+                }
+                case Constants.ORDER_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.ORDER);
+                    count++;
+                    orfanGeneCount.put(Constants.ORDER, count);
+                    break;
+                }
+                case Constants.CLASS_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.CLASS);
+                    count++;
+                    orfanGeneCount.put(Constants.CLASS, count);
+                    break;
+                }
+                case Constants.PHYLUM_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.PHYLUM);
+                    count++;
+                    orfanGeneCount.put(Constants.PHYLUM, count);
+                    break;
+                }
+                case Constants.STRICT_ORFAN: {
+                    int count = orfanGeneCount.get(Constants.STRICT);
+                    count++;
+                    orfanGeneCount.put(Constants.STRICT, count);
+                    break;
                 }
             }
         }
-
-        result.put("data", list);
+        orfanGenes.put("data", geneInfo);
+        // Writing orfanGenes data JSON data into file
         try {
             StringWriter writer = new StringWriter();
-            result.writeJSONString(writer);
+            orfanGenes.writeJSONString(writer);
             String orfanGenesData = writer.toString();
 
             PrintWriter printWriter = new PrintWriter(out + "/ORFanGenes.json", "UTF-8");
@@ -159,8 +213,9 @@ public class ORFanGenes {
             e.printStackTrace();
         }
 
-        JSONObject result2 = new JSONObject();
-        JSONArray list2 = new JSONArray();
+        // Genetating ORFan genes summary data and data to be displayed in the chart
+        JSONObject orfanGenesSummary = new JSONObject();
+        JSONArray summaryInfo = new JSONArray();
 
         JSONObject chartJSON = new JSONObject();
         JSONArray x = new JSONArray();
@@ -173,23 +228,24 @@ public class ORFanGenes {
             JSONArray array = new JSONArray();
             array.add(pair.getKey());
             array.add(pair.getValue());
-            list2.add(array);
+            summaryInfo.add(array);
 
             x.add(pair.getKey());
             y.add(pair.getValue());
         }
-        result2.put("data", list2);
+        orfanGenesSummary.put("data", summaryInfo);
 
         chartJSON.put("x", x);
         chartJSON.put("y", y);
 
+        // Writing orfanGenesSummary JSON data to file
         try {
             StringWriter writer = new StringWriter();
-            result.writeJSONString(writer);
-            String orfanGenesSummary = writer.toString();
+            orfanGenesSummary.writeJSONString(writer);
+            String orfanGenesSummaryString = writer.toString();
 
             PrintWriter printWriter = new PrintWriter(out + "/ORFanGenesSummary.json", "UTF-8");
-            printWriter.println(orfanGenesSummary);
+            printWriter.println(orfanGenesSummaryString);
             printWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -199,11 +255,12 @@ public class ORFanGenes {
             e.printStackTrace();
         }
 
+        //Writing chartJSON  data into file
         try {
             StringWriter writer2 = new StringWriter();
             chartJSON.writeJSONString(writer2);
             String orfanGenesSummaryChart = writer2.toString();
-            PrintWriter printWriter2 = new PrintWriter(out + "/ORFanGenesSummarychart.json", "UTF-8");
+            PrintWriter printWriter2 = new PrintWriter(out + "/ORFanGenesSummaryChart.json", "UTF-8");
             printWriter2.println(orfanGenesSummaryChart);
             printWriter2.close();
         } catch (IOException e) {
@@ -213,7 +270,7 @@ public class ORFanGenes {
 
     private static Map<Integer, Boolean> getGeneClassification(int organismTaxID, ArrayList<Integer> inputIDs,
                                                                TaxNode genusNode, Lineage taxLineage, String out) {
-        Map<Integer, Boolean> geneClassification = new HashMap<>();
+        Map<Integer, Boolean> geneClassification = new LinkedHashMap<>();
         ArrayList<BlastResult> blastResults = getBlastResults(out + "/" + Sequence.BLAST_RESULTS_FILE);
         for (int id: inputIDs) {
             boolean isNativeGene = false;

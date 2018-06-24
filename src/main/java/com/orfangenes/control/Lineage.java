@@ -7,13 +7,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class Lineage {
-    private Map<Integer, ArrayList<Integer>> taxonomies = new HashMap<>();
+    private Map<Integer, List<Integer>> taxonomies = new HashMap<>();
 
     public Lineage(String filename) {
         File lineageFile = new File(filename);
@@ -49,10 +47,16 @@ public class Lineage {
     }
 
     public boolean isNodeInLineage(int subjectSequence, TaxNode queryGenus) {
-        ArrayList<Integer> lineage = this.taxonomies.get(subjectSequence);
+        List<Integer> lineage = this.taxonomies.get(subjectSequence);
         if (lineage != null) {
             return lineage.contains(queryGenus.getID());
         }
         return false;
+    }
+
+    public List<Integer> getLineageForTaxID(int taxID) {
+        List<Integer> lineage = this.taxonomies.get(taxID);
+        Collections.reverse(lineage);
+        return lineage;
     }
 }

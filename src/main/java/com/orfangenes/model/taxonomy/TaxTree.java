@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -55,5 +56,18 @@ public class TaxTree {
         }
 
         return (node.getParent().getID() == 1) ? null : node.getParent();
+    }
+
+    public Map<Integer, String> getHeirarchyFromNode(int taxID) {
+        TaxNode node = nodes.get(taxID);
+        Map<Integer, String> hierarchy = new LinkedHashMap<>();
+
+        while (node.getParent() != null && node.getParent().getID() != 1) {
+            node = node.getParent();
+            if (!node.getRank().equals("no rank")) {
+                hierarchy.put(node.getID(), node.getRank());
+            }
+        }
+        return hierarchy;
     }
 }
