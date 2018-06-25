@@ -1,6 +1,7 @@
 package com.orfangenes;
 
 import com.orfangenes.constants.Constants;
+import com.orfangenes.control.BlastResultsProcessor;
 import com.orfangenes.control.Classifier;
 import com.orfangenes.control.Lineage;
 import com.orfangenes.control.Sequence;
@@ -48,6 +49,11 @@ public class ORFanGenes {
             printHelp(1);
             return;
         }
+        if (arguments.get("-names").equals("")) {
+            System.err.println("A names file must be provided");
+            printHelp(1);
+            return;
+        }
         if (arguments.get("-lineage").equals("")) {
             System.err.println("A lineage file must be provided");
             printHelp(1);
@@ -75,6 +81,11 @@ public class ORFanGenes {
             System.err.println("Nodes file is invalid.");
             return;
         }
+        File names = new File(arguments.get("-names"));
+        if (!names.exists()) {
+            System.err.println("Names file is invalid.");
+            return;
+        }
         File lineage = new File(arguments.get("-lineage"));
         if (!lineage.exists()) {
             System.err.println("Lineage file is invalid.");
@@ -98,10 +109,10 @@ public class ORFanGenes {
 
         // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-//        sequence.generateBlastFile(arguments.get("-out"));
+        sequence.generateBlastFile(arguments.get("-out"));
 //
 //        ArrayList<Integer> inputIDs = sequence.getGIDs();
-        TaxTree taxTree = new TaxTree(arguments.get("-nodes"));
+        TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
 //        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
@@ -115,12 +126,14 @@ public class ORFanGenes {
         3. Get lineage for each tax ID
         4. For each tax ID's lineage, check where it matches in the input organism's taxonomy hierarchy
          */
+        BlastResultsProcessor processor = new BlastResultsProcessor(arguments.get("-out"));
         Classifier classifier = new Classifier(sequence, taxTree, taxLineage, organismTaxID);
-        Map<Integer, String> geneClassification = classifier.getGeneClassification(arguments.get("-out"));
-        generateResult(geneClassification, sequence, arguments.get("-out"));
+        Map<Integer, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
+        generateResult(geneClassification, sequence, arguments.get("-out"), processor, taxTree);
     }
 
-    private static void generateResult (Map<Integer, String> geneClassification, Sequence sequence, String out) {
+    private static void generateResult (Map<Integer, String> geneClassification, Sequence sequence, String out,
+                                        BlastResultsProcessor blastResultsProcessor, TaxTree tree) {
         JSONObject orfanGenes = new JSONObject();
         JSONArray geneInfo = new JSONArray();
 
@@ -255,7 +268,7 @@ public class ORFanGenes {
             e.printStackTrace();
         }
 
-        //Writing chartJSON  data into file
+        // Writing chartJSON  data into file
         try {
             StringWriter writer2 = new StringWriter();
             chartJSON.writeJSONString(writer2);
@@ -266,12 +279,24 @@ public class ORFanGenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Writing blast results to JSON file
+        try {
+            StringWriter writer3 = new StringWriter();
+            blastResultsProcessor.generateTableData(tree).writeJSONString(writer3);
+            String blastResults = writer3.toString();
+            PrintWriter printWriter3 = new PrintWriter(out + "/blastresults.json", "UTF-8");
+            printWriter3.println(blastResults);
+            printWriter3.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Map<Integer, Boolean> getGeneClassification(int organismTaxID, ArrayList<Integer> inputIDs,
                                                                TaxNode genusNode, Lineage taxLineage, String out) {
         Map<Integer, Boolean> geneClassification = new LinkedHashMap<>();
-        ArrayList<BlastResult> blastResults = getBlastResults(out + "/" + Sequence.BLAST_RESULTS_FILE);
+        ArrayList<BlastResult> blastResults = getBlastResults(out + "/" + BlastResultsProcessor.BLAST_RESULTS_FILE);
         for (int id: inputIDs) {
             boolean isNativeGene = false;
             for (BlastResult result: blastResults) {
@@ -314,7 +339,7 @@ public class ORFanGenes {
         } else if (help == 2) {
             System.err.println("<-query BLAST_Output_filename>: The resulting tabular file from a BLAST where the genome was run against the database, such as nr.");
             System.err.println("<-nodes nodes_filename>: Lists the taxonomy ID, the taxonomy ID of its parent, and the taxonomy rank in a tab-delimited file.");
-            System.err.println("[-names taxonomy_to_names_filename]: Lists the Taxonomy ID and the name of that rank in a tab-delimited file. If this is provided, extra details are shown.");
+            System.err.println("[-names taxonomy_to_names_filename]: Lists the TaxName ID and the name of that rank in a tab-delimited file. If this is provided, extra details are shown.");
             System.err.println("<-tax taxonomy_id>: The Taxnomy ID of the genome being queried.");
         }
     }

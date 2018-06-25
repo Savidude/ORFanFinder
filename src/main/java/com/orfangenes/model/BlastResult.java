@@ -51,4 +51,8 @@ public class BlastResult {
     public int getQueryid() {
         return queryid;
     }
+
+    public String getQseqid() {
+        return qseqid;
+    }
 }

@@ -21,10 +21,7 @@ public class Classifier {
         this.organismTaxID = organismTaxID;
     }
 
-    public Map<Integer, String> getGeneClassification(String outputDir) {
-        String blastResultsFileName = outputDir + "/" + Sequence.BLAST_RESULTS_FILE;
-        List<BlastResult> blastResults = getBlastResults(blastResultsFileName);
-
+    public Map<Integer, String> getGeneClassification(List<BlastResult> blastResults) {
         Map<Integer, String> classification = new HashMap<>();
         Map<Integer, String> inputTaxHeirarchy = tree.getHeirarchyFromNode(organismTaxID);
         List<Integer> inputIDs = sequence.getGIDs();
@@ -73,21 +70,5 @@ public class Classifier {
             }
         }
         return taxIDs;
-    }
-
-    private ArrayList<BlastResult> getBlastResults(String blastResultsFileName) {
-        ArrayList<BlastResult> blastResults = new ArrayList<>();
-
-        try {
-            Scanner scanner = new Scanner(new File(blastResultsFileName));
-            while (scanner.hasNextLine()) {
-                BlastResult result = new BlastResult(scanner.nextLine());
-                blastResults.add(result);
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return blastResults;
     }
 }

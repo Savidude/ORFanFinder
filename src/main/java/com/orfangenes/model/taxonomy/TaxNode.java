@@ -3,11 +3,13 @@ package com.orfangenes.model.taxonomy;
 public class TaxNode {
 
     private int nID;
+    private String name;
     private String nRank;
     private TaxNode parent;
 
-    public TaxNode(int nID, String nRank) {
+    public TaxNode(int nID, String name, String nRank) {
         this.nID = nID;
+        this.name = name;
         this.nRank = nRank;
     }
 
@@ -25,5 +27,9 @@ public class TaxNode {
 
     public int getID() {
         return nID;
+    }
+
+    public String getName() {
+        return name;
     }
 }

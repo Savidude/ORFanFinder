@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class Sequence {
-    public static final String BLAST_RESULTS_FILE = "blastResults.bl";
-
     private String sequenceFileName;
 
     public Sequence (String filename) {

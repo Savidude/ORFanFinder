@@ -17,15 +17,24 @@ public class TaxTree {
     private ArrayList<Pair<TaxNode, Integer>> tempNodes = new ArrayList<>();
     private Map<Integer, TaxNode> nodes = new HashMap<>();
 
-    public TaxTree(String filename) {
-        File nodesFile = new File(filename);
+    private Map<Integer, String> names = new HashMap<>();
+
+    public TaxTree(String nodesFilename, String namesFilename) {
+        File nodesFile = new File(nodesFilename);
         if (!nodesFile.exists()) {
             System.err.println("Failure to open nodes.");
             return;
         }
 
+        // Reading the names file line by line
+        try (Stream<String> lines = Files.lines(Paths.get(namesFilename), Charset.defaultCharset())) {
+            lines.forEachOrdered(line -> processName(line));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // Reading the nodes file line by line
-        try (Stream<String> lines = Files.lines(Paths.get(filename), Charset.defaultCharset())) {
+        try (Stream<String> lines = Files.lines(Paths.get(nodesFilename), Charset.defaultCharset())) {
             lines.forEachOrdered(line -> processNode(line));
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,13 +49,25 @@ public class TaxTree {
 
     private void processNode(String nodeString) {
         String[] nodeData = nodeString.split("\t\\|\t");
-        String taxID = nodeData[0];
-        String parentID = nodeData[1];
+        int taxID = Integer.parseInt(nodeData[0]);
+        int parentID = Integer.parseInt(nodeData[1]);
         String rank = nodeData[2];
-        TaxNode node = new TaxNode(Integer.parseInt(taxID), rank);
+        String name = names.get(taxID);
+        TaxNode node = new TaxNode(taxID, name, rank);
 
-        this.tempNodes.add(new Pair<>(node, Integer.parseInt(parentID)));
-        this.nodes.put(Integer.parseInt(taxID), node);
+        this.tempNodes.add(new Pair<>(node, parentID));
+        this.nodes.put(taxID, node);
+    }
+    //scientific name	|
+
+    private void processName(String nameString) {
+        String[] nameData = nameString.split("\t\\|\t");
+        String type = nameData[3];
+        if (type.equals("scientific name\t|")) {
+            int taxID = Integer.parseInt(nameData[0]);
+            String name = nameData[1];
+            names.put(taxID, name);
+        }
     }
 
     public TaxNode getGenusParent(int taxID) {
@@ -69,5 +90,9 @@ public class TaxTree {
             }
         }
         return hierarchy;
+    }
+
+    public TaxNode getNode (int taxID) {
+        return this.nodes.get(taxID);
     }
 }
