@@ -12,7 +12,7 @@ public class BlastResult {
     private int sstart;
     private int send;
     private double evalue;
-    private int bbibtscore;
+    private double bbibtscore;
     private int staxid;
 
     private int queryid;
@@ -30,7 +30,7 @@ public class BlastResult {
         this.sstart = Integer.parseInt(resultData[8]);
         this.send = Integer.parseInt(resultData[9]);
         this.evalue = Double.parseDouble(resultData[10]);
-        this.bbibtscore = Integer.parseInt(resultData[11]);
+        this.bbibtscore = Double.parseDouble(resultData[11]);
 
         String taxID = resultData[12];
         if (taxID.contains(";")) {
@@ -38,7 +38,12 @@ public class BlastResult {
             String[] taxIDs = taxID.split(";");
             taxID = taxIDs[0];
         }
-        this.staxid = Integer.parseInt(taxID);
+
+        try {
+            this.staxid = Integer.parseInt(taxID);
+        } catch (NumberFormatException e) {
+            this.staxid = 0;
+        }
 
         String[] sequenceIDs = this.qseqid.split("\\|");
         this.queryid = Integer.parseInt(sequenceIDs[1]);

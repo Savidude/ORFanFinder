@@ -31,10 +31,12 @@ public class Classifier {
             for (int taxID : taxIDs) {
                 if (organismTaxID != taxID) {
                     List<Integer> lineageList = lineage.getLineageForTaxID(taxID);
-                    String lvl = getLevel(lineageList, inputTaxHeirarchy);
-                    if (lvl != null) {
-                        level = lvl;
-                        break;
+                    if (lineageList != null) {
+                        String lvl = getLevel(lineageList, inputTaxHeirarchy);
+                        if (lvl != null) {
+                            level = lvl;
+                            break;
+                        }
                     }
                 }
             }

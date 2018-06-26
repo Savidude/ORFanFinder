@@ -64,9 +64,13 @@ public class TaxTree {
         String[] nameData = nameString.split("\t\\|\t");
         String type = nameData[3];
         if (type.equals("scientific name\t|")) {
-            int taxID = Integer.parseInt(nameData[0]);
-            String name = nameData[1];
-            names.put(taxID, name);
+            try {
+                int taxID = Integer.parseInt(nameData[0]);
+                String name = nameData[1];
+                names.put(taxID, name);
+            } catch (NumberFormatException e) {
+                // Do nothing
+            }
         }
     }
 

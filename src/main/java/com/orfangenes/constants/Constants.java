@@ -22,4 +22,5 @@ public class Constants {
     public static final String CLASS_ORFAN = "Class ORFan";
     public static final String PHYLUM_ORFAN = "Phylum ORFan";
     public static final String STRICT_ORFAN = "Strict ORFan";
+    public static final String KINGDOM_ORFAN = "kingdom";
 }

@@ -109,7 +109,7 @@ public class ORFanGenes {
 
         // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-        sequence.generateBlastFile(arguments.get("-out"));
+//        sequence.generateBlastFile(arguments.get("-out"));
 //
 //        ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
@@ -139,7 +139,7 @@ public class ORFanGenes {
 
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
-        orfanGeneCount.put(Constants.STRICT, 0);
+        orfanGeneCount.put(Constants.KINGDOM_ORFAN, 0);
         orfanGeneCount.put(Constants.PHYLUM, 0);
         orfanGeneCount.put(Constants.CLASS, 0);
         orfanGeneCount.put(Constants.ORDER, 0);
@@ -205,9 +205,9 @@ public class ORFanGenes {
                     break;
                 }
                 case Constants.STRICT_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.STRICT);
+                    int count = orfanGeneCount.get(Constants.KINGDOM_ORFAN);
                     count++;
-                    orfanGeneCount.put(Constants.STRICT, count);
+                    orfanGeneCount.put(Constants.KINGDOM_ORFAN, count);
                     break;
                 }
             }

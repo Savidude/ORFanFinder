@@ -56,7 +56,9 @@ public class Lineage {
 
     public List<Integer> getLineageForTaxID(int taxID) {
         List<Integer> lineage = this.taxonomies.get(taxID);
-        Collections.reverse(lineage);
+        if (lineage != null) {
+            Collections.reverse(lineage);
+        }
         return lineage;
     }
 }
