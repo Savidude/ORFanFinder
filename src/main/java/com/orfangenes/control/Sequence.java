@@ -27,7 +27,7 @@ public class Sequence {
         this.sequenceFileName = filename;
     }
 
-    public void generateBlastFile(String out) {
+    public void generateBlastFile(String out, String max_target_seqs, String evalue) {
         Map<String, String> settings = Util.getSettings();
         List<String> command = Arrays.asList(
                 settings.get("blast"),
@@ -38,9 +38,9 @@ public class Sequence {
                 "-outfmt",
                 "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
                 "-max_target_seqs",
-                settings.get("defalt_maxtargetseq"),
+                max_target_seqs,
                 "-evalue",
-                settings.get("defalt_maxevalue"),
+                evalue,
                 "-out",
                 out + "/blastResults.bl", //TODO: use working directory: settings.get("workingdir") + "blastResults.bl"
                 "-remote"

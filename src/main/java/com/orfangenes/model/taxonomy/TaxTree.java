@@ -83,14 +83,27 @@ public class TaxTree {
         return (node.getParent().getID() == 1) ? null : node.getParent();
     }
 
-    public Map<Integer, String> getHeirarchyFromNode(int taxID) {
+//    public Map<Integer, String> getHeirarchyFromNode(int taxID) {
+//        TaxNode node = nodes.get(taxID);
+//        Map<Integer, String> hierarchy = new LinkedHashMap<>();
+//
+//        while (node.getParent() != null && node.getParent().getID() != 1) {
+//            node = node.getParent();
+//            if (!node.getRank().equals("no rank")) {
+//                hierarchy.put(node.getID(), node.getRank());
+//            }
+//        }
+//        return hierarchy;
+//    }
+
+    public Map<String, Integer> getHeirarchyFromNode(int taxID) {
         TaxNode node = nodes.get(taxID);
-        Map<Integer, String> hierarchy = new LinkedHashMap<>();
+        Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
         while (node.getParent() != null && node.getParent().getID() != 1) {
             node = node.getParent();
             if (!node.getRank().equals("no rank")) {
-                hierarchy.put(node.getID(), node.getRank());
+                hierarchy.put(node.getRank(), node.getID());
             }
         }
         return hierarchy;

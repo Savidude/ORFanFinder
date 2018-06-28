@@ -64,6 +64,16 @@ public class ORFanGenes {
             printHelp(1);
             return;
         }
+        if (arguments.get("-max_target_seqs").equals("")) {
+            System.err.println("The number of target sequences should be provided.");
+            printHelp(1);
+            return;
+        }
+        if (arguments.get("-evalue").equals("")) {
+            System.err.println("E-value must be provided");
+            printHelp(1);
+            return;
+        }
         if (arguments.get("-out").equals("")) {
             System.err.println("An output directory must be provided");
             printHelp(1);
@@ -109,8 +119,8 @@ public class ORFanGenes {
 
         // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-//        sequence.generateBlastFile(arguments.get("-out"));
-//
+        sequence.generateBlastFile(arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
+
 //        ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
 //        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
@@ -139,7 +149,7 @@ public class ORFanGenes {
 
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
-        orfanGeneCount.put(Constants.KINGDOM_ORFAN, 0);
+        orfanGeneCount.put(Constants.STRICT, 0);
         orfanGeneCount.put(Constants.PHYLUM, 0);
         orfanGeneCount.put(Constants.CLASS, 0);
         orfanGeneCount.put(Constants.ORDER, 0);
@@ -205,9 +215,9 @@ public class ORFanGenes {
                     break;
                 }
                 case Constants.STRICT_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.KINGDOM_ORFAN);
+                    int count = orfanGeneCount.get(Constants.STRICT);
                     count++;
-                    orfanGeneCount.put(Constants.KINGDOM_ORFAN, count);
+                    orfanGeneCount.put(Constants.STRICT, count);
                     break;
                 }
             }
