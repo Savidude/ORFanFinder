@@ -121,21 +121,9 @@ public class ORFanGenes {
         Sequence sequence = new Sequence(arguments.get("-query"));
         sequence.generateBlastFile(arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
 
-//        ArrayList<Integer> inputIDs = sequence.getGIDs();
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
-//        TaxNode genusNode = taxTree.getGenusParent(organismTaxID);
         Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
-        // Generating ORFanGenes result
-//        Map<Integer, Boolean> geneClassification = getGeneClassification(organismTaxID, inputIDs, genusNode, taxLineage, arguments.get("-out"));
-//        generateResult(geneClassification, sequence, arguments.get("-out"));
-
-        /*
-        1. Get BLAST results.
-        2. Get non-duplicate tax IDs for each gid in sequence
-        3. Get lineage for each tax ID
-        4. For each tax ID's lineage, check where it matches in the input organism's taxonomy hierarchy
-         */
         BlastResultsProcessor processor = new BlastResultsProcessor(arguments.get("-out"));
         Classifier classifier = new Classifier(sequence, taxTree, taxLineage, organismTaxID);
         Map<Integer, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
@@ -149,14 +137,13 @@ public class ORFanGenes {
 
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
-        orfanGeneCount.put(Constants.STRICT, 0);
-        orfanGeneCount.put(Constants.PHYLUM, 0);
-        orfanGeneCount.put(Constants.CLASS, 0);
-        orfanGeneCount.put(Constants.ORDER, 0);
-        orfanGeneCount.put(Constants.FAMILY, 0);
-        orfanGeneCount.put(Constants.GENUS, 0);
-        orfanGeneCount.put(Constants.SPECIES, 0);
-        orfanGeneCount.put(Constants.NATIVE, 0);
+        orfanGeneCount.put(Constants.STRICT_ORFAN, 0);
+        orfanGeneCount.put(Constants.KINGDOM_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.PHYLUM_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.CLASS_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.ORDER_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.FAMILY_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.GENUS_RESTRICTED_GENE, 0);
 
         // Iterating through every identified gene
         Iterator it = geneClassification.entrySet().iterator();
@@ -171,56 +158,9 @@ public class ORFanGenes {
             gene.add("Bacteria");
             geneInfo.add(gene);
 
-            switch (orfGene.getLevel()) {
-                case Constants.NATIVE_GENE: {
-                    int count = orfanGeneCount.get(Constants.NATIVE);
-                    count++;
-                    orfanGeneCount.put(Constants.NATIVE, count);
-                    break;
-                }
-                case Constants.SPECIES_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.SPECIES);
-                    count++;
-                    orfanGeneCount.put(Constants.SPECIES, count);
-                    break;
-                }
-                case Constants.GENUS_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.GENUS);
-                    count++;
-                    orfanGeneCount.put(Constants.GENUS, count);
-                    break;
-                }
-                case Constants.FAMILY_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.FAMILY);
-                    count++;
-                    orfanGeneCount.put(Constants.FAMILY, count);
-                    break;
-                }
-                case Constants.ORDER_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.ORDER);
-                    count++;
-                    orfanGeneCount.put(Constants.ORDER, count);
-                    break;
-                }
-                case Constants.CLASS_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.CLASS);
-                    count++;
-                    orfanGeneCount.put(Constants.CLASS, count);
-                    break;
-                }
-                case Constants.PHYLUM_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.PHYLUM);
-                    count++;
-                    orfanGeneCount.put(Constants.PHYLUM, count);
-                    break;
-                }
-                case Constants.STRICT_ORFAN: {
-                    int count = orfanGeneCount.get(Constants.STRICT);
-                    count++;
-                    orfanGeneCount.put(Constants.STRICT, count);
-                    break;
-                }
-            }
+            int count = orfanGeneCount.get(orfGene.getLevel());
+            count++;
+            orfanGeneCount.put(orfGene.getLevel(), count);
         }
         orfanGenes.put("data", geneInfo);
         // Writing orfanGenes data JSON data into file

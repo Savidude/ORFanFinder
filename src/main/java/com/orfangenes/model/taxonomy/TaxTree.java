@@ -58,7 +58,6 @@ public class TaxTree {
         this.tempNodes.add(new Pair<>(node, parentID));
         this.nodes.put(taxID, node);
     }
-    //scientific name	|
 
     private void processName(String nameString) {
         String[] nameData = nameString.split("\t\\|\t");
@@ -74,35 +73,13 @@ public class TaxTree {
         }
     }
 
-    public TaxNode getGenusParent(int taxID) {
-        TaxNode node = nodes.get(taxID);
-        while (!node.getParent().getRank().equals("genus") && node.getParent() != null && node.getParent().getID() != 1){
-            node = node.getParent();
-        }
-
-        return (node.getParent().getID() == 1) ? null : node.getParent();
-    }
-
-//    public Map<Integer, String> getHeirarchyFromNode(int taxID) {
-//        TaxNode node = nodes.get(taxID);
-//        Map<Integer, String> hierarchy = new LinkedHashMap<>();
-//
-//        while (node.getParent() != null && node.getParent().getID() != 1) {
-//            node = node.getParent();
-//            if (!node.getRank().equals("no rank")) {
-//                hierarchy.put(node.getID(), node.getRank());
-//            }
-//        }
-//        return hierarchy;
-//    }
-
     public Map<String, Integer> getHeirarchyFromNode(int taxID) {
         TaxNode node = nodes.get(taxID);
         Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
         while (node.getParent() != null && node.getParent().getID() != 1) {
             node = node.getParent();
-            if (!node.getRank().equals("no rank")) {
+            if (!node.getRank().equals("no rank") && !node.getRank().contains("sub")) {
                 hierarchy.put(node.getRank(), node.getID());
             }
         }
