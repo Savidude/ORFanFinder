@@ -3,6 +3,7 @@ package com.orfangenes.constants;
 public class Constants {
 
     // Ranks
+    public static final String ORFAN = "orfan";
     public static final String SPECIES = "species";
     public static final String GENUS = "genus";
     public static final String FAMILY = "family";
@@ -14,6 +15,8 @@ public class Constants {
 
     // TRGs
     public static final String STRICT_ORFAN = "Strict ORFan";
+    public static final String MULTI_DOMAIN_GENE = "multi-domain gene";
+    public static final String DOMAIN_RESTRICTED_GENE = "domain restricted gene";
     public static final String KINGDOM_RESTRICTED_GENE = "kingdom restricted gene";
     public static final String PHYLUM_RESTRICTED_GENE = "phylum restricted gene";
     public static final String CLASS_RESTRICTED_GENE = "class restricted gene";

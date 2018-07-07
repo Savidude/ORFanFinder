@@ -7,7 +7,6 @@ import com.orfangenes.control.Lineage;
 import com.orfangenes.control.Sequence;
 import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.ORFGene;
-import com.orfangenes.model.taxonomy.TaxNode;
 import com.orfangenes.model.taxonomy.TaxTree;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -138,12 +137,15 @@ public class ORFanGenes {
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
         orfanGeneCount.put(Constants.STRICT_ORFAN, 0);
+        orfanGeneCount.put(Constants.MULTI_DOMAIN_GENE, 0);
+        orfanGeneCount.put(Constants.DOMAIN_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.KINGDOM_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.PHYLUM_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.CLASS_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.ORDER_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.FAMILY_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.GENUS_RESTRICTED_GENE, 0);
+        orfanGeneCount.put(Constants.ORFAN, 0);
 
         // Iterating through every identified gene
         Iterator it = geneClassification.entrySet().iterator();
@@ -189,12 +191,14 @@ public class ORFanGenes {
             Map.Entry pair = (Map.Entry)it.next();
 
             JSONArray array = new JSONArray();
-            array.add(pair.getKey());
-            array.add(pair.getValue());
-            summaryInfo.add(array);
+            if (!pair.getKey().equals(Constants.MULTI_DOMAIN_GENE)) {
+                array.add(pair.getKey());
+                array.add(pair.getValue());
+                summaryInfo.add(array);
 
-            x.add(pair.getKey());
-            y.add(pair.getValue());
+                x.add(pair.getKey());
+                y.add(pair.getValue());
+            }
         }
         orfanGenesSummary.put("data", summaryInfo);
 
@@ -241,27 +245,6 @@ public class ORFanGenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static Map<Integer, Boolean> getGeneClassification(int organismTaxID, ArrayList<Integer> inputIDs,
-                                                               TaxNode genusNode, Lineage taxLineage, String out) {
-        Map<Integer, Boolean> geneClassification = new LinkedHashMap<>();
-        ArrayList<BlastResult> blastResults = getBlastResults(out + "/" + BlastResultsProcessor.BLAST_RESULTS_FILE);
-        for (int id: inputIDs) {
-            boolean isNativeGene = false;
-            for (BlastResult result: blastResults) {
-                if (result.getQueryid() == id) {
-                    if (organismTaxID != result.getStaxid()) {
-                        if (taxLineage.isNodeInLineage(result.getStaxid(), genusNode)) {
-                            isNativeGene = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            geneClassification.put(id, isNativeGene);
-        }
-        return geneClassification;
     }
 
     private static ArrayList<BlastResult> getBlastResults(String blastResultsFileName) {

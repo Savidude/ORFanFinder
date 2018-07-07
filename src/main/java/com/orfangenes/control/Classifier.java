@@ -29,8 +29,10 @@ public class Classifier {
         Map<Integer, String> classification = new HashMap<>();
 
         Map<String, Integer> inputTaxHierarchy = tree.getHeirarchyFromNode(organismTaxID);
+
+        // Getting list of input IDs from FASTA sequence
         List<Integer> inputIDs = sequence.getGIDs();
-        for (int id : inputIDs) {
+        for (int id : inputIDs) { // For each input ID
             Set<Integer> taxIDs = getBlastTaxonomies(blastResults, id);
 
             // Getting the hierarchy for each taxonomy
@@ -48,6 +50,7 @@ public class Classifier {
         return classification;
     }
 
+    // Recursive method
     private String getLevel(List<Map<String, Integer>> hierarchies, Map<String, Integer> inputTaxHierarchy,
                             String currentRank, int levelsSkipped) {
         Map<String, String> rankInfo;
@@ -76,6 +79,9 @@ public class Classifier {
         }
 
         if (taxonomiesAtCurrentRank.size() == 1 && taxonomiesAtCurrentRank.contains(rankTaxID)) {
+            if (currentRank.equals(Constants.SPECIES)) {
+                return Constants.ORFAN;
+            }
             return getLevel(hierarchies, inputTaxHierarchy, rankInfo.get(NEXT_RANK), 0);
         } else if (taxonomiesAtCurrentRank.size() > 1 || (taxonomiesAtCurrentRank.size() == 1 && !taxonomiesAtCurrentRank.contains(rankTaxID))){
             for (int i = 0; i < levelsSkipped; i--) {
@@ -92,8 +98,8 @@ public class Classifier {
         String prevRank = null;
         String nextRank = null;
         switch (currentRank) {
-            case Constants.SUPERKINGDOM: geneType = null; prevRank = null; nextRank = Constants.KINGDOM; break;
-            case Constants.KINGDOM: geneType = null; prevRank = Constants.SUPERKINGDOM; nextRank = Constants.PHYLUM; break;
+            case Constants.SUPERKINGDOM: geneType = Constants.MULTI_DOMAIN_GENE; prevRank = null; nextRank = Constants.KINGDOM; break;
+            case Constants.KINGDOM: geneType = Constants.DOMAIN_RESTRICTED_GENE; prevRank = Constants.SUPERKINGDOM; nextRank = Constants.PHYLUM; break;
             case Constants.PHYLUM: geneType = Constants.KINGDOM_RESTRICTED_GENE;  prevRank = Constants.KINGDOM; nextRank = Constants.CLASS; break;
             case Constants.CLASS: geneType = Constants.PHYLUM_RESTRICTED_GENE; prevRank = Constants.PHYLUM; nextRank = Constants.ORDER; break;
             case Constants.ORDER: geneType = Constants.CLASS_RESTRICTED_GENE; prevRank = Constants.CLASS; nextRank = Constants.FAMILY; break;
