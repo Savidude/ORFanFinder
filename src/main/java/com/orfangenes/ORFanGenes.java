@@ -3,7 +3,6 @@ package com.orfangenes;
 import com.orfangenes.constants.Constants;
 import com.orfangenes.control.BlastResultsProcessor;
 import com.orfangenes.control.Classifier;
-import com.orfangenes.control.Lineage;
 import com.orfangenes.control.Sequence;
 import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.ORFGene;
@@ -53,11 +52,6 @@ public class ORFanGenes {
             printHelp(1);
             return;
         }
-        if (arguments.get("-lineage").equals("")) {
-            System.err.println("A lineage file must be provided");
-            printHelp(1);
-            return;
-        }
         if (arguments.get("-tax").equals("")) {
             System.err.println("A taxonomy ID must be provided");
             printHelp(1);
@@ -95,11 +89,6 @@ public class ORFanGenes {
             System.err.println("Names file is invalid.");
             return;
         }
-        File lineage = new File(arguments.get("-lineage"));
-        if (!lineage.exists()) {
-            System.err.println("Lineage file is invalid.");
-            return;
-        }
         int organismTaxID;
         try {
             organismTaxID = Integer.parseInt(arguments.get("-tax"));
@@ -121,10 +110,9 @@ public class ORFanGenes {
         sequence.generateBlastFile(arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
 
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
-        Lineage taxLineage = new Lineage(arguments.get("-lineage"));
 
         BlastResultsProcessor processor = new BlastResultsProcessor(arguments.get("-out"));
-        Classifier classifier = new Classifier(sequence, taxTree, taxLineage, organismTaxID);
+        Classifier classifier = new Classifier(sequence, taxTree, organismTaxID);
         Map<Integer, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
         generateResult(geneClassification, sequence, arguments.get("-out"), processor, taxTree);
     }
@@ -136,7 +124,6 @@ public class ORFanGenes {
 
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
-        orfanGeneCount.put(Constants.STRICT_ORFAN, 0);
         orfanGeneCount.put(Constants.MULTI_DOMAIN_GENE, 0);
         orfanGeneCount.put(Constants.DOMAIN_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.KINGDOM_RESTRICTED_GENE, 0);
@@ -145,7 +132,8 @@ public class ORFanGenes {
         orfanGeneCount.put(Constants.ORDER_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.FAMILY_RESTRICTED_GENE, 0);
         orfanGeneCount.put(Constants.GENUS_RESTRICTED_GENE, 0);
-        orfanGeneCount.put(Constants.ORFAN, 0);
+        orfanGeneCount.put(Constants.ORFAN_GENE, 0);
+        orfanGeneCount.put(Constants.STRICT_ORFAN, 0);
 
         // Iterating through every identified gene
         Iterator it = geneClassification.entrySet().iterator();

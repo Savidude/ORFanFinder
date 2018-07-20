@@ -3,7 +3,7 @@ package com.orfangenes.constants;
 public class Constants {
 
     // Ranks
-    public static final String ORFAN = "orfan";
+    public static final String ORFAN_GENE = "ORFan Gene";
     public static final String SPECIES = "species";
     public static final String GENUS = "genus";
     public static final String FAMILY = "family";

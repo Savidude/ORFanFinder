@@ -55,6 +55,13 @@ public class Sequence {
             ProcessBuilder pb = new ProcessBuilder(command);
             Process p = pb.start();
 
+            String line;
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+            input.close();
+
             // wait until the command get executed
             if (p.waitFor() != 0) {
                 // error occured

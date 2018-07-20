@@ -4,8 +4,6 @@ import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.taxonomy.TaxTree;
 import com.orfangenes.constants.Constants;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Classifier {
@@ -15,13 +13,11 @@ public class Classifier {
 
     private Sequence sequence;
     private TaxTree tree;
-    private Lineage lineage;
     private int organismTaxID;
 
-    public Classifier(Sequence sequence, TaxTree tree, Lineage lineage, int organismTaxID) {
+    public Classifier(Sequence sequence, TaxTree tree, int organismTaxID) {
         this.sequence = sequence;
         this.tree = tree;
-        this.lineage = lineage;
         this.organismTaxID = organismTaxID;
     }
 
@@ -80,7 +76,7 @@ public class Classifier {
 
         if (taxonomiesAtCurrentRank.size() == 1 && taxonomiesAtCurrentRank.contains(rankTaxID)) {
             if (currentRank.equals(Constants.SPECIES)) {
-                return Constants.ORFAN;
+                return Constants.ORFAN_GENE;
             }
             return getLevel(hierarchies, inputTaxHierarchy, rankInfo.get(NEXT_RANK), 0);
         } else if (taxonomiesAtCurrentRank.size() > 1 || (taxonomiesAtCurrentRank.size() == 1 && !taxonomiesAtCurrentRank.contains(rankTaxID))){

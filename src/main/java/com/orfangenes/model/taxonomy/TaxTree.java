@@ -3,14 +3,13 @@ package com.orfangenes.model.taxonomy;
 import javafx.util.Pair;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class TaxTree {
@@ -20,12 +19,6 @@ public class TaxTree {
     private Map<Integer, String> names = new HashMap<>();
 
     public TaxTree(String nodesFilename, String namesFilename) {
-        File nodesFile = new File(nodesFilename);
-        if (!nodesFile.exists()) {
-            System.err.println("Failure to open nodes.");
-            return;
-        }
-
         // Reading the names file line by line
         try (Stream<String> lines = Files.lines(Paths.get(namesFilename), Charset.defaultCharset())) {
             lines.forEachOrdered(line -> processName(line));
@@ -45,6 +38,17 @@ public class TaxTree {
             TaxNode parent = this.nodes.get(node.getValue());
             node.getKey().setParent(parent);
         }
+
+//        Iterator it = this.names.entrySet().iterator();
+//        try (PrintWriter out = new PrintWriter("names.txt")) {
+//            while (it.hasNext()) {
+//                Map.Entry pair = (Map.Entry)it.next();
+//                String nameData = Integer.toString((Integer) pair.getKey()) + "\t|\t" + pair.getValue();
+//                out.println(nameData);
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void processNode(String nodeString) {
@@ -71,17 +75,27 @@ public class TaxTree {
                 // Do nothing
             }
         }
+
+//        String[] nameData = nameString.split("\t\\|\t");
+//        int taxID = Integer.parseInt(nameData[0]);
+//        String name = nameData[1];
+//        this.names.put(taxID, name);
     }
 
     public Map<String, Integer> getHeirarchyFromNode(int taxID) {
         TaxNode node = nodes.get(taxID);
         Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
-        while (node.getParent() != null && node.getParent().getID() != 1) {
-            node = node.getParent();
-            if (!node.getRank().equals("no rank") && !node.getRank().contains("sub")) {
-                hierarchy.put(node.getRank(), node.getID());
+        try {
+            while (node.getParent() != null && node.getParent().getID() != 1) {
+                node = node.getParent();
+                if (!node.getRank().equals("no rank") && !node.getRank().contains("sub") && !node.getRank().contains("parv") && !node.getRank().contains("infra")
+                        && !node.getRank().contains("superphylum") && !node.getRank().contains("superclass") && !node.getRank().contains("superorder") && !node.getRank().contains("superfamily") && !node.getRank().contains("supergenus") && !node.getRank().contains("superspecies")) {
+                    hierarchy.put(node.getRank(), node.getID());
+                }
             }
+        } catch (NullPointerException e) {
+            System.out.println();
         }
         return hierarchy;
     }
