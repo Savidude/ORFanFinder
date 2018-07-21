@@ -1,6 +1,6 @@
 package com.orfangenes.control;
 
-import com.orfangenes.util.Util;
+import com.orfangenes.constants.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class Sequence {
@@ -27,24 +26,43 @@ public class Sequence {
         this.sequenceFileName = filename;
     }
 
-    public void generateBlastFile(String out, String max_target_seqs, String evalue) {
-        Map<String, String> settings = Util.getSettings();
-        List<String> command = Arrays.asList(
-                settings.get("blast"),
-                "-query",
-                sequenceFileName,
-                "-db",
-                "nr",
-                "-outfmt",
-                "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
-                "-max_target_seqs",
-                max_target_seqs,
-                "-evalue",
-                evalue,
-                "-out",
-                out + "/blastResults.bl", //TODO: use working directory: settings.get("workingdir") + "blastResults.bl"
-                "-remote"
-        );
+    public void generateBlastFile(String type, String out, String max_target_seqs, String evalue) {
+        List<String> command = new ArrayList<>();
+        if (type.equals(Constants.TYPE_PROTEIN)) {
+            command = Arrays.asList(
+                    "blastp",
+                    "-query",
+                    sequenceFileName,
+                    "-db",
+                    "nr",
+                    "-outfmt",
+                    "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
+                    "-max_target_seqs",
+                    max_target_seqs,
+                    "-evalue",
+                    evalue,
+                    "-out",
+                    out + "/blastResults.bl",
+                    "-remote"
+            );
+        } else if (type.equals(Constants.TYPE_NUCLEOTIDE)) {
+            command = Arrays.asList(
+                    "blastn",
+                    "-query",
+                    sequenceFileName,
+                    "-db",
+                    "nr",
+                    "-outfmt",
+                    "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
+                    "-max_target_seqs",
+                    max_target_seqs,
+                    "-evalue",
+                    evalue,
+                    "-out",
+                    out + "/blastResults.bl",
+                    "-remote"
+            );
+        }
 
         try {
             // print the blast command to the terminal

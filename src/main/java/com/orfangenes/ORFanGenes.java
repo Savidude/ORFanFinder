@@ -42,6 +42,11 @@ public class ORFanGenes {
             printHelp(1);
             return;
         }
+        if (arguments.get("-type").equals("")) {
+            System.err.println("A blast type must be provided");
+            printHelp(1);
+            return;
+        }
         if (arguments.get("-nodes").equals("")) {
             System.err.println("A nodes file must be provided");
             printHelp(1);
@@ -79,6 +84,11 @@ public class ORFanGenes {
             System.err.println("Input sequence file is invalid.");
             return;
         }
+        String blastType = arguments.get("-type");
+        if (!(blastType.equals(Constants.TYPE_PROTEIN) || blastType.equals(Constants.TYPE_NUCLEOTIDE))) {
+            System.err.println("Blast type is invalid");
+            return;
+        }
         File nodes = new File(arguments.get("-nodes"));
         if (!nodes.exists()) {
             System.err.println("Nodes file is invalid.");
@@ -107,7 +117,7 @@ public class ORFanGenes {
 
         // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"));
-        sequence.generateBlastFile(arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
+        sequence.generateBlastFile(blastType, arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
 
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
 

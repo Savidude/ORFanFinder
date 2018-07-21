@@ -2,6 +2,10 @@ package com.orfangenes.constants;
 
 public class Constants {
 
+    // Blast Types
+    public static final String TYPE_PROTEIN = "protein";
+    public static final String TYPE_NUCLEOTIDE = "nucleotide";
+
     // Ranks
     public static final String ORFAN_GENE = "ORFan Gene";
     public static final String SPECIES = "species";
