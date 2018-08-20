@@ -49,18 +49,20 @@ public class BlastResultsProcessor {
 
             if (staxid > 0) {
                 TaxNode resultNode = taxTree.getNode(staxid);
-                String level = resultNode.getRank();
-                String name = resultNode.getName();
-                String parentName = resultNode.getParent().getName();
+                if (resultNode != null) {
+                    String level = resultNode.getRank();
+                    String name = resultNode.getName();
+                    String parentName = resultNode.getParent().getName();
 
-                JSONArray resultData = new JSONArray();
-                resultData.add(i);
-                resultData.add(querySequence);
-                resultData.add(level);
-                resultData.add(name);
-                resultData.add(parentName);
-                resultDataArray.add(resultData);
-                i++;
+                    JSONArray resultData = new JSONArray();
+                    resultData.add(i);
+                    resultData.add(querySequence);
+                    resultData.add(level);
+                    resultData.add(name);
+                    resultData.add(parentName);
+                    resultDataArray.add(resultData);
+                    i++;
+                }
             }
         }
         blastResultsJSON.put("data", resultDataArray);

@@ -1,6 +1,7 @@
 package com.orfangenes.control;
 
 import com.orfangenes.constants.Constants;
+import com.orfangenes.model.Gene;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -13,14 +14,18 @@ import java.util.stream.Stream;
 
 public class Sequence {
     private String sequenceFileName;
+    private List<Gene> genes;
     private int fileCount;
 
-    public Sequence (String filename, String out) {
+    private static final String GI = ">gi";
+
+    public Sequence (String filename, String out, int inputTax) {
         File nodesFile = new File(filename);
         if (!nodesFile.exists()) {
             System.err.println("Failure to open sequence.");
             return;
         }
+        this.genes = getGeneData(filename, inputTax);
         this.sequenceFileName = filename;
         this.fileCount = divideSequence(filename, out);
     }
@@ -94,9 +99,13 @@ public class Sequence {
         }
     }
 
-    public ArrayList<Integer> getGIDs() {
+    public List<Gene> getGenes() {
+        return genes;
+    }
+
+    private ArrayList<Gene> getGeneData(String sequenceFileName, int inputTax) {
         StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines( Paths.get(this.sequenceFileName), StandardCharsets.UTF_8))
+        try (Stream<String> stream = Files.lines( Paths.get(sequenceFileName), StandardCharsets.UTF_8))
         {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         }
@@ -106,37 +115,33 @@ public class Sequence {
         }
         String inputSequence = contentBuilder.toString();
         String[] sequences = inputSequence.split("\n\n");
-        ArrayList<Integer> ids = new ArrayList<>();
+        ArrayList<Gene> genes = new ArrayList<>();
+
         for (String sequence: sequences) {
+            Gene gene = new Gene();
+            gene.setTaxID(inputTax);
+
             String[] sequenceData = sequence.split("\\|");
             if (sequenceData.length > 1) {
-                ids.add(Integer.parseInt(sequenceData[1]));
+                int offset = 2;
+                if (sequenceData[0].equals(GI)) {
+                    gene.setGeneID(Integer.parseInt(sequenceData[1]));
+                    offset = 0;
+                }
+
+                String geneInfo = sequenceData[4 - offset];
+                String[] lines = geneInfo.split("\n");
+                gene.setDescription(lines[0]);
+
+                String sequenceString = "";
+                for (int i = 1; i < lines.length; i++) {
+                    sequenceString += lines[i];
+                }
+                gene.setSequence(sequenceString);
+                genes.add(gene);
             }
         }
-
-        return ids;
-    }
-
-    public String getDescriptionFromGID (int gid) {
-        StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(this.sequenceFileName), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String inputSequence = contentBuilder.toString();
-        String[] sequences = inputSequence.split("\n\n");
-        for (String sequence : sequences) {
-            String[] lines = sequence.split("\n");
-            String header = lines[0];
-            String[] headerData = header.split("\\|");
-            int sequenceGID = Integer.parseInt(headerData[1]);
-            if (gid == sequenceGID) {
-                String description = headerData[4];
-                return description.substring(1);
-            }
-        }
-        return null;
+        return genes;
     }
 
     private int divideSequence(String sequenceFileName, String out) {

@@ -1,6 +1,7 @@
 package com.orfangenes.control;
 
 import com.orfangenes.model.BlastResult;
+import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxTree;
 import com.orfangenes.constants.Constants;
 
@@ -21,15 +22,13 @@ public class Classifier {
         this.organismTaxID = organismTaxID;
     }
 
-    public Map<Integer, String> getGeneClassification(List<BlastResult> blastResults) {
-        Map<Integer, String> classification = new HashMap<>();
+    public Map<Gene, String> getGeneClassification(List<BlastResult> blastResults) {
+        Map<Gene, String> classification = new HashMap<>();
 
         Map<String, Integer> inputTaxHierarchy = tree.getHeirarchyFromNode(organismTaxID);
 
-        // Getting list of input IDs from FASTA sequence
-        List<Integer> inputIDs = sequence.getGIDs();
-        for (int id : inputIDs) { // For each input ID
-            Set<Integer> taxIDs = getBlastTaxonomies(blastResults, id);
+        for (Gene gene : sequence.getGenes()) { // For each input ID
+            Set<Integer> taxIDs = getBlastTaxonomies(blastResults, gene.getGeneID());
 
             // Getting the hierarchy for each taxonomy
             List<Map<String, Integer>> hierarchies = new ArrayList<>();
@@ -46,7 +45,7 @@ public class Classifier {
             if (level == null) {
                 level = Constants.STRICT_ORFAN;
             }
-            classification.put(id, level);
+            classification.put(gene, level);
         }
         return classification;
     }
