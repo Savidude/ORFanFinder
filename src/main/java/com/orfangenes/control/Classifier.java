@@ -80,6 +80,7 @@ public class Classifier {
 
         if (taxonomiesAtCurrentRank.size() == 1 && taxonomiesAtCurrentRank.contains(rankTaxID)) {
             if (currentRank.equals(Constants.SPECIES)) {
+                //TODO: add to database
                 return Constants.ORFAN_GENE;
             }
             return getLevel(hierarchies, inputTaxHierarchy, rankInfo.get(NEXT_RANK), 0);

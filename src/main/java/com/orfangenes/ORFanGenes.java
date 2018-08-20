@@ -118,7 +118,7 @@ public class ORFanGenes {
 
         // Generating BLAST file
         Sequence sequence = new Sequence(arguments.get("-query"), arguments.get("-out"), organismTaxID);
-//        sequence.generateBlastFile(blastType, arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
+        sequence.generateBlastFile(blastType, arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
 
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
 
