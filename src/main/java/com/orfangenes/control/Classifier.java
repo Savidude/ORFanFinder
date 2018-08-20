@@ -35,7 +35,12 @@ public class Classifier {
             List<Map<String, Integer>> hierarchies = new ArrayList<>();
             for (int taxID: taxIDs) {
                 Map<String, Integer> taxHierarchy = tree.getHeirarchyFromNode(taxID);
-                hierarchies.add(taxHierarchy);
+                if (taxHierarchy != null && taxHierarchy.size() > 0) {
+                    int speciesTaxID = taxHierarchy.get(Constants.SPECIES);
+                    if (speciesTaxID != organismTaxID) {
+                        hierarchies.add(taxHierarchy);
+                    }
+                }
             }
             String level = getLevel(hierarchies, inputTaxHierarchy, Constants.SUPERKINGDOM, 0);
             if (level == null) {

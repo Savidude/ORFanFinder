@@ -1,5 +1,6 @@
 package com.orfangenes.model.taxonomy;
 
+import com.orfangenes.constants.Constants;
 import javafx.util.Pair;
 
 import java.io.File;
@@ -87,17 +88,27 @@ public class TaxTree {
         Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
         try {
-            while (node.getParent() != null && node.getParent().getID() != 1) {
-                node = node.getParent();
-                if (!node.getRank().equals("no rank") && !node.getRank().contains("sub") && !node.getRank().contains("parv") && !node.getRank().contains("infra")
-                        && !node.getRank().contains("superphylum") && !node.getRank().contains("superclass") && !node.getRank().contains("superorder") && !node.getRank().contains("superfamily") && !node.getRank().contains("supergenus") && !node.getRank().contains("superspecies")) {
-                    hierarchy.put(node.getRank(), node.getID());
+
+            if (node.getRank().equals(Constants.SPECIES)) {
+                hierarchy.put(Constants.SPECIES, node.getID());
+
+                try {
+                    while (node.getParent() != null && node.getParent().getID() != 1) {
+                        node = node.getParent();
+                        if (!node.getRank().equals("no rank") && !node.getRank().contains("sub") && !node.getRank().contains("parv") && !node.getRank().contains("infra")
+                                && !node.getRank().contains("superphylum") && !node.getRank().contains("superclass") && !node.getRank().contains("superorder") && !node.getRank().contains("superfamily") && !node.getRank().contains("supergenus") && !node.getRank().contains("superspecies")) {
+                            hierarchy.put(node.getRank(), node.getID());
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    // Do nothing
                 }
             }
+
+            return hierarchy;
         } catch (NullPointerException e) {
-            System.out.println();
+            return null;
         }
-        return hierarchy;
     }
 
     public TaxNode getNode (int taxID) {

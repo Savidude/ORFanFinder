@@ -2,10 +2,7 @@ package com.orfangenes.control;
 
 import com.orfangenes.constants.Constants;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,14 +13,16 @@ import java.util.stream.Stream;
 
 public class Sequence {
     private String sequenceFileName;
+    private int fileCount;
 
-    public Sequence (String filename) {
+    public Sequence (String filename, String out) {
         File nodesFile = new File(filename);
         if (!nodesFile.exists()) {
             System.err.println("Failure to open sequence.");
             return;
         }
         this.sequenceFileName = filename;
+        this.fileCount = divideSequence(filename, out);
     }
 
     public void generateBlastFile(String type, String out, String max_target_seqs, String evalue) {
@@ -118,26 +117,6 @@ public class Sequence {
         return ids;
     }
 
-    public String getSeqenceFromGID (int gid) {
-        StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(this.sequenceFileName), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String inputSequence = contentBuilder.toString();
-        String[] sequences = inputSequence.split("\n\n");
-        for (String sequence : sequences) {
-            String[] sequenceData = sequence.split(" ");
-            String[] sequenceIDs = sequenceData[0].split("\\|");
-            int sequenceGID = Integer.parseInt(sequenceIDs[1]);
-            if (gid == sequenceGID) {
-                return sequenceData[0].replace(">", "");
-            }
-        }
-        return null;
-    }
-
     public String getDescriptionFromGID (int gid) {
         StringBuilder contentBuilder = new StringBuilder();
         try (Stream<String> stream = Files.lines(Paths.get(this.sequenceFileName), StandardCharsets.UTF_8)) {
@@ -158,5 +137,48 @@ public class Sequence {
             }
         }
         return null;
+    }
+
+    private int divideSequence(String sequenceFileName, String out) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (Stream<String> stream = Files.lines( Paths.get(sequenceFileName), StandardCharsets.UTF_8))
+        {
+            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        String inputSequence = contentBuilder.toString();
+        String[] sequences = inputSequence.split("\n\n");
+
+        String currentSequence = "";
+        int fileNo = 1;
+        for (double i = 0; i < (sequences.length - 1); i++) {
+            if (((i / 2.0) == 1.0)) {
+                createSequenceFile(out, currentSequence, fileNo);
+                currentSequence = "";
+                fileNo++;
+            }
+
+            currentSequence += sequences[(int)i] + "\n\n";
+        }
+        if (!currentSequence.equals("")) {
+            createSequenceFile(out, currentSequence, fileNo);
+        }
+        return fileNo;
+    }
+
+    private void createSequenceFile(String out, String sequence, int fileNo) {
+        try {
+            PrintWriter writer = new PrintWriter(out + "/sequence" + Integer.toString(fileNo) + ".fasta", "UTF-8");
+            writer.println(sequence);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -116,7 +116,7 @@ public class ORFanGenes {
         }
 
         // Generating BLAST file
-        Sequence sequence = new Sequence(arguments.get("-query"));
+        Sequence sequence = new Sequence(arguments.get("-query"), arguments.get("-out"));
         sequence.generateBlastFile(blastType, arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
 
         TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
@@ -189,14 +189,12 @@ public class ORFanGenes {
             Map.Entry pair = (Map.Entry)it.next();
 
             JSONArray array = new JSONArray();
-            if (!pair.getKey().equals(Constants.MULTI_DOMAIN_GENE)) {
                 array.add(pair.getKey());
                 array.add(pair.getValue());
                 summaryInfo.add(array);
 
                 x.add(pair.getKey());
                 y.add(pair.getValue());
-            }
         }
         orfanGenesSummary.put("data", summaryInfo);
 
