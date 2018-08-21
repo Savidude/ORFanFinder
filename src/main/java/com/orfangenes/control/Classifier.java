@@ -1,10 +1,13 @@
 package com.orfangenes.control;
 
+import com.orfangenes.constants.Database;
+import com.orfangenes.control.dabases.ORFanDB;
 import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxTree;
 import com.orfangenes.constants.Constants;
 
+import java.sql.Connection;
 import java.util.*;
 
 public class Classifier {
@@ -46,6 +49,19 @@ public class Classifier {
                 level = Constants.STRICT_ORFAN;
             }
             classification.put(gene, level);
+
+            // Add orfan Gene data to ORFanDB
+            if (level.equals(Constants.ORFAN_GENE)) {
+                Connection connection = ORFanDB.connectToDatabase(Database.DB_ORFAN);
+                String insertQuery = "INSERT INTO " + Database.TB_ORFAN_GENES + " (geneId, sequence, description, taxId) " +
+                        "VALUES (?,?,?,?)";
+                Object[] insertData = new Object[4];
+                insertData[0] = gene.getGeneID();
+                insertData[1] = gene.getSequence();
+                insertData[2] = gene.getDescription();
+                insertData[3] = gene.getTaxID();
+                ORFanDB.insertRecordPreparedStatement(connection, insertQuery, insertData);
+            }
         }
         return classification;
     }
@@ -80,7 +96,6 @@ public class Classifier {
 
         if (taxonomiesAtCurrentRank.size() == 1 && taxonomiesAtCurrentRank.contains(rankTaxID)) {
             if (currentRank.equals(Constants.SPECIES)) {
-                //TODO: add to database
                 return Constants.ORFAN_GENE;
             }
             return getLevel(hierarchies, inputTaxHierarchy, rankInfo.get(NEXT_RANK), 0);

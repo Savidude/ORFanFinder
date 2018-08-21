@@ -4,6 +4,7 @@ public class Gene {
     private int geneID;
     private String sequence;
     private String description;
+    private int taxID;
 
     public String getDescription() {
         return description;
@@ -12,8 +13,6 @@ public class Gene {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    private int taxID;
 
     public int getGeneID() {
         return geneID;
