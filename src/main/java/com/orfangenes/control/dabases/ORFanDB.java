@@ -2,10 +2,7 @@ package com.orfangenes.control.dabases;
 
 import com.orfangenes.constants.Database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ORFanDB {
 
@@ -36,5 +33,18 @@ public class ORFanDB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean recordExists (Connection connection, String tableName, String sequence) {
+        String selectQuery = "SELECT sequence FROM " + tableName + " WHERE sequence = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+            preparedStatement.setString(1, sequence);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
