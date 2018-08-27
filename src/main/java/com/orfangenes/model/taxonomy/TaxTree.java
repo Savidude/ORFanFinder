@@ -87,10 +87,9 @@ public class TaxTree {
         TaxNode node = nodes.get(taxID);
         Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
-        try {
-
             if (node.getRank().equals(Constants.SPECIES)) {
                 hierarchy.put(Constants.SPECIES, node.getID());
+            }
 
                 try {
                     while (node.getParent() != null && node.getParent().getID() != 1) {
@@ -103,12 +102,8 @@ public class TaxTree {
                 } catch (NullPointerException e) {
                     // Do nothing
                 }
-            }
 
             return hierarchy;
-        } catch (NullPointerException e) {
-            return null;
-        }
     }
 
     public TaxNode getNode (int taxID) {

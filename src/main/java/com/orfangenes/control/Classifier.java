@@ -38,9 +38,13 @@ public class Classifier {
             for (int taxID: taxIDs) {
                 Map<String, Integer> taxHierarchy = tree.getHeirarchyFromNode(taxID);
                 if (taxHierarchy != null && taxHierarchy.size() > 0) {
-                    int speciesTaxID = taxHierarchy.get(Constants.SPECIES);
-                    if (speciesTaxID != organismTaxID) {
-                        hierarchies.add(taxHierarchy);
+                    try{
+                        int speciesTaxID = taxHierarchy.get(Constants.SPECIES);
+                        if (speciesTaxID != organismTaxID) {
+                            hierarchies.add(taxHierarchy);
+                        }
+                    } catch (NullPointerException e) {
+                        // Do nothing
                     }
                 }
             }

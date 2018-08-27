@@ -11,7 +11,7 @@ public class ORFanDB {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://" + Database.HOST + ":" + Database.PORT + "/" +
-                    database, Database.USERNAME, Database.PASSWORD);
+                    database + "?autoReconnect=true&useSSL=false", Database.USERNAME, Database.PASSWORD);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -25,11 +25,14 @@ public class ORFanDB {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             for (int i = 0; i < data.length; i++) {
                 if (data[i] instanceof Integer) {
-                    preparedStatement.setInt(i, (int)data[i]);
+                    preparedStatement.setInt(i+1, (int)data[i]);
                 } else if (data[i] instanceof String) {
-                    preparedStatement.setString(i, (String)data[i]);
+                    preparedStatement.setString(i+1, (String)data[i]);
                 }
             }
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
