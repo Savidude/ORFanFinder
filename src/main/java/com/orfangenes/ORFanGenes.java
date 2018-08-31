@@ -116,16 +116,21 @@ public class ORFanGenes {
             arguments.put("-out", arguments.get("-out").substring(0, arguments.get("-out").length() -1));
         }
 
+        run(arguments.get("-query"), arguments.get("-out"), organismTaxID, arguments.get("-type"),
+                arguments.get("-max_target_seqs"), arguments.get("-evalue"), arguments.get("-nodes"), arguments.get("-names"));
+    }
+
+    public static void run(String query, String outputdir, int organismTaxID, String blastType, String max_target_seqs, String evalue, String nodes, String names) {
         // Generating BLAST file
-        Sequence sequence = new Sequence(arguments.get("-query"), arguments.get("-out"), organismTaxID);
-        sequence.generateBlastFile(blastType, arguments.get("-out"), arguments.get("-max_target_seqs"), arguments.get("-evalue"));
+        Sequence sequence = new Sequence(query, outputdir, organismTaxID);
+        sequence.generateBlastFile(blastType, outputdir, max_target_seqs, evalue);
 
-        TaxTree taxTree = new TaxTree(arguments.get("-nodes"), arguments.get("-names"));
+        TaxTree taxTree = new TaxTree(nodes, names);
 
-        BlastResultsProcessor processor = new BlastResultsProcessor(arguments.get("-out"));
+        BlastResultsProcessor processor = new BlastResultsProcessor(outputdir);
         Classifier classifier = new Classifier(sequence, taxTree, organismTaxID);
         Map<Gene, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
-        generateResult(geneClassification, arguments.get("-out"), processor, taxTree);
+        generateResult(geneClassification, outputdir, processor, taxTree);
     }
 
     private static void generateResult (Map<Gene, String> geneClassification, String out,
