@@ -38,9 +38,8 @@ public class BlastResultsProcessor {
         return blastResults;
     }
 
-    public JSONObject generateTableData (TaxTree taxTree) {
-        JSONObject blastResultsJSON = new JSONObject();
-        JSONArray resultDataArray = new JSONArray();
+    public JSONArray generateTableData (TaxTree taxTree) {
+        JSONArray blastResultsJSON = new JSONArray();
 
         int i = 1;
         for (BlastResult result: blastResults) {
@@ -54,18 +53,17 @@ public class BlastResultsProcessor {
                     String name = resultNode.getName();
                     String parentName = resultNode.getParent().getName();
 
-                    JSONArray resultData = new JSONArray();
-                    resultData.add(i);
-                    resultData.add(querySequence);
-                    resultData.add(level);
-                    resultData.add(name);
-                    resultData.add(parentName);
-                    resultDataArray.add(resultData);
+                    JSONObject resultData = new JSONObject();
+                    resultData.put("no", i);
+                    resultData.put("sequence", querySequence);
+                    resultData.put("level", level);
+                    resultData.put("name", name);
+                    resultData.put("parent", parentName);
+                    blastResultsJSON.add(resultData);
                     i++;
                 }
             }
         }
-        blastResultsJSON.put("data", resultDataArray);
         return blastResultsJSON;
     }
 }

@@ -17,4 +17,9 @@ public class WebPageController {
     public ModelAndView input() {
         return new ModelAndView("input", "sequence", new InputSequence());
     }
+
+    @RequestMapping("/result")
+    public String result() {
+        return "result";
+    }
 }

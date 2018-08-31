@@ -155,3 +155,9 @@ input[type="range"] {
     padding-top: 24px;
     height: 100%;
 }
+
+.result-container {
+    margin-left: 12px;
+    margin-top: 6px;
+    margin-right: 12px;
+}

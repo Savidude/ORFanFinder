@@ -135,8 +135,7 @@ public class ORFanGenes {
 
     private static void generateResult (Map<Gene, String> geneClassification, String out,
                                         BlastResultsProcessor blastResultsProcessor, TaxTree tree) {
-        JSONObject orfanGenes = new JSONObject();
-        JSONArray geneInfo = new JSONArray();
+        JSONArray orfanGenes = new JSONArray();
 
         // ORFan and Native Gene count
         Map<String, Integer> orfanGeneCount = new LinkedHashMap<>();
@@ -157,18 +156,17 @@ public class ORFanGenes {
             Map.Entry pair = (Map.Entry)it.next();
 
             ORFGene orfGene = new ORFGene((Gene) pair.getKey(), (String)pair.getValue());
-            JSONArray gene = new JSONArray();
-            gene.add(orfGene.getId());
-            gene.add(orfGene.getDescription());
-            gene.add(orfGene.getLevel());
-            gene.add("Bacteria");
-            geneInfo.add(gene);
+            JSONObject orfanJSON = new JSONObject();
+            orfanJSON.put("geneid", orfGene.getId());
+            orfanJSON.put("description", orfGene.getDescription());
+            orfanJSON.put("orfanLevel", orfGene.getLevel());
+            orfanJSON.put("taxonomyLevel", orfGene.getTaxonomy());
+            orfanGenes.add(orfanJSON);
 
             int count = orfanGeneCount.get(orfGene.getLevel());
             count++;
             orfanGeneCount.put(orfGene.getLevel(), count);
         }
-        orfanGenes.put("data", geneInfo);
         // Writing orfanGenes data JSON data into file
         try {
             StringWriter writer = new StringWriter();
@@ -183,8 +181,7 @@ public class ORFanGenes {
         }
 
         // Genetating ORFan genes summary data and data to be displayed in the chart
-        JSONObject orfanGenesSummary = new JSONObject();
-        JSONArray summaryInfo = new JSONArray();
+        JSONArray orfanGenesSummary = new JSONArray();
 
         JSONObject chartJSON = new JSONObject();
         JSONArray x = new JSONArray();
@@ -194,15 +191,14 @@ public class ORFanGenes {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
 
-            JSONArray array = new JSONArray();
-                array.add(pair.getKey());
-                array.add(pair.getValue());
-                summaryInfo.add(array);
+            JSONObject summaryObject = new JSONObject();
+            summaryObject.put("type", pair.getKey());
+            summaryObject.put("count", pair.getValue());
+            orfanGenesSummary.add(summaryObject);
 
-                x.add(pair.getKey());
-                y.add(pair.getValue());
+            x.add(pair.getKey());
+            y.add(pair.getValue());
         }
-        orfanGenesSummary.put("data", summaryInfo);
 
         chartJSON.put("x", x);
         chartJSON.put("y", y);
