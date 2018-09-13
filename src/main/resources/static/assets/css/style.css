@@ -161,3 +161,11 @@ input[type="range"] {
     margin-top: 6px;
     margin-right: 12px;
 }
+
+.chart {
+    width: 2000px;
+    height: 2000px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}

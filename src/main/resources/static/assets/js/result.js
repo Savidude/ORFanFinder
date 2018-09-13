@@ -106,33 +106,74 @@ $(document).ready(function() {
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
             var blastResults = JSON.parse(result);
-            $('#blastResults').DataTable({
-                "data":blastResults,
-                "columns": [
-                    {"data" : "no"},
-                    {"data" : "sequence"},
-                    {"data" : "level"},
-                    {"data" : "name"},
-                    {"data" : "parent"}
-                ],
-                "oLanguage": {
-                    "sStripClasses": "",
-                    "sSearch": "",
-                    "sSearchPlaceholder": "Enter Search Term Here",
-                    "sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
-                    "sLengthMenu": '<span>Rows per page:</span>'+
-                        '<select class="browser-default">' +
-                        '<option value="5">5</option>' +
-                        '<option value="10">10</option>' +
-                        '<option value="20">20</option>' +
-                        '<option value="50">50</option>' +
-                        '<option value="100">100</option>' +
-                        '<option value="-1">All</option>' +
-                        '</select></div>'
-                },
-                dom: 'frt',
-                "aaSorting": []
-            });
+
+            var blastResultsDiv = document.getElementById("blastResults");
+            for (var i = 0; i < blastResults.length; i++) {
+                var description = document.createElement("p");
+                description.className = "h5";
+                description.innerHTML = blastResults[i].description;
+                blastResultsDiv.appendChild(description);
+
+                var chart = document.createElement("div");
+                chart.className = "chart";
+                var resultChart = echarts.init(chart);
+                resultChart.setOption(option = {
+                    tooltip: {
+                        trigger: 'item',
+                        triggerOn: 'mousemove'
+                    },
+                    series: [
+                        {
+                            type: 'tree',
+
+                            data: [blastResults[i].tree],
+
+                            top: '18%',
+                            bottom: '14%',
+
+                            layout: 'radial',
+
+                            symbol: 'emptyCircle',
+
+                            symbolSize: 7,
+
+                            initialTreeDepth: 9,
+
+                            animationDurationUpdate: 750
+
+                        }
+                    ]
+                });
+                blastResultsDiv.appendChild(chart);
+            }
+
+            // $('#blastResults').DataTable({
+            //     "data":blastResults,
+            //     "columns": [
+            //         {"data" : "no"},
+            //         {"data" : "sequence"},
+            //         {"data" : "level"},
+            //         {"data" : "name"},
+            //         {"data" : "parent"}
+            //     ],
+            //     "oLanguage": {
+            //         "sStripClasses": "",
+            //         "sSearch": "",
+            //         "sSearchPlaceholder": "Enter Search Term Here",
+            //         "sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
+            //         "sLengthMenu": '<span>Rows per page:</span>'+
+            //             '<select class="browser-default">' +
+            //             '<option value="5">5</option>' +
+            //             '<option value="10">10</option>' +
+            //             '<option value="20">20</option>' +
+            //             '<option value="50">50</option>' +
+            //             '<option value="100">100</option>' +
+            //             '<option value="-1">All</option>' +
+            //             '</select></div>'
+            //     },
+            //     dom: 'frt',
+            //     "aaSorting": []
+            // });
         }
     });
 });

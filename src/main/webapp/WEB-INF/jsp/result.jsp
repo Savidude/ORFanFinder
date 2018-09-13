@@ -203,37 +203,7 @@
                                     <div id="BlastResultsTable" class="row">
                                         <div class="col s10 offset-s1 center-align">
                                             <p class="h3">BLAST Results</p>
-                                            <table id="blastResults" class="table display">
-                                                <thead>
-                                                <tr>
-                                                    <th class="secondary-text">
-                                                        <div class="table-header">
-                                                            <span class="column-title">#</span>
-                                                        </div>
-                                                    </th>
-                                                    <th class="secondary-text">
-                                                        <div class="table-header">
-                                                            <span class="column-title">Gene</span>
-                                                        </div>
-                                                    </th>
-                                                    <th class="secondary-text">
-                                                        <div class="table-header">
-                                                            <span class="column-title">Taxonomy Level</span>
-                                                        </div>
-                                                    </th>
-                                                    <th class="secondary-text">
-                                                        <div class="table-header">
-                                                            <span class="column-title">Taxonomy Name</span>
-                                                        </div>
-                                                    </th>
-                                                    <th class="secondary-text">
-                                                        <div class="table-header">
-                                                            <span class="column-title">Parent Taxonomy Name</span>
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                                </thead>
-                                            </table>
+                                            <div id="blastResults"></div>
                                         </div>
                                     </div>
                                 </div>
