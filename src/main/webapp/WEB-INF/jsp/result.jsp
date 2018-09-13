@@ -51,6 +51,8 @@
     <script type="text/javascript" src="assets/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
     <!-- plot.ly -->
     <script type="text/javascript" src="assets/bower_components/plotlyjs/plotly.js"></script>
+     <%--Echarts --%>
+    <script type="text/javascript" src="assets/bower_components/echarts/dist/echarts.min.js"></script>
     <!-- Main JS -->
     <script type="text/javascript" src="assets/js/main.js"></script>
     <!-- Result JS -->
@@ -126,6 +128,12 @@
                         <!-- CONTENT -->
                         <div class="page-content">
                             <div class="result-container">
+                                <div>
+                                    <button class="btn btn-primary" id="saveresult" data-toggle="modal" data-target="#saveResultModal">Save Result
+                                        <i class="mdi mdi-send"></i>
+                                    </button>
+                                    <br><br>
+                                </div>
                                 <div class="row">
                                     <div class="col s5 offset-s1 center-align">
                                         <p class="h4"> ORFan Genes</p>
@@ -232,6 +240,28 @@
                             </div>
                         </div>
                         <!-- / CONTENT -->
+                    </div>
+                </div>
+            </div>
+            <div id="saveResultModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Save Result</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save Result</button>
+                        </div>
                     </div>
                 </div>
             </div>

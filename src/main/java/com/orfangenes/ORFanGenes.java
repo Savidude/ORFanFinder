@@ -4,7 +4,6 @@ import com.orfangenes.constants.Constants;
 import com.orfangenes.control.BlastResultsProcessor;
 import com.orfangenes.control.Classifier;
 import com.orfangenes.control.Sequence;
-import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.ORFGene;
 import com.orfangenes.model.taxonomy.TaxTree;
@@ -130,11 +129,11 @@ public class ORFanGenes {
         BlastResultsProcessor processor = new BlastResultsProcessor(outputdir);
         Classifier classifier = new Classifier(sequence, taxTree, organismTaxID);
         Map<Gene, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
-        generateResult(geneClassification, outputdir, processor, taxTree);
+        generateResult(geneClassification, outputdir, processor, taxTree, sequence.getGenes());
     }
 
     private static void generateResult (Map<Gene, String> geneClassification, String out,
-                                        BlastResultsProcessor blastResultsProcessor, TaxTree tree) {
+                                        BlastResultsProcessor blastResultsProcessor, TaxTree tree, List<Gene> inputGenes) {
         JSONArray orfanGenes = new JSONArray();
 
         // ORFan and Native Gene count
@@ -233,9 +232,10 @@ public class ORFanGenes {
         }
 
         // Writing blast results to JSON file
+        JSONArray blastTrees = blastResultsProcessor.generateBlastResultsTrees(tree, inputGenes);
         try {
             StringWriter writer3 = new StringWriter();
-            blastResultsProcessor.generateTableData(tree).writeJSONString(writer3);
+            blastTrees.writeJSONString(writer3);
             String blastResults = writer3.toString();
             PrintWriter printWriter3 = new PrintWriter(out + "/blastresults.json", "UTF-8");
             printWriter3.println(blastResults);
@@ -243,22 +243,6 @@ public class ORFanGenes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static ArrayList<BlastResult> getBlastResults(String blastResultsFileName) {
-        ArrayList<BlastResult> blastResults = new ArrayList<>();
-
-        try {
-            Scanner scanner = new Scanner(new File(blastResultsFileName));
-            while (scanner.hasNextLine()) {
-                BlastResult result = new BlastResult(scanner.nextLine());
-                blastResults.add(result);
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return blastResults;
     }
 
     private static void printHelp(int help) {

@@ -1,16 +1,21 @@
 package com.orfangenes.model.taxonomy;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class TaxNode {
 
     private int nID;
     private String name;
     private String nRank;
     private TaxNode parent;
+    private Set<TaxNode> children;
 
     public TaxNode(int nID, String name, String nRank) {
         this.nID = nID;
         this.name = name;
         this.nRank = nRank;
+        this.children = new LinkedHashSet<>();
     }
 
     public void setParent(TaxNode parent) {
@@ -31,5 +36,13 @@ public class TaxNode {
 
     public String getName() {
         return name;
+    }
+
+    public void addChild(TaxNode node) {
+        children.add(node);
+    }
+
+    public Set<TaxNode> getChildren() {
+        return children;
     }
 }

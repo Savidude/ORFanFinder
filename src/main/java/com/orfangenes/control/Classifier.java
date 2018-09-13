@@ -53,7 +53,7 @@ public class Classifier {
                 level = Constants.STRICT_ORFAN;
             }
             classification.put(gene, level);
-            addToDatabase(gene, level);
+//            addToDatabase(gene, level);
         }
         return classification;
     }

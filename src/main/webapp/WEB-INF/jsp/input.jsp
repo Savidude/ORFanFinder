@@ -117,9 +117,9 @@
 
                 <div id="project-dashboard" class="page-layout simple right-sidebar">
 
-                    <div class="page-content-wrapper">
+                    <div class="page-content-wrapper" >
                         <!-- CONTENT -->
-                        <div class="page-content">
+                        <div class="page-content" style="background-color: #CFD8DC">
                             <div class="container">
                                 <form:form method="post" modelAttribute="sequence" action="/store" >
                                     <fieldset class="form-group">
@@ -144,18 +144,18 @@
                                         </div>
                                     </fieldset>
                                     <div class="form-group row">
-                                        <label for="fastafile" class="col-sm-2 col-form-label">Sequence</label>
+                                        <label for="fastafile" class="col-sm-2 col-form-label" style="color: black">Sequence</label>
                                         <div class="col-sm-10">
-                                            <form:textarea path="genesequence" class="form-control" id="genesequence" rows="3" name="genesequence"></form:textarea>
+                                            <form:textarea path="genesequence" class="form-control" id="genesequence" rows="3" name="genesequence" style="border:solid 1px black;"></form:textarea>
                                             <br>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="fastafile" accept=".fasta" onchange="setFileContent(this.value);">
-                                                <label class="custom-file-label" for="fastafile" id="filename">Choose file</label>
+                                                <label class="custom-file-label" for="fastafile" id="filename" style="background-color: #CFD8DC">Choose file</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="organismName" class="col-sm-2 col-form-label">Organism</label>
+                                        <label for="organismName" class="col-sm-2 col-form-label" style="color: black">Organism</label>
                                         <div class="col-sm-10 autocomplete">
                                             <form:input path="organismName" type="text" class="form-control" id="organismName" name="organismName"></form:input>
                                         </div>
@@ -191,6 +191,70 @@
                                         </div>
                                     </div>
 
+                                    <br><br><br><br>
+
+                                    <div class="row">
+                                        <!-- Get Started -->
+                                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                                            <a href="/input" class="action">
+                                                <div id="started" class="widget widget1 card action" style="background-color: #455A64">
+                                                    <div class="widget-header pl-4 pr-2">
+                                                        <div class="col">
+                                                            <i class="mdi s-8 mdi-cursor-pointer" style="color: #FFECB3"></i>
+                                                            <h4 class="center" style="color: #ffe57f">Get Started</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!-- / Get Started -->
+
+                                        <!-- Instructions -->
+                                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                                            <a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing" class="action">
+                                                <div id="instructions" class="widget widget1 card" style="background-color: #455A64">
+                                                    <div class="widget-header pl-4 pr-2">
+                                                        <div class="col">
+                                                            <i class="mdi s-8 mdi-library-books" style="color: #FFECB3"></i>
+                                                            <h4 class="center" style="color: #ffe57f">Instructions</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!-- / Instructions -->
+
+                                        <!-- Results -->
+                                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                                            <a href="" class="action">
+                                                <div id="results" class="widget widget1 card action" style="background-color: #455A64">
+                                                    <div class="widget-header pl-4 pr-2">
+                                                        <div class="col">
+                                                            <i class="mdi s-8 mdi-clipboard" style="color: #FFECB3"></i>
+                                                            <h4 class="center" style="color: #ffe57f">Results</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!-- / Results -->
+
+                                        <!-- ORFanBase -->
+                                        <div class="col-12 col-sm-6 col-xl-3 p-3">
+                                            <a href="" class="action">
+                                                <div id="orfanbase" class="widget widget1 card action" style="background-color: #455A64">
+                                                    <div class="widget-header pl-4 pr-2">
+                                                        <div class="col">
+                                                            <i class="mdi s-8 mdi-database" style="color: #FFECB3"></i>
+                                                            <h4 class="center" style="color: #ffe57f">ORFanBase</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!-- / ORFanBase -->
+                                    </div>
+
                                     <div id="modal1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -223,7 +287,7 @@
                 </div>
             </div>
 
-            <footer class="footer-copyright">
+            <footer class="footer-copyright" style="background-color: #CFD8DC">
                 <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>
                     <p class="center-align">Copyright &nbsp;© 2017-2018</p>
                 </div>

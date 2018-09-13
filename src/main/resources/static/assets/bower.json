@@ -21,6 +21,7 @@
     "mobile-detect": "hgoebl/mobile-detect.js#^1.4.2",
     "datatables.net": "^1.10.19",
     "datatables.net-dt": "^3.2.2",
-    "plotlyjs": "plotly#^1.18.1"
+    "plotlyjs": "plotly#^1.18.1",
+    "echarts": "^4.1.0"
   }
 }

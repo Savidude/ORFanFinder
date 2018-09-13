@@ -39,7 +39,6 @@ $(document).ready(function() {
         url: "/data/summary/chart",
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
-            console.log(result)
             var orfanGenesSummaryChart = JSON.parse(result);
             orfanLevels = orfanGenesSummaryChart.x;
             numberOfOrphanGenes = orfanGenesSummaryChart.y;

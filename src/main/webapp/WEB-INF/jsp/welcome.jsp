@@ -232,11 +232,11 @@
                                 <!-- Get Started -->
                                 <div class="col-12 col-sm-6 col-xl-3 p-3">
                                     <a href="/input" class="action">
-                                        <div id="started" class="widget widget1 card action">
+                                        <div id="started" class="widget widget1 card action" style="background-color: #455A64">
                                             <div class="widget-header pl-4 pr-2">
                                                 <div class="col">
-                                                    <i class="mdi s-30 mdi-cursor-pointer"></i>
-                                                    <h3 class="center">Get Started</h3>
+                                                    <i class="mdi s-8 mdi-cursor-pointer" style="color: #FFECB3"></i>
+                                                    <h4 class="center" style="color: #ffe57f">Get Started</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -247,11 +247,11 @@
                                 <!-- Instructions -->
                                 <div class="col-12 col-sm-6 col-xl-3 p-3">
                                     <a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing" class="action">
-                                        <div id="instructions" class="widget widget1 card">
+                                        <div id="instructions" class="widget widget1 card" style="background-color: #455A64">
                                             <div class="widget-header pl-4 pr-2">
                                                 <div class="col">
-                                                    <i class="mdi s-30 mdi-library-books"></i>
-                                                    <h3 class="center">Instructions</h3>
+                                                    <i class="mdi s-8 mdi-library-books" style="color: #FFECB3"></i>
+                                                    <h4 class="center" style="color: #ffe57f">Instructions</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -262,11 +262,11 @@
                                 <!-- Results -->
                                 <div class="col-12 col-sm-6 col-xl-3 p-3">
                                     <a href="" class="action">
-                                        <div id="results" class="widget widget1 card action">
+                                        <div id="results" class="widget widget1 card action" style="background-color: #455A64">
                                             <div class="widget-header pl-4 pr-2">
                                                 <div class="col">
-                                                    <i class="mdi s-30 mdi-clipboard"></i>
-                                                    <h3 class="center">Results</h3>
+                                                    <i class="mdi s-8 mdi-clipboard" style="color: #FFECB3"></i>
+                                                    <h4 class="center" style="color: #ffe57f">Results</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -277,11 +277,11 @@
                                 <!-- ORFanBase -->
                                 <div class="col-12 col-sm-6 col-xl-3 p-3">
                                     <a href="" class="action">
-                                        <div id="orfanbase" class="widget widget1 card action">
+                                        <div id="orfanbase" class="widget widget1 card action" style="background-color: #455A64">
                                             <div class="widget-header pl-4 pr-2">
                                                 <div class="col">
-                                                    <i class="mdi s-30 mdi-database"></i>
-                                                    <h3 class="center">ORFanBase</h3>
+                                                    <i class="mdi s-8 mdi-database" style="color: #FFECB3"></i>
+                                                    <h4 class="center" style="color: #ffe57f">ORFanBase</h4>
                                                 </div>
                                             </div>
                                         </div>
