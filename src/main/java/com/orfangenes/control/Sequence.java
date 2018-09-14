@@ -17,6 +17,7 @@ public class Sequence {
     private static final String GI = ">gi";
     private static final String BLAST_RESULTS = "blastResults";
     private static final String BLAST_EXT = ".bl";
+    private static final double SEQUENCE_SLICE_SIZE = 3.0;
 
     public Sequence (String filename, String out, int inputTax) {
         File sequenceFile = new File(filename);
@@ -37,6 +38,11 @@ public class Sequence {
             BlastCommand command = new BlastCommand(Integer.toString(i), type, out, max_target_seqs, evalue);
             command.start();
             blastCommands[i-1] = command;
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         // Wait for all blast commands to finish running
@@ -134,13 +140,13 @@ public class Sequence {
         String currentSequence = "";
         int fileNo = 1;
         for (double i = 0; i < (sequences.length - 1); i++) {
-            if (((i % 10.0) == 0) && (i > 0)) {
+            if (((i % SEQUENCE_SLICE_SIZE) == 0) && (i > 0)) {
                 createSequenceFile(out, currentSequence, fileNo);
                 currentSequence = "";
                 fileNo++;
             }
 
-            if (i%10.0 == 9.0) {
+            if (i%SEQUENCE_SLICE_SIZE == (SEQUENCE_SLICE_SIZE - 1.0)) {
                 currentSequence += sequences[(int)i] + "\n";
             } else {
                 currentSequence += sequences[(int) i] + "\n\n";
@@ -148,6 +154,7 @@ public class Sequence {
         }
         if (!currentSequence.equals("")) {
             createSequenceFile(out, currentSequence, fileNo);
+            fileNo++;
         }
         return fileNo;
     }
