@@ -80,12 +80,24 @@ public class BlastResultsProcessor {
                     if (taxonomiesAtSuperkingdom.size() > 1) {
                         // TODO: Add root to tree
                     } else {
-                        Map<String, Integer> hierarchy = hierarchies.get(0);
-                        int superkingdomTaxID = hierarchy.get(Constants.SUPERKINGDOM);
-                        TaxNode superkingdomNode = tree.getNode(superkingdomTaxID);
-                        JSONObject jsonTree = createJSONNode(superkingdomNode);
-                        blastResult.put("tree", jsonTree);
-                        blastTrees.add(blastResult);
+                        int i = 0;
+                        boolean isValid = false;
+
+                        while (!isValid) {
+                            try {
+                                Map<String, Integer> hierarchy = hierarchies.get(i);
+                                int superkingdomTaxID = hierarchy.get(Constants.SUPERKINGDOM);
+                                TaxNode superkingdomNode = tree.getNode(superkingdomTaxID);
+                                JSONObject jsonTree = createJSONNode(superkingdomNode);
+                                blastResult.put("tree", jsonTree);
+                                blastTrees.add(blastResult);
+                                isValid = true;
+                            } catch (NullPointerException e) {
+                                i++;
+                            } catch (IndexOutOfBoundsException e) {
+                                //Do nothing. This is in the case of an invalid tree is created.
+                            }
+                        }
                     }
                 }
             } catch (CloneNotSupportedException e) {
@@ -110,11 +122,26 @@ public class BlastResultsProcessor {
     }
 
     private void createTree (TaxTree tree, Map<String, Integer> hierarchy, String currentRank) {
-        int currentRankTaxID = hierarchy.get(currentRank);
-        TaxNode currentRankNode = tree.getNode(currentRankTaxID);
-        String nextRank = getNextRank(currentRank);
+        if (hierarchy.size() == 0) {
+            return;
+        }
 
         boolean isComplete = false;
+        TaxNode currentRankNode = null;
+        String nextRank = null;
+
+        while (!isComplete) {
+            try {
+                int currentRankTaxID = hierarchy.get(currentRank);
+                currentRankNode = tree.getNode(currentRankTaxID);
+                nextRank = getNextRank(currentRank);
+                isComplete = true;
+            } catch (NullPointerException e) {
+                currentRank = getNextRank(currentRank);
+            }
+        }
+        isComplete = false;
+
         while (nextRank != null && !isComplete) {
             try {
                 currentRankNode.addChild(tree.getNode(hierarchy.get(nextRank)));

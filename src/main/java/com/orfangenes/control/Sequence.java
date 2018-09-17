@@ -154,7 +154,6 @@ public class Sequence {
         }
         if (!currentSequence.equals("")) {
             createSequenceFile(out, currentSequence, fileNo);
-            fileNo++;
         }
         return fileNo;
     }

@@ -91,21 +91,20 @@ public class TaxTree implements Cloneable{
         TaxNode node = nodes.get(taxID);
         Map<String, Integer> hierarchy = new LinkedHashMap<>();
 
+        try {
             if (node.getRank().equals(Constants.SPECIES)) {
                 hierarchy.put(Constants.SPECIES, node.getID());
             }
-
-                try {
-                    while (node.getParent() != null && node.getParent().getID() != 1) {
-                        node = node.getParent();
-                        if (!node.getRank().equals("no rank") && !node.getRank().contains("sub") && !node.getRank().contains("parv") && !node.getRank().contains("infra")
-                                && !node.getRank().contains("superphylum") && !node.getRank().contains("superclass") && !node.getRank().contains("superorder") && !node.getRank().contains("superfamily") && !node.getRank().contains("supergenus") && !node.getRank().contains("superspecies")) {
-                            hierarchy.put(node.getRank(), node.getID());
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    // Do nothing
+            while (node.getParent() != null && node.getParent().getID() != 1) {
+                node = node.getParent();
+                if (!node.getRank().equals("no rank") && !node.getRank().contains("sub") && !node.getRank().contains("parv") && !node.getRank().contains("infra")
+                        && !node.getRank().contains("superphylum") && !node.getRank().contains("superclass") && !node.getRank().contains("superorder") && !node.getRank().contains("superfamily") && !node.getRank().contains("supergenus") && !node.getRank().contains("superspecies")) {
+                    hierarchy.put(node.getRank(), node.getID());
                 }
+            }
+        } catch (NullPointerException e) {
+            // Do nothing
+        }
 
             return hierarchy;
     }

@@ -120,7 +120,12 @@ public class Classifier {
             return getLevel(hierarchies, inputTaxHierarchy, rankInfo.get(NEXT_RANK), 0);
         } else if (taxonomiesAtCurrentRank.size() > 1 || (taxonomiesAtCurrentRank.size() == 1 && !taxonomiesAtCurrentRank.contains(rankTaxID))){
             for (int i = 0; i < levelsSkipped; i--) {
-                rankInfo = getRankInfo(rankInfo.get(PREV_RANK));
+                String prevRank = rankInfo.get(PREV_RANK);
+                if (prevRank != null) {
+                    rankInfo = getRankInfo(rankInfo.get(PREV_RANK));
+                } else {
+                    return Constants.MULTI_DOMAIN_GENE;
+                }
             }
             return rankInfo.get(GENE_TYPE);
         } else {
