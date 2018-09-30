@@ -138,14 +138,14 @@ public class Classifier {
         String prevRank = null;
         String nextRank = null;
         switch (currentRank) {
-            case Constants.SUPERKINGDOM: geneType = Constants.MULTI_DOMAIN_GENE; prevRank = null; nextRank = Constants.KINGDOM; break;
-            case Constants.KINGDOM: geneType = Constants.DOMAIN_RESTRICTED_GENE; prevRank = Constants.SUPERKINGDOM; nextRank = Constants.PHYLUM; break;
-            case Constants.PHYLUM: geneType = Constants.KINGDOM_RESTRICTED_GENE;  prevRank = Constants.KINGDOM; nextRank = Constants.CLASS; break;
-            case Constants.CLASS: geneType = Constants.PHYLUM_RESTRICTED_GENE; prevRank = Constants.PHYLUM; nextRank = Constants.ORDER; break;
-            case Constants.ORDER: geneType = Constants.CLASS_RESTRICTED_GENE; prevRank = Constants.CLASS; nextRank = Constants.FAMILY; break;
-            case Constants.FAMILY: geneType = Constants.ORDER_RESTRICTED_GENE; prevRank = Constants.ORDER; nextRank = Constants.GENUS; break;
-            case Constants.GENUS: geneType = Constants.FAMILY_RESTRICTED_GENE; prevRank = Constants.FAMILY; nextRank = Constants.SPECIES; break;
-            case Constants.SPECIES: geneType = Constants.GENUS_RESTRICTED_GENE; prevRank = Constants.GENUS; nextRank = null; break;
+            case Constants.SUPERKINGDOM: geneType = Constants.DOMAIN_RESTRICTED_GENE; prevRank = null; nextRank = Constants.KINGDOM; break;
+            case Constants.KINGDOM: geneType = Constants.KINGDOM_RESTRICTED_GENE; prevRank = Constants.SUPERKINGDOM; nextRank = Constants.PHYLUM; break;
+            case Constants.PHYLUM: geneType = Constants.PHYLUM_RESTRICTED_GENE;  prevRank = Constants.KINGDOM; nextRank = Constants.CLASS; break;
+            case Constants.CLASS: geneType = Constants.CLASS_RESTRICTED_GENE; prevRank = Constants.PHYLUM; nextRank = Constants.ORDER; break;
+            case Constants.ORDER: geneType = Constants.ORDER_RESTRICTED_GENE; prevRank = Constants.CLASS; nextRank = Constants.FAMILY; break;
+            case Constants.FAMILY: geneType = Constants.FAMILY_RESTRICTED_GENE; prevRank = Constants.ORDER; nextRank = Constants.GENUS; break;
+            case Constants.GENUS: geneType = Constants.GENUS_RESTRICTED_GENE; prevRank = Constants.FAMILY; nextRank = Constants.SPECIES; break;
+            case Constants.SPECIES: geneType = Constants.ORFAN_GENE; prevRank = Constants.GENUS; nextRank = null; break;
         }
 
         Map<String, String> rankInfo = new HashMap<>();
