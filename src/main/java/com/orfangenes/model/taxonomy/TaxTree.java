@@ -13,11 +13,15 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class TaxTree implements Cloneable{
+public class TaxTree {
     private ArrayList<Pair<TaxNode, Integer>> tempNodes = new ArrayList<>();
     private Map<Integer, TaxNode> nodes = new HashMap<>();
 
     private Map<Integer, String> names = new HashMap<>();
+
+    public TaxTree (Map<Integer, TaxNode> nodes) {
+        this.nodes = nodes;
+    }
 
     public TaxTree(String nodesFilename, String namesFilename) {
         // Reading the names file line by line
@@ -50,10 +54,6 @@ public class TaxTree implements Cloneable{
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 
     private void processNode(String nodeString) {
@@ -111,5 +111,9 @@ public class TaxTree implements Cloneable{
 
     public TaxNode getNode (int taxID) {
         return this.nodes.get(taxID);
+    }
+
+    public Map<Integer, TaxNode> getNodes() {
+        return nodes;
     }
 }

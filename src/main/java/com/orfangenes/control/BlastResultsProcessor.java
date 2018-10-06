@@ -43,65 +43,61 @@ public class BlastResultsProcessor {
         for (Gene gene: genes) {
             JSONObject blastResult = new JSONObject();
             blastResult.put("description", gene.getDescription());
-            try {
-                // Getting tax IDs for the gene
-                Set<Integer> taxIDs = new LinkedHashSet<>();
-                for (BlastResult result : blastResults) {
-                    if (result.getQueryid() == gene.getGeneID()) {
-                        taxIDs.add(result.getStaxid());
+            // Getting tax IDs for the gene
+            Set<Integer> taxIDs = new LinkedHashSet<>();
+            for (BlastResult result : blastResults) {
+                if (result.getQueryid() == gene.getGeneID()) {
+                    taxIDs.add(result.getStaxid());
+                }
+            }
+
+            // Getting the hierarchy for each taxonomy
+            List<Map<String, Integer>> hierarchies = new ArrayList<>();
+            for (int taxID: taxIDs) {
+                Map<String, Integer> taxHierarchy = taxTree.getHeirarchyFromNode(taxID);
+                hierarchies.add(taxHierarchy);
+            }
+
+            if (hierarchies.size() > 0) {
+                // Creating a tax tree for the BLAST results
+                TaxTree tree = new TaxTree(taxTree.getNodes());
+                for (Map<String, Integer> hierarchy: hierarchies) {
+                    if (hierarchy != null) {
+                        createTree(tree, hierarchy, Constants.SUPERKINGDOM);
                     }
                 }
 
-                // Getting the hierarchy for each taxonomy
-                List<Map<String, Integer>> hierarchies = new ArrayList<>();
-                for (int taxID: taxIDs) {
-                    Map<String, Integer> taxHierarchy = taxTree.getHeirarchyFromNode(taxID);
-                    hierarchies.add(taxHierarchy);
-                }
-
-                if (hierarchies.size() > 0) {
-                    // Creating a tax tree for the BLAST results
-                    TaxTree tree = (TaxTree)taxTree.clone();
-                    for (Map<String, Integer> hierarchy: hierarchies) {
-                        if (hierarchy != null) {
-                            createTree(tree, hierarchy, Constants.SUPERKINGDOM);
-                        }
+                Set<Integer> taxonomiesAtSuperkingdom = new HashSet<>();
+                for (Map<String, Integer> currentTaxHierarchy: hierarchies) {
+                    try {
+                        int currentRankId = currentTaxHierarchy.get(Constants.SUPERKINGDOM);
+                        taxonomiesAtSuperkingdom.add(currentRankId);
+                    } catch (NullPointerException e) {
+                        // Do nothing
                     }
+                }
+                if (taxonomiesAtSuperkingdom.size() > 1) {
+                    // TODO: Add root to tree
+                } else {
+                    int i = 0;
+                    boolean isValid = false;
 
-                    Set<Integer> taxonomiesAtSuperkingdom = new HashSet<>();
-                    for (Map<String, Integer> currentTaxHierarchy: hierarchies) {
+                    while (!isValid) {
                         try {
-                            int currentRankId = currentTaxHierarchy.get(Constants.SUPERKINGDOM);
-                            taxonomiesAtSuperkingdom.add(currentRankId);
+                            Map<String, Integer> hierarchy = hierarchies.get(i);
+                            int superkingdomTaxID = hierarchy.get(Constants.SUPERKINGDOM);
+                            TaxNode superkingdomNode = tree.getNode(superkingdomTaxID);
+                            JSONObject jsonTree = createJSONNode(superkingdomNode);
+                            blastResult.put("tree", jsonTree);
+                            blastTrees.add(blastResult);
+                            isValid = true;
                         } catch (NullPointerException e) {
-                            // Do nothing
-                        }
-                    }
-                    if (taxonomiesAtSuperkingdom.size() > 1) {
-                        // TODO: Add root to tree
-                    } else {
-                        int i = 0;
-                        boolean isValid = false;
-
-                        while (!isValid) {
-                            try {
-                                Map<String, Integer> hierarchy = hierarchies.get(i);
-                                int superkingdomTaxID = hierarchy.get(Constants.SUPERKINGDOM);
-                                TaxNode superkingdomNode = tree.getNode(superkingdomTaxID);
-                                JSONObject jsonTree = createJSONNode(superkingdomNode);
-                                blastResult.put("tree", jsonTree);
-                                blastTrees.add(blastResult);
-                                isValid = true;
-                            } catch (NullPointerException e) {
-                                i++;
-                            } catch (IndexOutOfBoundsException e) {
-                                //Do nothing. This is in the case of an invalid tree is created.
-                            }
+                            i++;
+                        } catch (IndexOutOfBoundsException e) {
+                            //Do nothing. This is in the case of an invalid tree is created.
                         }
                     }
                 }
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
             }
         }
         return blastTrees;
