@@ -5,6 +5,7 @@ import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxNode;
 import com.orfangenes.model.taxonomy.TaxTree;
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -59,8 +60,7 @@ public class BlastResultsProcessor {
             }
 
             if (hierarchies.size() > 0) {
-                // Creating a tax tree for the BLAST results
-                TaxTree tree = new TaxTree(taxTree.getNodes());
+                TaxTree tree = SerializationUtils.clone(taxTree);
                 for (Map<String, Integer> hierarchy: hierarchies) {
                     if (hierarchy != null) {
                         createTree(tree, hierarchy, Constants.SUPERKINGDOM);

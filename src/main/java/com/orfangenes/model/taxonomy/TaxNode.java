@@ -1,9 +1,10 @@
 package com.orfangenes.model.taxonomy;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class TaxNode {
+public class TaxNode implements Serializable {
 
     private int nID;
     private String name;

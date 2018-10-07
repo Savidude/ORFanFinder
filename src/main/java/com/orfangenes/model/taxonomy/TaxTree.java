@@ -3,25 +3,18 @@ package com.orfangenes.model.taxonomy;
 import com.orfangenes.constants.Constants;
 import javafx.util.Pair;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class TaxTree {
+public class TaxTree implements Serializable {
     private ArrayList<Pair<TaxNode, Integer>> tempNodes = new ArrayList<>();
     private Map<Integer, TaxNode> nodes = new HashMap<>();
 
     private Map<Integer, String> names = new HashMap<>();
-
-    public TaxTree (Map<Integer, TaxNode> nodes) {
-        this.nodes = nodes;
-    }
 
     public TaxTree(String nodesFilename, String namesFilename) {
         // Reading the names file line by line
@@ -114,6 +107,6 @@ public class TaxTree {
     }
 
     public Map<Integer, TaxNode> getNodes() {
-        return nodes;
+        return this.nodes;
     }
 }
