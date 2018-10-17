@@ -1,329 +1,124 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: savidude
-  Date: 8/29/18
-  Time: 7:26 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html lang="en-us">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>ORFanGenes</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico" />
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700italic,700,900,900italic" rel="stylesheet">
-
-    <!-- STYLESHEETS -->
-    <style type="text/css">
-        [fuse-cloak],
-        .fuse-cloak {
-            display: none !important;
-        }
-    </style>
-
-    <!-- Icons.css -->
-    <link type="text/css" rel="stylesheet" href="assets/bower_components/mdi/css/materialdesignicons.min.css">
-    <!-- Fuse Html -->
-    <link type="text/css" rel="stylesheet" href="assets/fuse-html/fuse-html.min.css" />
-    <!-- Main CSS -->
-    <link type="text/css" rel="stylesheet" href="assets/css/main.css">
-    <!-- Home CSS -->
-    <link type="text/css" rel="stylesheet" href="assets/css/style.css">
-    <!-- / STYLESHEETS -->
-
-    <!-- JAVASCRIPT -->
-    <!-- jQuery -->
-    <script type="text/javascript" src="assets/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Mobile Detect -->
-    <script type="text/javascript" src="assets/bower_components/mobile-detect/mobile-detect.min.js"></script>
-    <!-- Bootstrap -->
-    <script type="text/javascript" src="assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Fuse Html -->
-    <script type="text/javascript" src="assets/fuse-html/fuse-html.min.js"></script>
-    <!-- Main JS -->
-    <script type="text/javascript" src="assets/js/main.js"></script>
-    <!-- / JAVASCRIPT -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ORFanID</title>
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="assets/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="assets/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
-
-<body class="layout layout-vertical layout-left-navigation layout-above-toolbar layout-above-footer">
-<main>
-    <div id="wrapper">
-        <aside id="aside" class="aside aside-left" data-fuse-bar="aside" data-fuse-bar-media-step="md" data-fuse-bar-position="left">
-            <div class="aside-content bg-primary-700 text-auto">
-
-                <div class="aside-toolbar">
-
-                    <div class="logo">
-                        <span class="logo-icon">OF</span>
-                        <span class="logo-text">ORFanGenes</span>
-                    </div>
-
-                    <button id="toggle-fold-aside-button" type="button" class="btn btn-icon d-none d-lg-block" data-fuse-aside-toggle-fold>
-                        <i class="icon icon-backburger"></i>
-                    </button>
-
-                </div>
-
-                <ul class="nav flex-column" id="sidenav" data-children=".nav-item">
-
-                    <li class="nav-item">
-                        <a class="nav-link ripple active" href="/" data-url="/">
-                            <i class="mdi s-4 mdi-home"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link ripple" href="/input" data-url="/">
-                            <i class="mdi s-4 mdi-cursor-pointer"></i>
-                            <span>Input</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link ripple" href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing" data-url="/">
-                            <i class="mdi s-4 mdi-library-books"></i>
-                            <span>Instructions</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link ripple" href="/results" data-url="/">
-                            <i class="mdi s-4 mdi-clipboard"></i>
-                            <span>Results</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link ripple" href="/orfanbase" data-url="/">
-                            <i class="mdi s-4 mdi-database"></i>
-                            <span>ORFanBase</span>
-                        </a>
-                    </li>
-                </ul>
+<body>
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo">ORFanID</a>
+        <ul class="right hide-on-med-and-down">
+            <!--<li><a href="input.jsp">Login</a></li>-->
+        </ul>
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="#">Input</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+<div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+            <h1 class="header center white-text text-lighten-2">ORFanID</h1>
+            <div class="row center">
+                <h5 class="header col s12 light">Identifying Orfan Genes</h5>
             </div>
-
-        </aside>
-        <div class="content-wrapper">
-            <div class="content">
-
-                <div id="project-dashboard" class="page-layout simple right-sidebar">
-
-                    <div class="page-content-wrapper">
-                        <!-- CONTENT -->
-                        <div class="page-content">
-                            <!-- ORFan Genes -->
-                            <div class="col-12 col-sm-12 col-xl-12 p-3">
-                                <div class="widget widget1 card">
-                                    <div class="widget-header pl-4 pr-2">
-                                        <div class="col">
-                                            <h3 class="center">ORFanGenes</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
-                                        <div class="sub-title h6 text-muted">
-                                            <p>
-                                                ORFanGenes is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.                                             </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- / ORFan Genes -->
-
-                            <!-- WIDGET GROUP -->
-                            <div class="widget-group row no-gutters">
-                                <section id="mystery-section">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="section-details">
-                                                    <p>
-                                                        Orphan genes are an unraveling mystery. We hope that ORFanID will help reveal the intricacies of their origin and function.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <!-- ORFan Genes -->
-                                <div class="col-12 col-sm-6 col-xl-4 p-3">
-                                    <div class="widget widget1 card">
-                                        <div class="widget-header pl-4 pr-2">
-                                            <div class="col">
-                                                <i class="mdi s-10 mdi-dna"></i>
-                                                <h5 class="center">ORFan Genes</h5>
-                                            </div>
-                                        </div>
-
-                                        <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
-                                            <div class="sub-title h6 text-muted">
-                                                <p>
-                                                    Orphan genes (also known as taxonomically restricted genes) are genes that do not have related ancestral genes in other species or at the specified taxonomy level. At the molecular level, ORFan genes consist of DNA sequences that have no homology with sequences found in common DNA databases such as Genbank. While the prevailing dogma has defined genes in different species as a result of gene duplication or recombination, the presence of orphan gene ubiquity in various sequenced genomes is a mystery, perhaps even a significant problem to be solved.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- / ORFan Genes -->
-
-                                <!-- Biology -->
-                                <div class="col-12 col-sm-6 col-xl-4 p-3">
-                                    <div class="widget widget1 card">
-                                        <div class="widget-header pl-4 pr-2">
-                                            <div class="col">
-                                                <i class="mdi s-10 mdi-tree"></i>
-                                                <h5 class="center">Biology</h5>
-                                            </div>
-                                        </div>
-
-                                        <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
-                                            <div class="sub-title h6 text-muted">
-                                                <p>
-                                                    Historically, gene function is known to be expressed through proteins. There are specific organisms that have been found with unique proteins expressed by orphan genes such as Hydra, various Mollusks, Salamander and others. It appears that the anatomy of Hydra is mediated by orphan genes that give rise to unique proteins. Similarly, the mantle of various Mollusks has been found to be expressed from orphan genes, while the regeration of salamander limbs are mediated by orphans (Dr. Paul Nelson, 2017)
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- / Biology -->
-
-                                <!-- Discovery -->
-                                <div class="col-12 col-sm-6 col-xl-4 p-3">
-                                    <div class="widget widget1 card">
-                                        <div class="widget-header pl-4 pr-2">
-                                            <div class="col">
-                                                <i class="mdi s-10 mdi-magnify"></i>
-                                                <h5 class="center">Discovery</h5>
-                                            </div>
-                                        </div>
-
-                                        <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
-                                            <div class="sub-title h6 text-muted">
-                                                <p>
-                                                    By identifying these unique DNA sequences, ORFanID can help discover the origin, function and other significance of orphan genes. The software is able to identify genes unique to genus, family, or species etc. at differing taxonomy levels. Based on the parameters specified, some of orphans (also called Taxonomy Restricted Genes) may or may not fall under the given classification for strict ORFans.   As such, ORFanID can help delineate the actual sequence and function of de novo genes discovered in species and at all levels of the taxonomy tree.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- / Discovery -->
-
-                                <section id="frontier-section">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="section-details">
-                                                    <p>
-                                                        Orphan genes, a frontier for discovery
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <!-- Get Started -->
-                                <div class="col-12 col-sm-6 col-xl-3 p-3">
-                                    <a href="/input" class="action">
-                                        <div id="started" class="widget widget1 card action" style="background-color: #455A64">
-                                            <div class="widget-header pl-4 pr-2">
-                                                <div class="col">
-                                                    <i class="mdi s-8 mdi-cursor-pointer" style="color: #FFECB3"></i>
-                                                    <h4 class="center" style="color: #ffe57f">Get Started</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!-- / Get Started -->
-
-                                <!-- Instructions -->
-                                <div class="col-12 col-sm-6 col-xl-3 p-3">
-                                    <a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing" class="action">
-                                        <div id="instructions" class="widget widget1 card" style="background-color: #455A64">
-                                            <div class="widget-header pl-4 pr-2">
-                                                <div class="col">
-                                                    <i class="mdi s-8 mdi-library-books" style="color: #FFECB3"></i>
-                                                    <h4 class="center" style="color: #ffe57f">Instructions</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!-- / Instructions -->
-
-                                <!-- Results -->
-                                <div class="col-12 col-sm-6 col-xl-3 p-3">
-                                    <a href="" class="action">
-                                        <div id="results" class="widget widget1 card action" style="background-color: #455A64">
-                                            <div class="widget-header pl-4 pr-2">
-                                                <div class="col">
-                                                    <i class="mdi s-8 mdi-clipboard" style="color: #FFECB3"></i>
-                                                    <h4 class="center" style="color: #ffe57f">Results</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!-- / Results -->
-
-                                <!-- ORFanBase -->
-                                <div class="col-12 col-sm-6 col-xl-3 p-3">
-                                    <a href="" class="action">
-                                        <div id="orfanbase" class="widget widget1 card action" style="background-color: #455A64">
-                                            <div class="widget-header pl-4 pr-2">
-                                                <div class="col">
-                                                    <i class="mdi s-8 mdi-database" style="color: #FFECB3"></i>
-                                                    <h4 class="center" style="color: #ffe57f">ORFanBase</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!-- / ORFanBase -->
-
-                                <!-- References -->
-                                <div class="col-12 col-sm-12 col-xl-12 p-12">
-                                    <div class="widget widget1 card">
-                                        <div class="widget-header pl-4 pr-2">
-                                            <div class="col">
-                                                <h5 class="center">References</h5>
-                                            </div>
-                                        </div>
-
-                                        <div class="widget-content pt-2 pb-8 d-flex flex-column align-items-center justify-content-center">
-                                            <div class="sub-title h6 text-muted">
-                                                <p>Altschul, S.F., Gish, W., Miller, W., Myers, E.W. & Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410</p>
-                                                <p>Clamp, M., Fry, B., Kamal, M., Xie, X., Cuff, J., Lin, M.F., Kellis, K., Lindblad-Toh, K., and Lander, E. S. (2007) “Distinguishing protein-coding and noncoding genes in the human genome”. PNAS 2007 December, 104 (49) 19428-19433</p>
-                                                <p>Ekstrom, A. & Yin, Y. (2016) "ORFanFinder: automated identification of taxonomically restricted orphan genes." Bioinformatics; 32 (13): 2053-2055. doi: 10.1093/bioinformatics/btw122</p>
-                                                <p>Gunasekera, R. S., Hewapathirana, S., Gunasekera, V., and Nelson P., (2018),
-                                                    A Web-Based Computational Algorithm, ORFanID, for Discovering and Cataloging Orphan and Taxonomically Restricted Genes in Various Species, Proceedings of the International Society for Computational Biology, 26th Conference on Intelligent Systems in Molecular Biology, Chicago, IL, USA</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- / References -->
-                            </div>
-
-
-                            <div class="footer-copyright">
-                                <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>
-                                    <p class="center-align">Copyright &nbsp;© 2017-2018</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- / CONTENT -->
-                    </div>
+            <div class="row center">
+                <a href="input" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+    <div class="parallax"><img src="assets/images/background1.jpg" alt="Unsplashed background img 1"></div>
+</div>
+<div class="container">
+    <div class="section">
+        <div class="row">
+            <div class="col s12 center">
+                <h3><i class="mdi-content-send brown-text"></i></h3>
+                <h4>ORFanID</h4>
+                <p>ORFanID is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <div class="row center">
+                <h5 class="header col s12" style="color:#ffe57f;">Orphan genes are an unraveling mystery. We hope that ORFanID will help reveal the intricacies of their origin and function.</h5>
+            </div>
+        </div>
+    </div>
+    <div class="parallax"><img src="assets/images/background2.jpg" alt="Unsplashed background img 2"></div>
+</div>
+<div class="container">
+    <div class="section">
+        <!--   Icon Section   -->
+        <div class="row">
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
+                    <h5 class="center">ORFan Genes</h5>
+                    <p>Orphan genes (also known as taxonomically restricted genes) are genes that do not have related ancestral genes in other species or at the specified taxonomy level. At the molecular level, ORFan genes consist of DNA sequences that have no homology with sequences found in common DNA databases such as Genbank. While the prevailing dogma has defined genes in different species as a result of gene duplication or recombination, the presence of orphan gene ubiquity in various sequenced genomes is a mystery, perhaps even a significant problem to be solved.</p>
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center brown-text"><i class="material-icons">verified_user</i></h2>
+                    <h5 class="center">Biology</h5>
+                    <p>Historically, gene function is known to be expressed through proteins. There are specific organisms that have been <strong>found </strong>with unique proteins expressed by orphan genes such as Hydra, various Mollusks, Salamander and others. It appears that the anatomy of Hydra is mediated by orphan genes that give rise to unique proteins. Similarly, the mantle of various Mollusks has been found to be expressed from orphan genes, while the regeration of salamander limbs are mediated by orphans (Dr. Paul Nelson, 2017)</p>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
+                    <h5 class="center">Discovery</h5>
+                    <p>By identifying these unique DNA sequences, ORFanID can help discover the origin, function and other significance of orphan genes. The software is able to identify genes unique to genus, family, or species etc. at differing taxonomy levels. Based on the parameters specified, some of orphans (also called Taxonomy Restricted Genes) may or may not fall under the given classification for strict ORFans. &nbsp; As such, ORFanID can help delineate the actual sequence and function of <em>de novo</em> genes discovered in species and at all levels of the taxonomy tree.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</main>
+</div>
+<div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <div class="row center">
+                <h5 class="header col s12 light" style="text-align:left;margin:auto;">Orphan genes, a frontier for discovery</h5>
+            </div>
+        </div>
+    </div>
+    <div class="parallax"><img src="assets/images/background3.jpg" alt="Unsplashed background img 3"></div>
+</div>
+<footer class="page-footer teal">
+    <div class="container">
+        <div class="row">
+            <h5 class="grey-text text-lighten-4">References</h5>
+            <p class="grey-text text-lighten-4">Altschul, S.F., Gish, W., Miller, W., Myers, E.W. & Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410</p>
+            <p class="grey-text text-lighten-4"> Ekstrom, A. & Yin, Y. (2016) "ORFanFinder: automated identification of taxonomically restricted orphan genes." Bioinformatics; 32 (13): 2053-2055. doi: 10.1093/bioinformatics/btw122 </p>
+            <p class="grey-text text-lighten-4">Clamp, M., Fry, B., Kamal, M., Xie, X., Cuff, J., Lin, M.F., Kellis, K., Lindblad-Toh, K., and Lander, E. S. (2007) “Distinguishing protein-coding and noncoding genes in the human genome”. PNAS 2007 December, 104 (49) 19428-19433 </p>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>
+            <p class="center-align">Copyright &nbsp;© 2017-2018</p>
+        </div>
+    </div>
+</footer>
+<!--  Scripts-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="assets/js/materialize.js"></script>
+<script src="assets/js/init.js"></script>
 </body>
+</html>
