@@ -2,6 +2,10 @@ package com.orfangenes.constants;
 
 public class Constants {
 
+    public enum InputType {
+        HIGH,
+        LOW
+    }
     // Blast Types
     public static final String TYPE_PROTEIN = "protein";
     public static final String TYPE_NUCLEOTIDE = "nucleotide";

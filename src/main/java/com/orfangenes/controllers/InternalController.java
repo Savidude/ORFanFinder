@@ -32,6 +32,12 @@ public class InternalController {
     private static final String USERS = "users";
     private static final String INPUT_FASTA = "input.fasta";
 
+    @RequestMapping(value = "/getsequence", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public String getSequence() {
+        return "accession found";
+    }
+
     @RequestMapping(value = "/store", method = RequestMethod.POST)
     public String store(@Valid @ModelAttribute("sequence") InputSequence sequence, BindingResult result, Model model) {
         if (result.hasErrors()) {
