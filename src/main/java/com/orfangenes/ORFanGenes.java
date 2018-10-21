@@ -122,7 +122,7 @@ public class ORFanGenes {
     public static void run(String query, String outputdir, int organismTaxID, String blastType, String max_target_seqs, String evalue, String nodes, String names) {
         // Generating BLAST file
         Sequence sequence = new Sequence(blastType, query, outputdir, organismTaxID);
-//        sequence.generateBlastFile(outputdir, max_target_seqs, evalue);
+        sequence.generateBlastFile(outputdir, max_target_seqs, evalue);
 
         TaxTree taxTree = new TaxTree(nodes, names);
 

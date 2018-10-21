@@ -101,17 +101,30 @@ public class Sequence {
         String inputSequence = contentBuilder.toString();
 
         String[] geneIDs = null;
-        boolean isSequenceProvided = true;
-        int index = 0;
-
         // Checking if input sequence contains fasta file, or comma separated string of Gene IDs
         if (inputSequence.contains(",")) {
             inputSequence = inputSequence.trim();
             geneIDs = inputSequence.split(",");
             inputSequence = requestInputSequence(inputSequence);
-            System.out.println("Input Sequence:");
-            System.out.println(inputSequence);
-            isSequenceProvided = false;
+
+            // Adding Gene ID to input sequence
+            int i = 0;
+            String[] sequences = inputSequence.split("\n\n");
+            String newInputSequence = "";
+            for (String sequence: sequences) {
+                sequence = sequence.replace(">", ">gi|" + geneIDs[i] + "|ref|");
+                int indexOfDecimal = sequence.indexOf(".");
+                /*
+                 Adding "|" character after NP ID
+                 The first line of the sequence should look like this:
+                    ">gi|226524729|ref|YP_002791247.1| toxic membrane protein [Escherichia coli str. K-12 substr. MG1655]"
+                  */
+                sequence = sequence.substring(0, (indexOfDecimal + 2)) + "| " + sequence.substring(indexOfDecimal + 3);
+                i++;
+
+                newInputSequence += sequence + "\n\n";
+            }
+            inputSequence = newInputSequence;
 
             // Writing retrieved input sequence to file
             try {
@@ -124,48 +137,31 @@ public class Sequence {
 
         }
 
+        // Getting Gene data from input sequence
         String[] sequences = inputSequence.split("\n\n");
         ArrayList<Gene> genes = new ArrayList<>();
         for (String sequence: sequences) {
             Gene gene = new Gene();
             gene.setTaxID(inputTax);
 
-            if (isSequenceProvided) {
-                String[] sequenceData = sequence.split("\\|");
-                if (sequenceData.length > 1) {
-                    int offset = 2;
-                    if (sequenceData[0].equals(GI)) {
-                        gene.setGeneID(Integer.parseInt(sequenceData[1]));
-                        offset = 0;
-                    }
-
-                    String geneInfo = sequenceData[4 - offset];
-                    String[] lines = geneInfo.split("\n");
-                    gene.setDescription(lines[0]);
-
-                    String sequenceString = "";
-                    for (int i = 1; i < lines.length; i++) {
-                        sequenceString += lines[i];
-                    }
-                    gene.setSequence(sequenceString);
-                    genes.add(gene);
+            String[] sequenceData = sequence.split("\\|");
+            if (sequenceData.length > 1) {
+                int offset = 2;
+                if (sequenceData[0].equals(GI)) {
+                    gene.setGeneID(Integer.parseInt(sequenceData[1]));
+                    offset = 0;
                 }
-            } else {
-                gene.setGeneID(Integer.parseInt(geneIDs[index]));
-                index++;
 
-                String[] sequenceData = sequence.split("]");
+                String geneInfo = sequenceData[4 - offset];
+                String[] lines = geneInfo.split("\n");
+                gene.setDescription(lines[0]);
 
-                //Getting the sequence name
-                String sequenceDescription = sequenceData[0] + "]";
-                String[] sequenceDescriptionData = sequenceDescription.split(" ");
-                sequenceDescription = "";
-                for (int i = 1; i < sequenceDescriptionData.length; i++) {
-                    sequenceDescription += sequenceDescriptionData[i] + " ";
+                String sequenceString = "";
+                for (int i = 1; i < lines.length; i++) {
+                    sequenceString += lines[i];
                 }
-                gene.setDescription(sequenceDescription);
-
-                gene.setSequence(sequenceData[1]);
+                gene.setSequence(sequenceString);
+                genes.add(gene);
             }
         }
         return genes;
