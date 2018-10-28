@@ -62,19 +62,18 @@ $(document).ready(function () {
     });
 
     $('#findsequence').click(function () {
-        const url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=16128551,226524729,16127995&rettype=fasta&retmode=text';
         $.ajax({
-            url: url,
+            url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=16128551,226524729,16127995&rettype=fasta&retmode=text',
             async: false,
             dataType: 'json',
             success: function (response) {
-                $('#modal1').modal('open');
+                // alert(response.responseText);
                 // console.log(response);
-                $('#genesequence').val("hello");
-                $('#modal1').modal('close');
+                $('#genesequence').val('hello');
             },
             error: function (error) {
                 console.log(error);
+                $('#genesequence').val(error.responseText);
             }
         });
     });
@@ -85,7 +84,7 @@ $(document).ready(function () {
         $('#genesequence').addClass('active');
         $('#organismName').val('Escherichia coli str. K-12 substr. MG1655 (511145)');
         $.ajax({
-            url: 'data/TaxData.json',
+            url: 'assets/data/TaxData.json',
             async: false,
             dataType: 'json',
             success: function (response) {
