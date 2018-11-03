@@ -46,7 +46,11 @@ public class BlastResult {
         }
 
         String[] sequenceIDs = this.qseqid.split("\\|");
-        this.queryid = Integer.parseInt(sequenceIDs[1]);
+        try {
+            this.queryid = Integer.parseInt(sequenceIDs[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            this.queryid = 0;
+        }
     }
 
     public int getStaxid() {

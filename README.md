@@ -1,6 +1,6 @@
 # ORFanGenes Instructions
 
-##1. How to Run an Example Sequence
+## 1. How to Run an Example Sequence
 
 1. Visit the ORFanGenes [website](http://orfangenes.com) and click on "Input" from the Navigation bar, or "Get Started" 
 at the bottom of the page.
@@ -19,7 +19,7 @@ The example input contains three genes. Out of the three genes, two of which are
 is an **ORFan Gene**. The Blast Results table shows the taxonomies (and their parents) for each gene in the input sequence 
 from the BLAST search.
 
-##2. Using ORFanGenes
+## 2. Using ORFanGenes
 1. Visit the ORFanGenes [website](http://orfangenes.com) and click on "Input" from the Navigation bar, or "Get Started" 
 at the bottom of the page.
 ![GetStarted](https://github.com/Savidude/ORFanGenes/blob/master/src/main/resources/static/assets/images/documentation/GetStarted.png)

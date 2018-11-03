@@ -113,7 +113,7 @@
 
         </aside>
         <div class="content-wrapper">
-            <%--<div class="content">--%>
+            <!-- <div class="content"> -->
 
                 <div id="project-dashboard" class="page-layout simple right-sidebar">
 
@@ -284,8 +284,8 @@
                         </div>
                         <!-- / CONTENT -->
                     </div>
-                <%--</div>--%>
-            </div>
+                </div>
+            <!-- </div> -->
 
             <footer class="footer-copyright" style="background-color: #CFD8DC">
                 <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>

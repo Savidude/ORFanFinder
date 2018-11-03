@@ -35,7 +35,7 @@ public class BlastCommand extends Thread {
         List<String> command = new ArrayList<>();
         if (type.equals(Constants.TYPE_PROTEIN)) {
             command = Arrays.asList(
-                    "blastp",
+                    "/usr/local/ncbi/blast/bin/blastp",
                     "-query",
                     out + "/" + SEQUENCE + this.fileNo + FASTA_EXT,
                     "-db",
@@ -52,7 +52,7 @@ public class BlastCommand extends Thread {
             );
         } else if (type.equals(Constants.TYPE_NUCLEOTIDE)) {
             command = Arrays.asList(
-                    "blastn",
+                    "/usr/local/ncbi/blast/bin/blastn",
                     "-query",
                     SEQUENCE + this.fileNo + FASTA_EXT,
                     "-db",
