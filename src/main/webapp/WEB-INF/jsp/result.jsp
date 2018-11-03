@@ -120,7 +120,7 @@
 
         </aside>
         <div class="content-wrapper">
-            <div class="content">
+            <%--<div class="content">--%>
 
                 <div id="project-dashboard" class="page-layout simple right-sidebar">
 
@@ -212,7 +212,7 @@
                         <!-- / CONTENT -->
                     </div>
                 </div>
-            </div>
+            <%--</div>--%>
             <div id="saveResultModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

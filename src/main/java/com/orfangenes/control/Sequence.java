@@ -1,8 +1,11 @@
 package com.orfangenes.control;
 
 import com.orfangenes.model.Gene;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,13 +16,15 @@ import java.util.stream.Stream;
 public class Sequence {
     private List<Gene> genes;
     private int fileCount;
+    private String blastType;
 
     private static final String GI = ">gi";
     private static final String BLAST_RESULTS = "blastResults";
     private static final String BLAST_EXT = ".bl";
     private static final double SEQUENCE_SLICE_SIZE = 3.0;
 
-    public Sequence (String filename, String out, int inputTax) {
+    public Sequence (String blastType, String filename, String out, int inputTax) {
+        this.blastType = blastType;
         File sequenceFile = new File(filename);
         if (!sequenceFile.exists()) {
             System.err.println("Failure to open sequence.");
@@ -29,13 +34,13 @@ public class Sequence {
         this.fileCount = divideSequence(filename, out);
     }
 
-    public void generateBlastFile(String type, String out, String max_target_seqs, String evalue) {
+    public void generateBlastFile(String out, String max_target_seqs, String evalue) {
         System.out.println("Running BLAST. Be patient...This will take 2-15 min...");
         long startTime = System.currentTimeMillis();
 
         BlastCommand[] blastCommands = new BlastCommand[fileCount];
         for (int i = 1; i < fileCount + 1; i++) {
-            BlastCommand command = new BlastCommand(Integer.toString(i), type, out, max_target_seqs, evalue);
+            BlastCommand command = new BlastCommand(Integer.toString(i), this.blastType, out, max_target_seqs, evalue);
             command.start();
             blastCommands[i-1] = command;
             try {
@@ -94,6 +99,15 @@ public class Sequence {
             e.printStackTrace();
         }
         String inputSequence = contentBuilder.toString();
+
+        // Checking if input sequence contains fasta file, or comma separated string of Gene IDs
+        if (inputSequence.contains(",")) {
+            inputSequence.replaceAll("\\s+", "");
+            String inputSequenceInFasta = requestInputSequence(inputSequence);
+            String[] geneIDs = inputSequence.split(",");
+        } else {
+
+        }
         String[] sequences = inputSequence.split("\n\n");
         ArrayList<Gene> genes = new ArrayList<>();
 
@@ -122,6 +136,25 @@ public class Sequence {
             }
         }
         return genes;
+    }
+
+    private String requestInputSequence(String genes) {
+        String inputSequence = null;
+        try {
+            URI uri = new URIBuilder()
+                    .setScheme("https")
+                    .setHost("eutils.ncbi.nlm.nih.gov/entrez/eutils")
+                    .setPath("/efetch.fcgi")
+                    .setParameter("db", this.blastType)
+                    .setParameter("id", genes)
+                    .setParameter("rettype", "fasta")
+                    .setParameter("retmode", "text")
+                    .build();
+            inputSequence = HTTPUtils.getPlainTextFromResponse(HTTPUtils.requestGet(uri));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return inputSequence;
     }
 
     private int divideSequence(String sequenceFileName, String out) {
