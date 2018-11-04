@@ -117,12 +117,11 @@ $(document).ready(function() {
                 var chart = document.createElement("div");
                 chart.className = "chart";
                 var resultChart = echarts.init(chart);
+                resultChart.showLoading();
                 var data = blastResults[i].tree;
+                console.log(JSON.stringify(data, null, 2));
 
-                // echarts.util.each(data.children, function (datum, index) {
-                //     index % 2 === 0 && (datum.collapsed = true);
-                // });
-
+                resultChart.hideLoading();
                 resultChart.setOption(option = {
                     tooltip: {
                         trigger: 'item',
@@ -131,6 +130,7 @@ $(document).ready(function() {
                     series: [
                         {
                             type: 'tree',
+                            name: blastResults[i].description,
 
                             data: [data],
 
@@ -169,34 +169,6 @@ $(document).ready(function() {
                 });
                 blastResultsDiv.appendChild(chart);
             }
-
-            // $('#blastResults').DataTable({
-            //     "data":blastResults,
-            //     "columns": [
-            //         {"data" : "no"},
-            //         {"data" : "sequence"},
-            //         {"data" : "level"},
-            //         {"data" : "name"},
-            //         {"data" : "parent"}
-            //     ],
-            //     "oLanguage": {
-            //         "sStripClasses": "",
-            //         "sSearch": "",
-            //         "sSearchPlaceholder": "Enter Search Term Here",
-            //         "sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
-            //         "sLengthMenu": '<span>Rows per page:</span>'+
-            //             '<select class="browser-default">' +
-            //             '<option value="5">5</option>' +
-            //             '<option value="10">10</option>' +
-            //             '<option value="20">20</option>' +
-            //             '<option value="50">50</option>' +
-            //             '<option value="100">100</option>' +
-            //             '<option value="-1">All</option>' +
-            //             '</select></div>'
-            //     },
-            //     dom: 'frt',
-            //     "aaSorting": []
-            // });
         }
     });
 });

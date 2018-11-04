@@ -100,42 +100,42 @@ public class Sequence {
         }
         String inputSequence = contentBuilder.toString();
 
-        String[] geneIDs = null;
+//        String[] geneIDs = null;
         // Checking if input sequence contains fasta file, or comma separated string of Gene IDs
-        if (inputSequence.contains(",")) {
-            inputSequence = inputSequence.trim();
-            geneIDs = inputSequence.split(",");
-            inputSequence = requestInputSequence(inputSequence);
-
-            // Adding Gene ID to input sequence
-            int i = 0;
-            String[] sequences = inputSequence.split("\n\n");
-            String newInputSequence = "";
-            for (String sequence: sequences) {
-                sequence = sequence.replace(">", ">gi|" + geneIDs[i] + "|ref|");
-                int indexOfDecimal = sequence.indexOf(".");
-                /*
-                 Adding "|" character after NP ID
-                 The first line of the sequence should look like this:
-                    ">gi|226524729|ref|YP_002791247.1| toxic membrane protein [Escherichia coli str. K-12 substr. MG1655]"
-                  */
-                sequence = sequence.substring(0, (indexOfDecimal + 2)) + "| " + sequence.substring(indexOfDecimal + 3);
-                i++;
-
-                newInputSequence += sequence + "\n\n";
-            }
-            inputSequence = newInputSequence;
-
-            // Writing retrieved input sequence to file
-            try {
-                PrintWriter writer = new PrintWriter(sequenceFileName);
-                writer.println(inputSequence);
-                writer.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
+//        if (inputSequence.contains(",")) {
+//            inputSequence = inputSequence.trim();
+//            geneIDs = inputSequence.split(",");
+//            inputSequence = requestInputSequence(inputSequence);
+//
+//            // Adding Gene ID to input sequence
+//            int i = 0;
+//            String[] sequences = inputSequence.split("\n\n");
+//            String newInputSequence = "";
+//            for (String sequence: sequences) {
+//                sequence = sequence.replace(">", ">gi|" + geneIDs[i] + "|ref|");
+//                int indexOfDecimal = sequence.indexOf(".");
+//                /*
+//                 Adding "|" character after NP ID
+//                 The first line of the sequence should look like this:
+//                    ">gi|226524729|ref|YP_002791247.1| toxic membrane protein [Escherichia coli str. K-12 substr. MG1655]"
+//                  */
+//                sequence = sequence.substring(0, (indexOfDecimal + 2)) + "| " + sequence.substring(indexOfDecimal + 3);
+//                i++;
+//
+//                newInputSequence += sequence + "\n\n";
+//            }
+//            inputSequence = newInputSequence;
+//
+//            // Writing retrieved input sequence to file
+//            try {
+//                PrintWriter writer = new PrintWriter(sequenceFileName);
+//                writer.println(inputSequence);
+//                writer.close();
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 
         // Getting Gene data from input sequence
         String[] sequences = inputSequence.split("\n\n");
