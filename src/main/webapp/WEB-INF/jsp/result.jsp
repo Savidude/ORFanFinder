@@ -190,6 +190,11 @@
                                                             <span class="column-title">Taxonomy Level</span>
                                                         </div>
                                                     </th>
+                                                    <th class="secondary-text">
+                                                        <div class="table-header">
+                                                            <span class="column-title">BLAST Result</span>
+                                                        </div>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -203,7 +208,7 @@
                                     <div id="BlastResultsTable" class="row">
                                         <div class="col s10 offset-s1 center-align">
                                             <p class="h3">BLAST Results</p>
-                                            <div id="blastResults"></div>
+                                            <%--<div id="blastResults" style="width: 1000px;height:1000px;"></div>--%>
                                         </div>
                                     </div>
                                 </div>
@@ -233,6 +238,26 @@
                             <button type="button" class="btn btn-primary">Save Result</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="blastResultModal" class="modal modal-wide fade" tabindex="-1" role="dialog" aria-labelledby="blastResultModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blastDescription"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="blastResults" class="chart"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

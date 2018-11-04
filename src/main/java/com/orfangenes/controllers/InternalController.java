@@ -2,7 +2,11 @@ package com.orfangenes.controllers;
 
 import com.orfangenes.ORFanGenes;
 import com.orfangenes.model.entities.InputSequence;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -117,14 +121,32 @@ public class InternalController {
     @ResponseBody
     public String getBlast(@RequestBody Map<String, Object> payload) {
         String sessionID = (String) payload.get("sessionid");
+        int ID = (Integer) payload.get("id");
+        Long geneID = Long.valueOf(ID);
 
         if (outputdir.substring(outputdir.length() - 1).equals("/")) {
             outputdir = outputdir.substring(0, outputdir.length() -1 );
         }
         String output = outputdir + "/" + USERS + "/" + sessionID;
         try {
-            return new String(Files.readAllBytes(Paths.get(output + "/blastresults.json")));
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader(output + "/blastresults.json"));
+            JSONArray results = (JSONArray) obj;
+            for (Object o: results) {
+                if (o instanceof JSONObject) {
+                    JSONObject result = (JSONObject) o;
+                    long id = (Long) result.get("id");
+
+                    if (id == geneID) {
+                        return result.toString();
+                    }
+                }
+            }
+
+            return null;
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return null;

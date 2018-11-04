@@ -43,6 +43,7 @@ public class BlastResultsProcessor {
         JSONArray blastTrees = new JSONArray();
         for (Gene gene: genes) {
             JSONObject blastResult = new JSONObject();
+            blastResult.put("id", gene.getGeneID());
             blastResult.put("description", gene.getDescription());
             // Getting tax IDs for the gene
             Set<Integer> taxIDs = new LinkedHashSet<>();

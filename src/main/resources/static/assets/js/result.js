@@ -68,13 +68,14 @@ $(document).ready(function() {
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
             var orfanGenes = JSON.parse(result);
-            $('#orfanGenes').DataTable({
+            var table = $('#orfanGenes').DataTable({
                 "data":orfanGenes,
                 "columns": [
                     {"data" : "geneid"},
                     {"data" : "description"},
                     {"data" : "orfanLevel"},
-                    {"data" : "taxonomyLevel"}
+                    {"data" : "taxonomyLevel"},
+                    {"data" : "blastResult"}
                 ],
                 "oLanguage": {
                     "sStripClasses": "",
@@ -92,83 +93,82 @@ $(document).ready(function() {
                         '</select></div>'
                 },
                 dom: 'frt',
-                "aaSorting": []
+                "aaSorting": [],
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<button>view!</button>"
+                } ]
             });
-        }
-    });
 
-    //Getting BLAST Results
-    $.ajax({
-        type: "POST",
-        contentType: 'application/json',
-        dataType: "text",
-        url: "/data/blast",
-        data: '{"sessionid":"' + sessionid + '"}',
-        success: function (result) {
-            var blastResults = JSON.parse(result);
+            $('#orfanGenes tbody').on( 'click', 'button', function () {
+                var data = table.row( $(this).parents('tr') ).data();
 
-            var blastResultsDiv = document.getElementById("blastResults");
-            for (var i = 0; i < blastResults.length; i++) {
-                var description = document.createElement("p");
-                description.className = "h5";
-                description.innerHTML = blastResults[i].description;
-                blastResultsDiv.appendChild(description);
+                //Getting BLAST Results
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json',
+                    dataType: "text",
+                    url: "/data/blast",
+                    data: '{"sessionid":"' + sessionid + '", "id" : ' + data["geneid"] + '}',
+                    success: function (result) {
+                        var blastResult = JSON.parse(result);
+                        var treeData = blastResult["tree"];
 
-                var chart = document.createElement("div");
-                chart.className = "chart";
-                var resultChart = echarts.init(chart);
-                resultChart.showLoading();
-                var data = blastResults[i].tree;
-                console.log(JSON.stringify(data, null, 2));
+                        var myChart = echarts.init(document.getElementById('blastResults'));
+                        myChart.showLoading();
 
-                resultChart.hideLoading();
-                resultChart.setOption(option = {
-                    tooltip: {
-                        trigger: 'item',
-                        triggerOn: 'mousemove'
-                    },
-                    series: [
-                        {
-                            type: 'tree',
-                            name: blastResults[i].description,
-
-                            data: [data],
-
-                            top: '1%',
-                            left: '7%',
-                            bottom: '1%',
-                            right: '20%',
-
-                            symbolSize: 7,
-                            initialTreeDepth: 9,
-
-                            label: {
-                                normal: {
-                                    position: 'left',
-                                    verticalAlign: 'middle',
-                                    align: 'right',
-                                    fontSize: 9
-                                }
+                        myChart.hideLoading();
+                        myChart.setOption(option = {
+                            tooltip: {
+                                trigger: 'item',
+                                triggerOn: 'mousemove'
                             },
+                            series: [
+                                {
+                                    type: 'tree',
 
-                            leaves: {
-                                label: {
-                                    normal: {
-                                        position: 'right',
-                                        verticalAlign: 'middle',
-                                        align: 'left'
-                                    }
+                                    data: [treeData],
+
+                                    top: '1%',
+                                    left: '7%',
+                                    bottom: '1%',
+                                    right: '20%',
+
+                                    symbolSize: 7,
+                                    initialTreeDepth: 9,
+
+                                    label: {
+                                        normal: {
+                                            position: 'left',
+                                            verticalAlign: 'middle',
+                                            align: 'right',
+                                            fontSize: 9
+                                        }
+                                    },
+
+                                    leaves: {
+                                        label: {
+                                            normal: {
+                                                position: 'right',
+                                                verticalAlign: 'middle',
+                                                align: 'left'
+                                            }
+                                        }
+                                    },
+
+                                    expandAndCollapse: true,
+                                    animationDuration: 550,
+                                    animationDurationUpdate: 750
                                 }
-                            },
+                            ]
+                        });
 
-                            expandAndCollapse: true,
-                            animationDuration: 550,
-                            animationDurationUpdate: 750
-                        }
-                    ]
+                        document.getElementById("blastDescription").innerHTML = blastResult["description"];
+                        $('#blastResultModal').modal('show');
+                    }
                 });
-                blastResultsDiv.appendChild(chart);
-            }
+            } );
         }
     });
 });
