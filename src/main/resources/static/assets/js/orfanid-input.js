@@ -131,7 +131,6 @@ $('body').on('change focus', '#genesequence', function () {
 
 //Optional but keep for future
 function setFileContnet(val) {
-
     var file = document.getElementById("fastafile").files[0];
     var reader = new FileReader();
     reader.onload = function (e) {

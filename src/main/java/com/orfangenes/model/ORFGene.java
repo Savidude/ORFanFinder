@@ -1,8 +1,5 @@
 package com.orfangenes.model;
 
-import lombok.Getter;
-
-@Getter
 public class ORFGene {
     private int id;
     private String description;
@@ -14,5 +11,21 @@ public class ORFGene {
         this.description = gene.getDescription();
         this.level = level;
         this.taxonomy = "species";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public String getTaxonomy() {
+        return taxonomy;
     }
 }
