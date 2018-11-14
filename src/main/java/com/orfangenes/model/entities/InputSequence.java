@@ -1,19 +1,16 @@
 package com.orfangenes.model.entities;
 
+import com.orfangenes.constants.Constants;
+
 public class InputSequence {
 
     private String organismName;
-    private String type;
     private String genesequence;
     private String maxevalue;
     private String maxtargets;
 
     public String getOrganismName() {
         return organismName;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public String getGenesequence() {
@@ -32,10 +29,6 @@ public class InputSequence {
         this.organismName = organismName;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void setGenesequence(String genesequence) {
         this.genesequence = genesequence;
     }
@@ -46,5 +39,24 @@ public class InputSequence {
 
     public void setMaxtargets(String maxtargets) {
         this.maxtargets = maxtargets;
+    }
+
+    public String getType() {
+        String[] sequences = this.genesequence.split("\n\n");
+
+        // Getting first sequence. All sequences do not need to b e processed since the input sequence should only have one type of gene.
+        String sequence = sequences[0];
+        String[] lines = sequence.split("\n");
+        String sequenceString = "";
+        for (int i = 1; i < lines.length; i++) {
+            sequenceString += lines[i];
+        }
+        char[] characters = sequenceString.toCharArray();
+        for (char character : characters) {
+            if ((character != 'A') && (character != 'T') && (character != 'C') && (character != 'G')) {
+                return Constants.TYPE_PROTEIN;
+            }
+        }
+        return Constants.TYPE_NUCLEOTIDE;
     }
 }
