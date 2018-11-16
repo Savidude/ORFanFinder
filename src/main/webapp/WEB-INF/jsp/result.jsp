@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: savidude
-  Date: 8/31/18
-  Time: 11:19 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en-us">
 <head>
@@ -99,20 +92,23 @@
     </div>
 
     <div id="saveResultModal" class="modal">
-        <div class="modal-content">
-            <div class="row">
-                <div>
-                    <h5>Save Result</h5>
-                    <label for="email" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+        <div class="row">
+            <form class="col s12">
+                <div class="modal-content">
+                    <h5>Save your results!</h5>
+                    <div class="row">
+                        <div class="input-field col s10">
+                            <br><br>
+                            <i class="material-icons prefix">email</i>
+                            <input type="email" class="form-control validate" id="email" placeholder="Email">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Save</a>
-            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Close</a>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-red btn-flat">Close</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Save</a>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -131,3 +127,4 @@
     </div>
 </main>
 </body>
+</html>

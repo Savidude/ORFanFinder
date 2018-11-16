@@ -38,14 +38,16 @@
     <form:form method="post" modelAttribute="sequence" action="/store" >
         <div class="row">
             <div class="col s6">
-                <div class="row">
-                    <div class="col offset-s2 s10">
-                        <div class="input-field">
-                            <input type="text" id="autocomplete-input" class="input-field" name="accession">
-                            <label for="autocomplete-input">NCBI Accession</label>
-                        </div>
-                        <div>
-                            <a class="waves-effect waves-light btn" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
+                <div class="col offset-s2 s10">
+                    <div class="row">
+                        <div class="col s10">
+                            <div class="input-field">
+                                <input type="text" id="autocomplete-input" class="input-field" name="accession">
+                                <label for="autocomplete-input">NCBI Accession</label>
+                            </div>
+                            <div class="col s2">
+                                <a class="waves-effect waves-light btn" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
