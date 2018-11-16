@@ -38,13 +38,6 @@ public class BlastCommand extends Thread {
             log.info("Executing Blast Command:{}", command.toString());
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             Process process = processBuilder.start();
-//
-//            String line;
-//            BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//            while ((line = input.readLine()) != null) {
-//                System.out.println(line);
-//            }
-//            input.close();
 
             // wait until the command get executed
             if (process.waitFor() != 0) {

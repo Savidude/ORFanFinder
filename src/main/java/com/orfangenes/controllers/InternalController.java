@@ -76,10 +76,10 @@ public class InternalController {
 
       String inputFilePath = outputPath + "/" + INPUT_FASTA;
       FileOutputStream out = new FileOutputStream(inputFilePath);
-      out.write(sequence.getGenesequence().getBytes());
+      out.write(sequence.getSequence().getBytes());
       out.close();
 
-      ORFanGenes.run(inputFilePath, outputPath, organismTax, sequence.getType(), sequence.getMaxtargets(), sequence.getMaxevalue(), nodesfile, namesfile);
+      ORFanGenes.run(inputFilePath, outputPath, organismTax, sequence.getType(), sequence.getMaxTargetSequence(), sequence.getMaxEvalue(), nodesfile, namesfile);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
