@@ -1,6 +1,8 @@
 $(document).ready(function() {
+    $('.modal').modal();
     var urlParams = new URLSearchParams(window.location.search);
     var sessionid = urlParams.get("sessionid");
+    console.log("session id : "+ sessionid);
 
     var orfanLevels;
     var numberOfOrphanGenes;
@@ -13,6 +15,7 @@ $(document).ready(function() {
         url: "/data/summary",
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
+            console.log("result: "+ result);
             var orfanGenesSummary = JSON.parse(result);
             $('#orfanGenesSummary').DataTable({
                 "data":orfanGenesSummary,
@@ -28,6 +31,9 @@ $(document).ready(function() {
                 dom: 'frt',
                 "aaSorting": []
             });
+        },
+        error: function (error) {
+            console.log("error: "+ error);
         }
     });
 
@@ -39,23 +45,27 @@ $(document).ready(function() {
         url: "/data/summary/chart",
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
+            console.log("ORFanGenes Summary Chart" + result);
             var orfanGenesSummaryChart = JSON.parse(result);
             orfanLevels = orfanGenesSummaryChart.x;
             numberOfOrphanGenes = orfanGenesSummaryChart.y;
 
-            var data = [ {
+            var data = [{
                 x : orfanLevels,
                 y : numberOfOrphanGenes,
                 type : 'bar',
                 marker : {
                     color : '#ef6c00'
                 }
-            } ];
+            }];
             var layout = {
                 yaxis: {
                     title: 'Number of Orphan Genes'
                 }};
             Plotly.newPlot('genesummary', data, layout);
+        },
+        error: function (error) {
+            console.log("Error occured in ORFanGenes Summary Chart: "+ error);
         }
     });
 
@@ -83,21 +93,21 @@ $(document).ready(function() {
                     "sSearchPlaceholder": "Enter Search Term Here",
                     "sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
                     "sLengthMenu": '<span>Rows per page:</span>'+
-                        '<select class="browser-default">' +
-                        '<option value="5">5</option>' +
-                        '<option value="10">10</option>' +
-                        '<option value="20">20</option>' +
-                        '<option value="50">50</option>' +
-                        '<option value="100">100</option>' +
-                        '<option value="-1">All</option>' +
-                        '</select></div>'
+                    '<select class="browser-default">' +
+                    '<option value="5">5</option>' +
+                    '<option value="10">10</option>' +
+                    '<option value="20">20</option>' +
+                    '<option value="50">50</option>' +
+                    '<option value="100">100</option>' +
+                    '<option value="-1">All</option>' +
+                    '</select></div>'
                 },
                 dom: 'frt',
                 "aaSorting": [],
                 "columnDefs": [ {
                     "targets": -1,
                     "data": null,
-                    "defaultContent": "<button>view!</button>"
+                    "defaultContent": "<button class=\"btn modal-trigger btn-small\" data-target=\"blastResultModal\"><i class=\"large material-icons\">insert_chart</i></button>"
                 } ]
             });
 
@@ -164,11 +174,11 @@ $(document).ready(function() {
                             ]
                         });
 
-                        document.getElementById("blastDescription").innerHTML = blastResult["description"];
-                        $('#blastResultModal').modal('show');
+                        $('#blastDescription').innerHTML = blastResult["description"];
+                        $('#blastResultModal').modal();
                     }
                 });
-            } );
+            });
         }
     });
 });
