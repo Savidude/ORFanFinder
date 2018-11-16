@@ -2,6 +2,7 @@ package com.orfangenes.controllers;
 
 import com.orfangenes.ORFanGenes;
 import com.orfangenes.model.entities.InputSequence;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+@Slf4j
 @Controller
 public class InternalController {
 
@@ -41,7 +43,7 @@ public class InternalController {
     try {
       namesfile = url.toURI().getPath();
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      log.error("names.dmp not found");
     }
 
 
@@ -53,7 +55,7 @@ public class InternalController {
     try {
       nodesfile = url.toURI().getPath();
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      log.error("nodes.dmp not found");
     }
 
     if (result.hasErrors()) {
