@@ -1,6 +1,7 @@
 package com.orfangenes.control;
 
 import com.orfangenes.model.Gene;
+import com.orfangenes.util.HTTPUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.io.*;
@@ -40,7 +41,13 @@ public class Sequence {
 
         BlastCommand[] blastCommands = new BlastCommand[fileCount];
         for (int i = 1; i < fileCount + 1; i++) {
-            BlastCommand command = new BlastCommand(Integer.toString(i), this.blastType, out, max_target_seqs, evalue);
+            BlastCommand command = BlastCommand.builder()
+                    .fileNumber(Integer.toString(i))
+                    .sequenceType(this.blastType)
+                    .out(out)
+                    .max_target_seqs(max_target_seqs)
+                    .evalue(evalue)
+                    .build();
             command.start();
             blastCommands[i-1] = command;
             try {

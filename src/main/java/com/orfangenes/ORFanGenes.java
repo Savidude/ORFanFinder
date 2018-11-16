@@ -1,6 +1,6 @@
 package com.orfangenes;
 
-import com.orfangenes.constants.Constants;
+import com.orfangenes.util.Constants;
 import com.orfangenes.control.BlastResultsProcessor;
 import com.orfangenes.control.Classifier;
 import com.orfangenes.control.Sequence;

@@ -1,5 +1,6 @@
-package com.orfangenes.control;
+package com.orfangenes.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -10,6 +11,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 
+@Slf4j
 public class HTTPUtils {
 
     public static String getPlainTextFromResponse (CloseableHttpResponse response) {
@@ -18,7 +20,7 @@ public class HTTPUtils {
         try {
             responseString = EntityUtils.toString(httpEntity);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IOException Occured:{}", e.getMessage());
         }
         return responseString;
     }
@@ -30,7 +32,7 @@ public class HTTPUtils {
         try {
             response = httpclient.execute(httpget);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IOException Occured:{}", e.getMessage());
         }
         return response;
     }

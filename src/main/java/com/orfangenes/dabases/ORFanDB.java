@@ -1,6 +1,6 @@
-package com.orfangenes.control.dabases;
+package com.orfangenes.dabases;
 
-import com.orfangenes.constants.Database;
+import com.orfangenes.util.Database;
 
 import java.sql.*;
 

@@ -1,6 +1,6 @@
 package com.orfangenes.model.entities;
 
-import com.orfangenes.constants.Constants;
+import com.orfangenes.util.Constants;
 
 public class InputSequence {
 
