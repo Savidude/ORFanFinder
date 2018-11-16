@@ -35,7 +35,7 @@ public class InternalController {
 
     URL url = InternalController.class.getClassLoader().getResource("names.dmp");
     if (url == null) {
-      throw new IllegalStateException("no file for input found!");
+      throw new IllegalStateException("names.dmp file not found!");
     }
     String namesfile = null;
     try {
@@ -47,7 +47,7 @@ public class InternalController {
 
     url = InternalController.class.getClassLoader().getResource("nodes.dmp");
     if (url == null) {
-      throw new IllegalStateException("no file for input found!");
+      throw new IllegalStateException("nodes.dmp file not found!");
     }
     String nodesfile = null;
     try {
