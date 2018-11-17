@@ -175,25 +175,6 @@ public class Sequence {
         return genes;
     }
 
-    private String requestInputSequence(String genes) {
-        String inputSequence = null;
-        try {
-            URI uri = new URIBuilder()
-                    .setScheme("https")
-                    .setHost("eutils.ncbi.nlm.nih.gov/entrez/eutils")
-                    .setPath("/efetch.fcgi")
-                    .setParameter("db", this.blastType)
-                    .setParameter("id", genes)
-                    .setParameter("rettype", "fasta")
-                    .setParameter("retmode", "text")
-                    .build();
-            inputSequence = HTTPUtils.getPlainTextFromResponse(HTTPUtils.requestGet(uri));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return inputSequence;
-    }
-
     private int divideSequence(String sequenceFileName, String out) {
         StringBuilder contentBuilder = new StringBuilder();
         try (Stream<String> stream = Files.lines( Paths.get(sequenceFileName), StandardCharsets.UTF_8))
