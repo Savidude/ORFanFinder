@@ -58,7 +58,7 @@ $(document).ready(function () {
 
     $('#submit').click(function () {
         console.log('submit clicked');
-        $('#input_progressbar').modal();
+        $('#input_progressbar').modal('open');
     });
 
     $('#findsequence').click(function () {
