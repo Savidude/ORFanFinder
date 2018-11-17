@@ -69,7 +69,7 @@ public class InternalController {
     if (outputdir.substring(outputdir.length() - 1).equals("/")) {
       outputdir = outputdir.substring(0, outputdir.length() -1 );
     }
-    String sessionID = RandomStringUtils.randomAlphanumeric(16);
+    String sessionID = String.valueOf(System.currentTimeMillis()) + RandomStringUtils.randomAlphanumeric(3);
 
     try {
       String outputPath = outputdir + "/" + USERS + "/" + sessionID;
