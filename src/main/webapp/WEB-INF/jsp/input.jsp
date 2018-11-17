@@ -35,7 +35,7 @@
 </nav>
 <main>
 
-    <form:form method="post" modelAttribute="sequence" action="/store" >
+    <form:form method="post" modelAttribute="sequence" action="/analyse" >
         <div class="row">
             <div class="col s6">
                 <div class="col offset-s2 s10">
