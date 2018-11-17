@@ -26,7 +26,6 @@
         <a href="/" class="brand-logo">ORFanID</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/input">Home</a></li>
-            <li><a href="/clamp">Clamp</a></li>
             <li><a href="/results">Results</a></li>
             <li><a href="/orfanbase">ORFanBase</a></li>
             <li><a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing">Instructions</a></li>
@@ -42,23 +41,25 @@
                     <div class="row">
                         <div class="col s10">
                             <div class="input-field">
-                                <input type="text" id="ncbi_accession_input" class="input-field" name="accession">
+                                <input type="text" id="ncbi_accession_input" class="validate" name="accession">
                                 <label for="ncbi_accession_input">NCBI Accession</label>
+                                <span class="helper-text" data-error="wrong">Eg: 16128551,226524729,16127995</span>
                             </div>
-                            <div class="col s2">
-                                <a class="waves-effect waves-light btn" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
-                            </div>
+                        </div>
+                        <div class="col s2 bottom">
+                            <a class="waves-effect waves-light btn btn-large" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col s6">
+                <form action="#">
                     <div class="file-field input-field">
-                        <div class="col s9 file-path-wrapper">
+                        <div class="file-path-wrapper">
                             <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
                         </div>
                         <div class="btn">
-                            <input id="fastafile" type="file" accept=".fasta" onchange="setFileContnet(this.value);">
+                            <input id="fastafile" type="file" accept=".fasta" onchange="setFileContent(this.value);">
                             <i class="large material-icons">cloud_upload</i>
                         </div>
                     </div>

@@ -63,18 +63,22 @@ $(document).ready(function () {
 
     $('#findsequence').click(function () {
         var ncbi_accession_input = $('#ncbi_accession_input').val(); // 16128551,226524729,16127995
-        $.ajax({
-            url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id='+ncbi_accession_input+'&rettype=fasta&retmode=text',
-            async: false,
-            dataType: 'json',
-            success: function (response) {
-                $('#genesequence').val('hello');
-            },
-            error: function (error) {
-                console.log(error);
-                $('#genesequence').val(error.responseText);
-            }
-        });
+        if (!ncbi_accession_input){
+            $('#ncbi_accession_input').removeClass("validate");
+        }else{
+            $.ajax({
+                url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id='+ncbi_accession_input+'&rettype=fasta&retmode=text',
+                async: false,
+                dataType: 'json',
+                success: function (response) {
+                    $('#genesequence').val(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                    $('#genesequence').val(error.responseText);
+                }
+            });
+        }
     });
 
     $('#load-example-data').click(function () {
@@ -129,7 +133,7 @@ $('body').on('change focus', '#genesequence', function () {
 });
 
 //Optional but keep for future
-function setFileContnet(val) {
+function setFileContent(val) {
     var file = document.getElementById("fastafile").files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
