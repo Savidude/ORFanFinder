@@ -67,7 +67,7 @@
         <div class="row">
             <div class="col offset-s1 s10">
                 <div class="input-field">
-                    <textarea id="genesequence" hight="100px;overflow-y: auto;" name="genesequence" class="materialize-textarea" raw="3">
+                    <textarea id="genesequence" hight="100px;overflow-y: auto;" name="sequence" class="materialize-textarea" raw="3">
                         </textarea>
                     <label for="genesequence">Gene Sequence</label>
                 </div>
@@ -89,9 +89,9 @@
                 <h6>Advanced parameters:</h6><br>
                 <p class="range-field">
                     <label for="maxevalue">Maximum E-value for BLAST(e-10):</label>
-                    <input type="range" id="maxevalue"  name="maxevalue" min="1" max="10" value="3"/>
+                    <input type="range" id="maxevalue"  name="maxEvalue" min="1" max="10" value="3"/>
                     <label for="maxtargets">Maximum target sequences for BLAST:</label>
-                    <input type="range" id="maxtargets" name="maxtargets" min="100" max="1000" value="{{Config::get('orfanid.default_maxtargetseq')}}"/>
+                    <input type="range" id="maxtargets" name="maxTargetSequence" min="100" max="1000" value="{{Config::get('orfanid.default_maxtargetseq')}}"/>
                 </p>
             </div>
         </div>
