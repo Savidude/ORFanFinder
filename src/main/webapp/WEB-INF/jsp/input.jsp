@@ -42,8 +42,8 @@
                     <div class="row">
                         <div class="col s10">
                             <div class="input-field">
-                                <input type="text" id="autocomplete-input" class="input-field" name="accession">
-                                <label for="autocomplete-input">NCBI Accession</label>
+                                <input type="text" id="ncbi_accession_input" class="input-field" name="accession">
+                                <label for="ncbi_accession_input">NCBI Accession</label>
                             </div>
                             <div class="col s2">
                                 <a class="waves-effect waves-light btn" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
@@ -112,19 +112,8 @@
                 <div class="progress">
                     <div class="indeterminate"></div>
                 </div>
-                <%--<div class="row">--%>
-                    <%--<div class="col s12">--%>
-                        <%--<div class="col offset-s2 s1">--%>
-
-                        <%--</div>--%>
-                        <%--<div  class="col s4">--%>
-                            <%--<img src="assets/images/loading4.gif" alt="Loading">--%>
-                        <%--</div >--%>
-                    <%--</div>--%>
-                <%--</div>--%>
             </div>
             <div class="modal-footer">
-                <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Possible Close Implematioation</a> -->
             </div>
         </div>
     </form:form>

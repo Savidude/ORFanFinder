@@ -62,13 +62,12 @@ $(document).ready(function () {
     });
 
     $('#findsequence').click(function () {
+        var ncbi_accession_input = $('#ncbi_accession_input').val(); // 16128551,226524729,16127995
         $.ajax({
-            url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=16128551,226524729,16127995&rettype=fasta&retmode=text',
+            url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id='+ncbi_accession_input+'&rettype=fasta&retmode=text',
             async: false,
             dataType: 'json',
             success: function (response) {
-                // alert(response.responseText);
-                // console.log(response);
                 $('#genesequence').val('hello');
             },
             error: function (error) {
