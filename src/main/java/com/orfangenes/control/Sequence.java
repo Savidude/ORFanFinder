@@ -1,12 +1,8 @@
 package com.orfangenes.control;
 
 import com.orfangenes.model.Gene;
-import com.orfangenes.util.HTTPUtils;
-import org.apache.http.client.utils.URIBuilder;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
