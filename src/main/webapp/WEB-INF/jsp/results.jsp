@@ -101,7 +101,7 @@
         <a href="/" class="brand-logo">ORFanID</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/input">Home</a></li>
-            <%--<li><a href="/results">Results</a></li>--%>
+            <li><a href="/results">Results</a></li>
             <li><a href="instructions">Instructions</a></li>
         </ul>
     </div>

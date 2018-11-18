@@ -77,7 +77,7 @@
             <div class="col s10 offset-s1">
                 <div class="row">
                     <div class="input-field col s12">
-                        <input type="text" id="organismName" class="autocomplete">
+                        <input type="text" id="organismName" name="organismName" class="autocomplete">
                         <label for="organismName">Species</label>
                     </div>
                 </div>
@@ -102,31 +102,31 @@
                 <a id="advanceparameterslink" class="waves-effect waves-light">Advanced parameters</a>
             </div>
         </div>
-        <div class="row">
-            <div class="col offset-s10 s2">
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit
-                    <i class="material-icons right">send</i>
-                </button>
-            </div>
-        </div>
         <div id="input_progressbar" class="modal" >
             <div class="modal-content">
                 <h6>  ORFanID In Progress.... </h6>
                 <div class="progress">
                     <div class="indeterminate"></div>
                 </div>
-                <div class="row">
-                    <div class="col s12">
-                        <div class="col offset-s2 s1">
+                <%--<div class="row">--%>
+                    <%--<div class="col s12">--%>
+                        <%--<div class="col offset-s2 s1">--%>
 
-                        </div>
-                        <div  class="col s4">
-                            <img src="assets/images/loading4.gif" alt="Loading">
-                        </div >
-                    </div>
-                </div>
+                        <%--</div>--%>
+                        <%--<div  class="col s4">--%>
+                            <%--<img src="assets/images/loading4.gif" alt="Loading">--%>
+                        <%--</div >--%>
+                    <%--</div>--%>
+                <%--</div>--%>
             </div>
             <div class="modal-footer">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col offset-s10 s2">
+                <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit
+                    <i class="material-icons right">send</i>
+                </button>
             </div>
         </div>
     </form:form>
