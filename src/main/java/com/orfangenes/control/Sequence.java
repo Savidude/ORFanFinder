@@ -1,11 +1,8 @@
 package com.orfangenes.control;
 
 import com.orfangenes.model.Gene;
-import org.apache.http.client.utils.URIBuilder;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,7 +37,13 @@ public class Sequence {
 
         BlastCommand[] blastCommands = new BlastCommand[fileCount];
         for (int i = 1; i < fileCount + 1; i++) {
-            BlastCommand command = new BlastCommand(Integer.toString(i), this.blastType, out, max_target_seqs, evalue);
+            BlastCommand command = BlastCommand.builder()
+                    .fileNumber(Integer.toString(i))
+                    .sequenceType(this.blastType)
+                    .out(out)
+                    .max_target_seqs(max_target_seqs)
+                    .evalue(evalue)
+                    .build();
             command.start();
             blastCommands[i-1] = command;
             try {
@@ -166,25 +169,6 @@ public class Sequence {
             }
         }
         return genes;
-    }
-
-    private String requestInputSequence(String genes) {
-        String inputSequence = null;
-        try {
-            URI uri = new URIBuilder()
-                    .setScheme("https")
-                    .setHost("eutils.ncbi.nlm.nih.gov/entrez/eutils")
-                    .setPath("/efetch.fcgi")
-                    .setParameter("db", this.blastType)
-                    .setParameter("id", genes)
-                    .setParameter("rettype", "fasta")
-                    .setParameter("retmode", "text")
-                    .build();
-            inputSequence = HTTPUtils.getPlainTextFromResponse(HTTPUtils.requestGet(uri));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return inputSequence;
     }
 
     private int divideSequence(String sequenceFileName, String out) {

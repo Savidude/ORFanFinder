@@ -1,98 +1,54 @@
 package com.orfangenes.control;
 
-import com.orfangenes.constants.Constants;
-
-import java.io.BufferedReader;
+import com.orfangenes.util.Constants;
+import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import static com.orfangenes.util.Constants.*;
 
+/**
+ *  This class looks for the similar DNA/Protein sequences in the NCBI database
+ *  by running the blast command.
+ */
+@Slf4j
+@Builder
 public class BlastCommand extends Thread {
-    private static final String SEQUENCE = "sequence";
-    private static final String FASTA_EXT = ".fasta";
-    private static final String BLAST_RESULTS = "blastResults";
-    private static final String BLAST_EXT = ".bl";
 
-    private String fileNo;
-    private String type;
+    private String fileNumber;
+    private String sequenceType;
     private String out;
     private String max_target_seqs;
     private String evalue;
 
-
-    public BlastCommand(String fileNo, String type, String out, String max_target_seqs, String evalue) {
-        this.fileNo = fileNo;
-        this.type = type;
-        this.out = out;
-        this.max_target_seqs = max_target_seqs;
-        this.evalue = evalue;
-    }
-
     @Override
     public void run() {
-        List<String> command = new ArrayList<>();
-        if (type.equals(Constants.TYPE_PROTEIN)) {
-            command = Arrays.asList(
-                    "/usr/local/ncbi/blast/bin/blastp",
-                    "-query",
-                    out + "/" + SEQUENCE + this.fileNo + FASTA_EXT,
-                    "-db",
-                    "nr",
-                    "-outfmt",
-                    "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
-                    "-max_target_seqs",
-                    this.max_target_seqs,
-                    "-evalue",
-                    this.evalue,
-                    "-out",
-                    this.out + "/" + BLAST_RESULTS + this.fileNo + BLAST_EXT,
-                    "-remote"
-            );
-        } else if (type.equals(Constants.TYPE_NUCLEOTIDE)) {
-            command = Arrays.asList(
-                    "/usr/local/ncbi/blast/bin/blastn",
-                    "-query",
-                    SEQUENCE + this.fileNo + FASTA_EXT,
-                    "-db",
-                    "nr",
-                    "-outfmt",
-                    "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
-                    "-max_target_seqs",
-                    this.max_target_seqs,
-                    "-evalue",
-                    this.evalue,
-                    "-out",
-                    this.out + "/" + BLAST_RESULTS + this.fileNo + BLAST_EXT,
-                    "-remote"
-            );
-        }
-
+        final String programme = (sequenceType.equals(Constants.TYPE_PROTEIN))? "blastp": "blastn";
+        List<String> command = Arrays.asList(
+                "/usr/local/ncbi/blast/bin/" + programme,
+                "-query", out + "/" + SEQUENCE + this.fileNumber + FASTA_EXT,
+                "-db", "nr",
+                "-outfmt", "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
+                "-max_target_seqs", this.max_target_seqs,
+                "-evalue", this.evalue,
+                "-out", this.out + "/" + BLAST_RESULTS + this.fileNumber + BLAST_EXT,
+                "-remote");
         try {
-            //execute the blast command
-            ProcessBuilder pb = new ProcessBuilder(command);
-            Process p = pb.start();
-
-            String line;
-            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line = input.readLine()) != null) {
-                System.out.println(line);
-            }
-            input.close();
+            log.info("Executing Blast Command:{}", command.toString());
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            Process process = processBuilder.start();
 
             // wait until the command get executed
-            if (p.waitFor() != 0) {
-                // error occured
+            if (process.waitFor() != 0) {
                 throw new RuntimeException("BLAST error occured");
             } else {
-                System.out.println("BLAST successfully Completed!!");
+                log.info("BLAST successfully completed!!");
             }
-            System.out.println((p.exitValue() == 0) ? "Blast ran Successfully":"Blast Failed with " + p.exitValue() + " value");
         } catch (IOException ex) {
-            System.err.println("IOError: " + ex.getMessage());
+            log.error("IOError: " + ex.getMessage());
         } catch (InterruptedException ex) {
-            System.err.println("InterruptedException: " + ex.getMessage());
+            log.error("InterruptedException: " + ex.getMessage());
         }
     }
 }

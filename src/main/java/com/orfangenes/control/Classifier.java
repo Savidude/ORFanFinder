@@ -1,29 +1,20 @@
 package com.orfangenes.control;
 
-import com.orfangenes.constants.Database;
-import com.orfangenes.control.dabases.ORFanDB;
 import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxTree;
-import com.orfangenes.constants.Constants;
+import com.orfangenes.util.Constants;
+import lombok.AllArgsConstructor;
+import static com.orfangenes.util.Constants.*;
 
-import java.sql.Connection;
 import java.util.*;
 
+@AllArgsConstructor
 public class Classifier {
-    private static final String GENE_TYPE = "geneType";
-    private static final String PREV_RANK = "prevRank";
-    private static final String NEXT_RANK = "nextRank";
 
     private Sequence sequence;
     private TaxTree tree;
     private int organismTaxID;
-
-    public Classifier(Sequence sequence, TaxTree tree, int organismTaxID) {
-        this.sequence = sequence;
-        this.tree = tree;
-        this.organismTaxID = organismTaxID;
-    }
 
     public Map<Gene, String> getGeneClassification(List<BlastResult> blastResults) {
         Map<Gene, String> classification = new HashMap<>();
@@ -58,32 +49,32 @@ public class Classifier {
         return classification;
     }
 
-    private void addToDatabase (Gene gene, String level) {
-        Connection connection = ORFanDB.connectToDatabase(Database.DB_ORFAN);
-        String table = null;
-        switch (level){
-            case Constants.ORFAN_GENE:  table = Database.TB_ORFAN_GENES; break;
-            case Constants.STRICT_ORFAN: table = Database.TB_STRICT_ORFANS; break;
-            case Constants.MULTI_DOMAIN_GENE: table = Database.TB_MD_GENES; break;
-            case Constants.DOMAIN_RESTRICTED_GENE: table = Database.TB_DOMAIN_RG; break;
-            case Constants.KINGDOM_RESTRICTED_GENE: table = Database.TB_KINGDOM_RG; break;
-            case Constants.PHYLUM_RESTRICTED_GENE: table = Database.TB_PHYLUM_RG; break;
-            case Constants.CLASS_RESTRICTED_GENE: table = Database.TB_CLASS_RG; break;
-            case Constants.ORDER_RESTRICTED_GENE: table = Database.TB_ORDER_RG; break;
-            case Constants.FAMILY_RESTRICTED_GENE: table = Database.TB_FAMILY_RG; break;
-            case Constants.GENUS_RESTRICTED_GENE: table = Database.TB_GENUS_RG; break;
-        }
-        if (!ORFanDB.recordExists(connection, table, gene.getSequence())) {
-            String insertQuery = "INSERT INTO " + table + " (geneId, sequence, description, taxId) " +
-                    "VALUES (?,?,?,?)";
-            Object[] insertData = new Object[4];
-            insertData[0] = gene.getGeneID();
-            insertData[1] = gene.getSequence();
-            insertData[2] = gene.getDescription();
-            insertData[3] = gene.getTaxID();
-            ORFanDB.insertRecordPreparedStatement(connection, insertQuery, insertData);
-        }
-    }
+//    private void addToDatabase (Gene gene, String level) {
+//        Connection connection = ORFanDB.connectToDatabase(Database.DB_ORFAN);
+//        String table = null;
+//        switch (level){
+//            case Constants.ORFAN_GENE:  table = Database.TB_ORFAN_GENES; break;
+//            case Constants.STRICT_ORFAN: table = Database.TB_STRICT_ORFANS; break;
+//            case Constants.MULTI_DOMAIN_GENE: table = Database.TB_MD_GENES; break;
+//            case Constants.DOMAIN_RESTRICTED_GENE: table = Database.TB_DOMAIN_RG; break;
+//            case Constants.KINGDOM_RESTRICTED_GENE: table = Database.TB_KINGDOM_RG; break;
+//            case Constants.PHYLUM_RESTRICTED_GENE: table = Database.TB_PHYLUM_RG; break;
+//            case Constants.CLASS_RESTRICTED_GENE: table = Database.TB_CLASS_RG; break;
+//            case Constants.ORDER_RESTRICTED_GENE: table = Database.TB_ORDER_RG; break;
+//            case Constants.FAMILY_RESTRICTED_GENE: table = Database.TB_FAMILY_RG; break;
+//            case Constants.GENUS_RESTRICTED_GENE: table = Database.TB_GENUS_RG; break;
+//        }
+//        if (!ORFanDB.recordExists(connection, table, gene.getSequence())) {
+//            String insertQuery = "INSERT INTO " + table + " (geneId, sequence, description, taxId) " +
+//                    "VALUES (?,?,?,?)";
+//            Object[] insertData = new Object[4];
+//            insertData[0] = gene.getGeneID();
+//            insertData[1] = gene.getSequence();
+//            insertData[2] = gene.getDescription();
+//            insertData[3] = gene.getTaxID();
+//            ORFanDB.insertRecordPreparedStatement(connection, insertQuery, insertData);
+//        }
+//    }
 
     // Recursive method
     private String getLevel(List<Map<String, Integer>> hierarchies, Map<String, Integer> inputTaxHierarchy,

@@ -1,10 +1,12 @@
 package com.orfangenes.control;
 
-import com.orfangenes.constants.Constants;
+import com.orfangenes.util.Constants;
 import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxNode;
 import com.orfangenes.model.taxonomy.TaxTree;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,16 +14,20 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import static com.orfangenes.util.Constants.*;
 
+/**
+ * This class process the blast results to identify Orphan Genes
+ */
+@Slf4j
+@Getter
 public class BlastResultsProcessor {
-    private static final String BLAST_RESULTS_FILE = "blastResults.bl";
 
     private List<BlastResult> blastResults;
 
     public BlastResultsProcessor(String outputDir) {
         String blastResultsFileName = outputDir + "/" + BLAST_RESULTS_FILE;
-        ArrayList<BlastResult> blastResults = new ArrayList<>();
-
+        List<BlastResult> blastResults = new ArrayList<>();
         try {
             Scanner scanner = new Scanner(new File(blastResultsFileName));
             while (scanner.hasNextLine()) {
@@ -30,13 +36,9 @@ public class BlastResultsProcessor {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Blast output file not found in {} directory", blastResultsFileName);
         }
         this.blastResults = blastResults;
-    }
-
-    public List<BlastResult> getBlastResults() {
-        return blastResults;
     }
 
     public JSONArray generateBlastResultsTrees(TaxTree taxTree, List<Gene> genes) {
@@ -119,13 +121,13 @@ public class BlastResultsProcessor {
     }
 
     private void createTree (TaxTree tree, Map<String, Integer> hierarchy, String currentRank) {
-        if (hierarchy.size() == 0) {
-            return;
-        }
-
         boolean isComplete = false;
         TaxNode currentRankNode = null;
         String nextRank = null;
+
+        if (hierarchy.size() == 0) {
+            return;
+        }
 
         while (!isComplete) {
             try {
