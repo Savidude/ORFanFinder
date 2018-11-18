@@ -10,6 +10,7 @@
     <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="assets/css/orfanid-input.css">
     <link type="text/css" rel="stylesheet" href="assets/css/orfan_styles.css">
+    <link type="text/css" rel="stylesheet" href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -43,7 +44,7 @@
                             <div class="input-field">
                                 <input type="text" id="ncbi_accession_input" class="validate" name="accession">
                                 <label for="ncbi_accession_input">NCBI Accession</label>
-                                <span class="helper-text" data-error="wrong">Eg: 16128551,226524729,16127995</span>
+                                <span class="helper-text" data-error="wrong" style="font-size: small">Eg: 16128551,226524729,16127995</span>
                             </div>
                         </div>
                         <div class="col s2 bottom">
@@ -52,15 +53,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col s6">
-                <form action="#">
+            <div class="col s5">
                     <div class="file-field input-field">
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
-                        </div>
                         <div class="btn">
                             <input id="fastafile" type="file" accept=".fasta" onchange="setFileContent(this.value);">
                             <i class="large material-icons">cloud_upload</i>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
                         </div>
                     </div>
             </div>
@@ -74,15 +74,16 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
-            <div class="col s6">
+            <div class="col s10 offset-s1">
                 <div class="row">
-                    <div class="input-field col offset-s2 s10">
-                        <input type="text" id="organismName" name="organismName" class="autocomplete">
-                        <label for="organismName">Organism</label>
+                    <div class="input-field col s12">
+                        <input type="text" id="organismName" class="autocomplete">
+                        <label for="organismName">Species</label>
                     </div>
                 </div>
+            </div>
+            <div id="organismIcon" class="col s1">
             </div>
         </div>
         <div class="row hidden" id="advanceparameterssection">
@@ -101,7 +102,9 @@
                 <a id="load-example-data" class="waves-effect waves-light">Example</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                 <a id="advanceparameterslink" class="waves-effect waves-light">Advanced parameters</a>
             </div>
-            <div class="col offset-s7 s2">
+        </div>
+        <div class="row">
+            <div class="col offset-s10 s2">
                 <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit
                     <i class="material-icons right">send</i>
                 </button>
