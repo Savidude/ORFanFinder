@@ -22,4 +22,9 @@ public class WebPageController {
     public String result() {
         return "result";
     }
+
+    @RequestMapping("/instructions")
+    public String instructions() {
+        return "instructions";
+    }
 }

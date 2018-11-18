@@ -31,12 +31,8 @@
         <a href="/" class="brand-logo">ORFanID</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/input">Home</a></li>
-            <li><a href="/clamp">Clamp</a></li>
             <li><a href="/results">Results</a></li>
-            <li><a href="/orfanbase">ORFanBase</a></li>
-            <li>
-                <a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing">Instructions</a>
-            </li>
+            <li><a href=instructions>Instructions</a></li>
         </ul>
     </div>
 </nav>
