@@ -10,6 +10,7 @@
     <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="assets/css/orfanid-input.css">
     <link type="text/css" rel="stylesheet" href="assets/css/orfan_styles.css">
+    <link type="text/css" rel="stylesheet" href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -26,38 +27,39 @@
         <a href="/" class="brand-logo">ORFanID</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/input">Home</a></li>
-            <li><a href="/clamp">Clamp</a></li>
             <li><a href="/results">Results</a></li>
-            <li><a href="/orfanbase">ORFanBase</a></li>
-            <li><a href="https://docs.google.com/document/d/1VAhvAmmU4mQh-D93MVw4TfsgJZlo3VqIto1sOw8oOt4/edit?usp=sharing">Instructions</a></li>
+            <li><a href="instructions">Instructions</a></li>
         </ul>
     </div>
 </nav>
 <main>
 
-    <form:form method="post" modelAttribute="sequence" action="/store" >
+    <form:form method="post" modelAttribute="sequence" action="/analyse" >
         <div class="row">
             <div class="col s6">
-                <div class="row">
-                    <div class="col offset-s2 s10">
-                        <div class="input-field">
-                            <input type="text" id="autocomplete-input" class="input-field" name="accession">
-                            <label for="autocomplete-input">NCBI Accession</label>
+                <div class="col offset-s2 s10">
+                    <div class="row">
+                        <div class="col s10">
+                            <div class="input-field">
+                                <input type="text" id="ncbi_accession_input" class="validate" name="accession">
+                                <label for="ncbi_accession_input">NCBI Accession</label>
+                                <span class="helper-text" data-error="wrong" style="font-size: small">Eg: 16128551,226524729,16127995</span>
+                            </div>
                         </div>
-                        <div>
-                            <a class="waves-effect waves-light btn" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
+                        <div class="col s2 bottom">
+                            <a class="waves-effect waves-light btn btn-large" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col s6">
+            <div class="col s5">
                     <div class="file-field input-field">
-                        <div class="col s9 file-path-wrapper">
-                            <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
-                        </div>
                         <div class="btn">
-                            <input id="fastafile" type="file" accept=".fasta" onchange="setFileContnet(this.value);">
+                            <input id="fastafile" type="file" accept=".fasta" onchange="setFileContent(this.value);">
                             <i class="large material-icons">cloud_upload</i>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
                         </div>
                     </div>
             </div>
@@ -65,21 +67,22 @@
         <div class="row">
             <div class="col offset-s1 s10">
                 <div class="input-field">
-                    <textarea id="genesequence" hight="100px;overflow-y: auto;" name="genesequence" class="materialize-textarea" raw="3">
+                    <textarea id="genesequence" hight="100px;overflow-y: auto;" name="sequence" class="materialize-textarea" raw="3">
                         </textarea>
                     <label for="genesequence">Gene Sequence</label>
                 </div>
             </div>
         </div>
-
         <div class="row">
-            <div class="col s6">
+            <div class="col s10 offset-s1">
                 <div class="row">
-                    <div class="input-field col offset-s2 s10">
-                        <input type="text" id="organismName" name="organismName" class="autocomplete">
-                        <label for="organismName">Organism</label>
+                    <div class="input-field col s12">
+                        <input type="text" id="organismName" class="autocomplete">
+                        <label for="organismName">Species</label>
                     </div>
                 </div>
+            </div>
+            <div id="organismIcon" class="col s1">
             </div>
         </div>
         <div class="row hidden" id="advanceparameterssection">
@@ -87,9 +90,9 @@
                 <h6>Advanced parameters:</h6><br>
                 <p class="range-field">
                     <label for="maxevalue">Maximum E-value for BLAST(e-10):</label>
-                    <input type="range" id="maxevalue"  name="maxevalue" min="1" max="10" value="3"/>
+                    <input type="range" id="maxevalue"  name="maxEvalue" min="1" max="10" value="3"/>
                     <label for="maxtargets">Maximum target sequences for BLAST:</label>
-                    <input type="range" id="maxtargets" name="maxtargets" min="100" max="1000" value="{{Config::get('orfanid.default_maxtargetseq')}}"/>
+                    <input type="range" id="maxtargets" name="maxTargetSequence" min="100" max="1000" value="{{Config::get('orfanid.default_maxtargetseq')}}"/>
                 </p>
             </div>
         </div>
@@ -98,13 +101,15 @@
                 <a id="load-example-data" class="waves-effect waves-light">Example</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
                 <a id="advanceparameterslink" class="waves-effect waves-light">Advanced parameters</a>
             </div>
-            <div class="col offset-s7 s2">
+        </div>
+        <div class="row">
+            <div class="col offset-s10 s2">
                 <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit
                     <i class="material-icons right">send</i>
                 </button>
             </div>
         </div>
-        <div id="modal1" class="modal" >
+        <div id="input_progressbar" class="modal" >
             <div class="modal-content">
                 <h6>  ORFanID In Progress.... </h6>
                 <div class="progress">
@@ -122,7 +127,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Possible Close Implematioation</a> -->
             </div>
         </div>
     </form:form>

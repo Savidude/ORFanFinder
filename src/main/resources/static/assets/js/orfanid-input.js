@@ -8,74 +8,111 @@ $(document).ready(function () {
     $('select').material_select();
     var organisms = [];
 
-    $.ajax({
-        url: 'assets/data/TaxData.json',
-        async: false,
-        dataType: 'json',
-        success: function (response) {
-            organisms["All()"] = "null";
-            $.each(response, function (key, val) {
-                var options = "";
-                options = val.SpeciesName + '(' + val.NCBITaxID + ')';
-                organisms[options] = "null";
-            });
-        }
-    });
-    // console.log(organisms);
-    $('input.autocomplete').autocomplete({
-        data: organisms,
-        limit: 10 // The max amount of results that can be shown at once. Default: Infinity.
-    });
+    // $.ajax({
+    //     url: 'assets/data/TaxData.json',
+    //     async: false,
+    //     dataType: 'json',
+    //     success: function (response) {
+    //         organisms["All()"] = "null";
+    //         $.each(response, function (key, val) {
+    //             var options = "";
+    //             options = val.SpeciesName + '(' + val.NCBITaxID + ')';
+    //             organisms[options] = "null";
+    //         });
+    //     }
+    // });
+    // // console.log(organisms);
+    // $('input.autocomplete').autocomplete({
+    //     data: organisms,
+    //     limit: 10 // The max amount of results that can be shown at once. Default: Infinity.
+    // });
+    //
+    // var taxonomy = [];
 
-    var taxonomy = [];
+    // $("#organismName").change(function () {
+        // $.ajax({
+        //     url: 'assets/data/TaxData.json',
+        //     async: false,
+        //     dataType: 'json',
+        //     success: function (response) {
+        //         var selectedOrganism = $('#organismName').val();
+        //         var regularExpr = /\((.*)\)/;
+        //         var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
+        //         $.each(response, function (key, val) {
+        //             if (val.NCBITaxID == selectedOrganismTaxID) {
+        //                 $('select').empty().html(' ');
+        //                 $.each(val.Taxonomy, function (key, val) {
+        //                     var value = val.substr(9, val.length);
+        //                     $('select').append($("<option></option>").attr("value", value).text(value));
+        //                 });
+        //                 // re-initialize (update)
+        //                 $('select').material_select();
+        //             }
+        //         });
+        //     },
+        //     error: function (error) {
+        //         alert(error);
+        //     }
+        // });
+    // });
 
-    $("#organismName").change(function () {
-        $.ajax({
-            url: 'assets/data/TaxData.json',
-            async: false,
-            dataType: 'json',
-            success: function (response) {
-                var selectedOrganism = $('#organismName').val();
-                var regularExpr = /\((.*)\)/;
-                var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
-                $.each(response, function (key, val) {
-                    if (val.NCBITaxID == selectedOrganismTaxID) {
-                        $('select').empty().html(' ');
-                        $.each(val.Taxonomy, function (key, val) {
-                            var value = val.substr(9, val.length);
-                            $('select').append($("<option></option>").attr("value", value).text(value));
-                        });
-                        // re-initialize (update)
-                        $('select').material_select();
-                    }
-                });
-            },
-            error: function (error) {
-                alert(error);
+    var organismElement = $('#organismName');
+    organismElement.autocomplete({
+        data: {
+            "Escherichia coli str. K-12 substr. MG1655(511145)": null,
+            "Homo sapiens(9606)": null,
+            "Oryza sativa(4530)": null,
+            "Zea mays(4577)": null,
+            "Caenorhabditis elegans(6239)": null,
+            "Tribolium(7069)": null,
+        },
+    });
+    organismElement.change(function () {
+        var selectedOrganism = $('#organismName').val();
+        if(!selectedOrganism) {
+        var regularExpr = /\((.*)\)/;
+        var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
+            var image;
+            switch (selectedOrganismTaxID) {
+                case 511145:
+                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"L\"></i></span>";
+                    break;
+                case 9606:
+                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"H\"></i></span>";
+                    break;
+                case 6239:
+                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"W\"></i></span>";
+                    break;
+                default:
+                    image = "<span></span>"
             }
-        });
+            $('#organismIcon').append(image);
+        }
+
     });
 
     $('#submit').click(function () {
-        console.log('submit clicked');
-        $('#modal1').modal('open');
+        $('#input_progressbar').modal();
     });
 
     $('#findsequence').click(function () {
-        $.ajax({
-            url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=16128551,226524729,16127995&rettype=fasta&retmode=text',
-            async: false,
-            dataType: 'json',
-            success: function (response) {
-                // alert(response.responseText);
-                // console.log(response);
-                $('#genesequence').val('hello');
-            },
-            error: function (error) {
-                console.log(error);
-                $('#genesequence').val(error.responseText);
-            }
-        });
+        var ncbi_accession_input = $('#ncbi_accession_input').val(); // 16128551,226524729,16127995
+        if (!ncbi_accession_input){
+            $('#ncbi_accession_input').removeClass("validate");
+        }else{
+            $.ajax({
+                url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id='+ncbi_accession_input+'&rettype=fasta&retmode=text',
+                async: false,
+                dataType: 'json',
+                success: function (response) {
+                    $('#genesequence').val(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                    $('#genesequence').val(error.responseText);
+                }
+            });
+        }
     });
 
     $('#load-example-data').click(function () {
@@ -130,7 +167,7 @@ $('body').on('change focus', '#genesequence', function () {
 });
 
 //Optional but keep for future
-function setFileContnet(val) {
+function setFileContent(val) {
     var file = document.getElementById("fastafile").files[0];
     var reader = new FileReader();
     reader.onload = function (e) {

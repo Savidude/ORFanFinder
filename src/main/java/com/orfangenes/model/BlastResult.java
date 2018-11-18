@@ -1,6 +1,11 @@
 package com.orfangenes.model;
 
-public class BlastResult {
+import lombok.Getter;
+
+import java.io.Serializable;
+
+@Getter
+public class BlastResult implements Serializable {
     private String qseqid;
     private String sseqid;
     private double pident;
@@ -14,7 +19,6 @@ public class BlastResult {
     private double evalue;
     private double bbibtscore;
     private int staxid;
-
     private int queryid;
 
     public BlastResult(String result) {
@@ -31,37 +35,29 @@ public class BlastResult {
         this.send = Integer.parseInt(resultData[9]);
         this.evalue = Double.parseDouble(resultData[10]);
         this.bbibtscore = Double.parseDouble(resultData[11]);
+        setStaxid(resultData[12]);
+        setQueryid(resultData[0]);
+    }
 
-        String taxID = resultData[12];
-        if (taxID.contains(";")) {
-            // If many tax IDs are obtained from the last result, get the first one
-            String[] taxIDs = taxID.split(";");
-            taxID = taxIDs[0];
-        }
-
+    public void setStaxid(String taxID) {
         try {
+            if (taxID.contains(";")) {
+                // If many tax IDs are obtained from the last result, get the first one
+                String[] taxIDs = taxID.split(";");
+                taxID = taxIDs[0];
+            }
             this.staxid = Integer.parseInt(taxID);
         } catch (NumberFormatException e) {
-            this.staxid = 0;
+            this.staxid = 0; // TODO: is this correct?
         }
+    }
 
-        String[] sequenceIDs = this.qseqid.split("\\|");
+    public void setQueryid(String qseqid) {
+        String[] sequenceIDs = qseqid.split("\\|");
         try {
             this.queryid = Integer.parseInt(sequenceIDs[1]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            this.queryid = 0;
+            this.queryid = 0; // TODO: is this correct?
         }
-    }
-
-    public int getStaxid() {
-        return staxid;
-    }
-
-    public int getQueryid() {
-        return queryid;
-    }
-
-    public String getQseqid() {
-        return qseqid;
     }
 }

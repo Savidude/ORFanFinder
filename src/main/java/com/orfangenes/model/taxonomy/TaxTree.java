@@ -1,6 +1,6 @@
 package com.orfangenes.model.taxonomy;
 
-import com.orfangenes.constants.Constants;
+import com.orfangenes.util.Constants;
 import javafx.util.Pair;
 
 import java.io.*;

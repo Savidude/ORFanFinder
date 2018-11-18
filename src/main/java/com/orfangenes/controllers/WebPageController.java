@@ -22,4 +22,14 @@ public class WebPageController {
     public String result() {
         return "result";
     }
+
+    @RequestMapping("/results")
+    public String results() {
+        return "results";
+    }
+
+    @RequestMapping("/instructions")
+    public String instructions() {
+        return "instructions";
+    }
 }

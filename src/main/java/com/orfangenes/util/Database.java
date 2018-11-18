@@ -1,12 +1,11 @@
-package com.orfangenes.constants;
+package com.orfangenes.util;
 
 public class Database {
+    //Databases
     public static final String HOST = "127.0.0.1";
     public static final String PORT = "3306";
     public static final String USERNAME = "root";
     public static final String PASSWORD = "root";
-
-    //Databases
     public static final String DB_ORFAN = "orfandb";
 
     //Tables
