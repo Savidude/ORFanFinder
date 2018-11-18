@@ -2,12 +2,10 @@ package com.orfangenes.controllers;
 
 import com.orfangenes.ORFanGenes;
 import com.orfangenes.model.entities.InputSequence;
+import com.orfangenes.util.FileHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
+import static com.orfangenes.util.Constants.*;
 
 @Slf4j
 @Controller
@@ -29,150 +23,63 @@ public class InternalController {
   @Value("${data.outputdir}")
   private String outputdir;
 
-  private static final String USERS = "users";
-  private static final String INPUT_FASTA = "input.fasta";
+  @PostMapping("/analyse")
+  public String analyse(@Valid @ModelAttribute("sequence") InputSequence sequence, BindingResult result, Model model) {
 
-  @RequestMapping(value = "/store", method = RequestMethod.POST)
-  public String store(@Valid @ModelAttribute("sequence") InputSequence sequence, BindingResult result, Model model) {
-
-    URL url = InternalController.class.getClassLoader().getResource("names.dmp");
-    if (url == null) {
-      throw new IllegalStateException("names.dmp file not found!");
-    }
-    String namesfile = null;
-    try {
-      namesfile = url.toURI().getPath();
-    } catch (URISyntaxException e) {
-      log.error("names.dmp not found");
-    }
-
-
-    url = InternalController.class.getClassLoader().getResource("nodes.dmp");
-    if (url == null) {
-      throw new IllegalStateException("nodes.dmp file not found!");
-    }
-    String nodesfile = null;
-    try {
-      nodesfile = url.toURI().getPath();
-    } catch (URISyntaxException e) {
-      log.error("nodes.dmp not found");
-    }
-
-    if (result.hasErrors()) {
-      return "error";
-    }
-
-    String organismTaxID = sequence.getOrganismName().split("\\(")[1];
-    organismTaxID = organismTaxID.substring(0, organismTaxID.length() - 1);
-    int organismTax = Integer.parseInt(organismTaxID);
-
-    if (outputdir.substring(outputdir.length() - 1).equals("/")) {
-      outputdir = outputdir.substring(0, outputdir.length() -1 );
-    }
-    String sessionID = String.valueOf(System.currentTimeMillis()) + RandomStringUtils.randomAlphanumeric(3);
-
-    try {
-      String outputPath = outputdir + "/" + USERS + "/" + sessionID;
-      File file = new File(outputPath);
-      file.mkdir();
-
+      Assert.assertFalse("Error", result.hasErrors());
+      final String sessionID = RandomStringUtils.randomAlphanumeric(16);
+      String outputPath = outputdir + sessionID;
       String inputFilePath = outputPath + "/" + INPUT_FASTA;
-      FileOutputStream out = new FileOutputStream(inputFilePath);
-      out.write(sequence.getSequence().getBytes());
-      out.close();
 
-      ORFanGenes.run(inputFilePath, outputPath, organismTax, sequence.getType(), sequence.getMaxTargetSequence(), sequence.getMaxEvalue(), nodesfile, namesfile);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+      String organismTaxID = sequence.getOrganismName().split("\\(")[1];
+      organismTaxID = organismTaxID.substring(0, organismTaxID.length() - 1);
+      int organismTax = Integer.parseInt(organismTaxID);
+    try{
+      FileHandler.createResultsOutputDir(outputPath);
+      FileHandler.saveInputSequence(outputPath, sequence);
+      ORFanGenes.run(
+              inputFilePath,
+              outputPath,
+              organismTax,
+              sequence.getType(),
+              sequence.getMaxTargetSequence(),
+              sequence.getMaxEvalue());
+    } catch (Exception e) {
+     log.error("Analysis Failed: " + e.getMessage());
     }
     return "redirect:/result?sessionid=" + sessionID;
   }
 
-  @RequestMapping(value = "/data/summary", method = RequestMethod.POST, produces = "application/json")
+  @PostMapping("/data/summary")
   @ResponseBody
   public String getSummary(@RequestBody Map<String, Object> payload) {
-    String sessionID = (String) payload.get("sessionid");
-
-    if (outputdir.substring(outputdir.length() - 1).equals("/")) {
-      outputdir = outputdir.substring(0, outputdir.length() -1 );
-    }
-    String output = outputdir + "/" + USERS + "/" + sessionID;
-    try {
-      return new String(Files.readAllBytes(Paths.get(output + "/ORFanGenesSummary.json")));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    final String sessionID = (String) payload.get("sessionid");
+    String output = outputdir + sessionID;
+    return FileHandler.readJSONAsString(output + "/" + FILE_OUTPUT_ORFAN_GENES_SUMMARY);
   }
 
-  @RequestMapping(value = "/data/summary/chart", method = RequestMethod.POST, produces = "application/json")
+  @PostMapping("/data/summary/chart")
   @ResponseBody
   public String getSummaryChart(@RequestBody Map<String, Object> payload) {
-    String sessionID = (String) payload.get("sessionid");
-
-    if (outputdir.substring(outputdir.length() - 1).equals("/")) {
-      outputdir = outputdir.substring(0, outputdir.length() -1 );
-    }
-    String output = outputdir + "/" + USERS + "/" + sessionID;
-    try {
-      return new String(Files.readAllBytes(Paths.get(output + "/ORFanGenesSummaryChart.json")));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    final String sessionID = (String) payload.get("sessionid");
+    String output = outputdir + sessionID;
+    return FileHandler.readJSONAsString(output + "/" + FILE_OUTPUT_ORFAN_GENES_SUMMARY_CHART);
   }
 
-  @RequestMapping(value = "/data/genes", method = RequestMethod.POST, produces = "application/json")
+  @PostMapping("/data/genes")
   @ResponseBody
   public String getOrfanGenes(@RequestBody Map<String, Object> payload) {
-    String sessionID = (String) payload.get("sessionid");
-
-    if (outputdir.substring(outputdir.length() - 1).equals("/")) {
-      outputdir = outputdir.substring(0, outputdir.length() -1 );
-    }
-    String output = outputdir + "/" + USERS + "/" + sessionID;
-    try {
-      return new String(Files.readAllBytes(Paths.get(output + "/ORFanGenes.json")));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
+    final String sessionID = (String) payload.get("sessionid");
+    String output = outputdir + sessionID;
+    return FileHandler.readJSONAsString(output + "/" + FILE_OUTPUT_ORFAN_GENES);
   }
 
-  @RequestMapping(value = "/data/blast", method = RequestMethod.POST, produces = "application/json")
+  @PostMapping("/data/blast")
   @ResponseBody
   public String getBlast(@RequestBody Map<String, Object> payload) {
-    String sessionID = (String) payload.get("sessionid");
-    int ID = (Integer) payload.get("id");
-    Long geneID = Long.valueOf(ID);
-
-    if (outputdir.substring(outputdir.length() - 1).equals("/")) {
-      outputdir = outputdir.substring(0, outputdir.length() -1 );
-    }
-    String output = outputdir + "/" + USERS + "/" + sessionID;
-    try {
-      JSONParser parser = new JSONParser();
-      Object obj = parser.parse(new FileReader(output + "/blastresults.json"));
-      JSONArray results = (JSONArray) obj;
-      for (Object o: results) {
-        if (o instanceof JSONObject) {
-          JSONObject result = (JSONObject) o;
-          long id = (Long) result.get("id");
-
-          if (id == geneID) {
-            return result.toString();
-          }
-        }
-      }
-
-      return null;
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-    return null;
+    final String sessionID = (String) payload.get("sessionid");
+    final int id = (Integer) payload.get("id");
+    String output = outputdir + sessionID;
+    return FileHandler.blastToJSON(output + "/" + FILE_OUTPUT_BLAST_RESULTS, id);
   }
 }
