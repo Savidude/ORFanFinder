@@ -102,7 +102,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#!" class="modal-close waves-effect waves-red btn-flat">Close</a>
-                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Save</a>
+                    <a class="modal-close waves-effect waves-green btn-flat" onclick="saveResult()">Save</a>
                 </div>
             </form>
         </div>

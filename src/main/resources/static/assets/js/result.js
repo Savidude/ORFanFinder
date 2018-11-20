@@ -2,7 +2,6 @@ $(document).ready(function() {
     $('.modal').modal();
     var urlParams = new URLSearchParams(window.location.search);
     var sessionid = urlParams.get("sessionid");
-    console.log("session id : "+ sessionid);
 
     var orfanLevels;
     var numberOfOrphanGenes;
@@ -15,7 +14,6 @@ $(document).ready(function() {
         url: "/data/summary",
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
-            console.log("result: "+ result);
             var orfanGenesSummary = JSON.parse(result);
             $('#orfanGenesSummary').DataTable({
                 "data":orfanGenesSummary,
@@ -45,7 +43,6 @@ $(document).ready(function() {
         url: "/data/summary/chart",
         data: '{"sessionid":"' + sessionid + '"}',
         success: function (result) {
-            console.log("ORFanGenes Summary Chart" + result);
             var orfanGenesSummaryChart = JSON.parse(result);
             orfanLevels = orfanGenesSummaryChart.x;
             numberOfOrphanGenes = orfanGenesSummaryChart.y;
@@ -182,3 +179,29 @@ $(document).ready(function() {
         }
     });
 });
+
+
+
+function saveResult() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var sessionid = (urlParams.get('sessionid'));
+    var email = document.getElementById("email").value;
+    var data = {
+        "sessionid" : sessionid,
+        "email" : email
+    };
+
+    $.ajax({
+        type: "POST",
+        contentType: 'application/json',
+        dataType: "text",
+        url: "/save",
+        data: JSON.stringify(data),
+        success: function (result) {
+            // TODO show success message
+        },
+        error: function (error) {
+            // TODO show error message
+        }
+    });
+}
