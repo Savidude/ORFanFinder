@@ -51,6 +51,7 @@ public class FileHandler {
         resultData.put("date", date);
         resultData.put("sessionid", sessionid);
         resultData.put("organism", organismName);
+        resultData.put("saved", false);
 
         String resultFileName = outputdir + "/" + FILE_RESULT_METADATA;
         saveOutputFiles(resultData, resultFileName);

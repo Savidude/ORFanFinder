@@ -120,4 +120,26 @@ public class InternalController {
 
         return new ResponseEntity<Authenticator.Success>(HttpStatus.CREATED);
     }
+
+
+
+    @PostMapping("/results")
+    @ResponseBody
+    public String getResults() {
+        JSONArray results = new JSONArray();
+
+        File[] sessions = new File(outputdir).listFiles(File::isDirectory);
+        for (File session: sessions) {
+            String sessionPath = session.getPath();
+            String metadataFilePath = sessionPath + "/" + FILE_RESULT_METADATA;
+            JSONObject metadata = FileHandler.getObjectFromFile(metadataFilePath);
+            // Fetch result if it is marked as saved
+            if (metadata != null && (boolean) metadata.get("saved")) {
+                metadata.remove("saved");
+                results.add(metadata);
+            }
+        }
+
+        return results.toString();
+    }
 }
