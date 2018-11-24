@@ -36,17 +36,6 @@ public class TaxTree implements Serializable {
             TaxNode parent = this.nodes.get(node.getValue());
             node.getKey().setParent(parent);
         }
-
-//        Iterator it = this.names.entrySet().iterator();
-//        try (PrintWriter out = new PrintWriter("names.txt")) {
-//            while (it.hasNext()) {
-//                Map.Entry pair = (Map.Entry)it.next();
-//                String nameData = Integer.toString((Integer) pair.getKey()) + "\t|\t" + pair.getValue();
-//                out.println(nameData);
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private void processNode(String nodeString) {
@@ -73,11 +62,6 @@ public class TaxTree implements Serializable {
                 // Do nothing
             }
         }
-
-//        String[] nameData = nameString.split("\t\\|\t");
-//        int taxID = Integer.parseInt(nameData[0]);
-//        String name = nameData[1];
-//        this.names.put(taxID, name);
     }
 
     public Map<String, Integer> getHeirarchyFromNode(int taxID) {
