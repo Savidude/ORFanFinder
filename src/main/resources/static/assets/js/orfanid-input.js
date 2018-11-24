@@ -92,7 +92,7 @@ $(document).ready(function () {
     });
 
     $('#submit').click(function () {
-        $('#input_progressbar').modal();
+        $('#input_progressbar').modal('open');
     });
 
     $('#findsequence').click(function () {

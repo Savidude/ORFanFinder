@@ -1,127 +1,62 @@
-$(document).ready(
-	function() {
+$(document).ready(function() {
+    $.ajax({
+        type: "POST",
+        contentType: 'application/json',
+        dataType: "text",
+        url: "/results",
+        success: function (results) {
+            var savedResults = JSON.parse(results);
+            savedResults.forEach(function (result) {
+                // Converting UNIX timestamp to date
+                var timestamp = result.date;
+                var savedDate = new Date(timestamp * 1000);
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                var year = savedDate.getFullYear();
+                var month = months[savedDate.getMonth()];
+                var date = savedDate.getDate();
+                var time = date + ' ' + month + ' ' + year;
+                result.date = time;
+            });
+            var table = $('#ResultViewTable').DataTable({
+                "data":savedResults,
+                "columns": [
+                    {"data" : "date"},
+                    {"data" : "sessionid"},
+                    {"data" : "email"},
+                    {"data" : "organism"},
+                    {"data" : "view"}
+                ],
+                "oLanguage": {
+                    "sStripClasses": "",
+                    "sSearch": "",
+                    "sSearchPlaceholder": "Enter Search Term Here",
+                    "sLengthMenu": '<span>Rows per page:</span>'+
+                        '<select class="browser-default">' +
+                        '<option value="5">5</option>' +
+                        '<option value="10">10</option>' +
+                        '<option value="20">20</option>' +
+                        '<option value="50">50</option>' +
+                        '<option value="100">100</option>' +
+                        '<option value="-1">All</option>' +
+                        '</select></div>'
+                },
+                dom: 'frt',
+                "aaSorting": [],
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<button class=\"btn btn-small\"><i class=\"large material-icons\">insert_chart</i></button>"
+                } ]
+            });
 
-
-
-		var orfanLevels;
-		var numberOfOrphanGenes;
-		var selectedBlastResults;
-		var blastTable;
-
-		var userid = $('#username').text();
-		console.log("UserID: "+userid);
-
-		$.getJSON('users/'+ userid +'/ORFanGenesSummaryChart.json',
-			function(json) {
-				orfanLevels = json.x;
-				numberOfOrphanGenes = json.y;
-
-				var data = [ {
-					x : orfanLevels,
-					y : numberOfOrphanGenes,
-					type : 'bar',
-					marker : {
-						color : '#ef6c00'
-					}
-				} ];
-				var layout = {
-					yaxis: {
-					title: 'Number of Orphan Genes'
-				}}
-				Plotly.newPlot('genesummary', data, layout);
-			}
-		);
-		$('#ORFanGenes').DataTable( {
-			"ajax": 'users/'+ userid +'/ORFanGenes.json',
-			"oLanguage": {
-				"sStripClasses": "",
-				"sSearch": "",
-				"sSearchPlaceholder": "Enter Search Term Here",
-				"sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
-				"sLengthMenu": '<span>Rows per page:</span>'+
-				'<select class="browser-default">' +
-				'<option value="5">5</option>' +
-				'<option value="10">10</option>' +
-				'<option value="20">20</option>' +
-				'<option value="50">50</option>' +
-				'<option value="100">100</option>' +
-				'<option value="-1">All</option>' +
-				'</select></div>'
-			},
-			dom: 'frtlipB',
-			buttons: [['csv', 'print']],
-		});
-		$('#ORFanGenesSummary').DataTable( {
-			"ajax":'users/'+ userid +'/ORFanGenesSummary.json',
-			"oLanguage": {
-				"sStripClasses": "",
-				"sSearch": "",
-				"sSearchPlaceholder": "Enter Search Term Here"
-			},
-			dom: 'frt'
-		});
-
-		blastTable = $('#blastresults').DataTable( {
-			"columnDefs": [
-				{
-					"targets": [ 1 ],
-					"visible": true,
-					"searchable": true
-				}],
-				"ajax": 'users/'+ userid +'/blastresults.json',
-				"bDestroy": true,
-				"oLanguage": {
-					"sStripClasses": "",
-					"sSearch": "",
-					"sSearchPlaceholder": "Enter Search Term Here",
-					"sInfo": "Showing _START_ -_END_ of _TOTAL_ blast results",
-					"sLengthMenu": '<span>Rows per page:</span>'+
-					'<select class="browser-default">' +
-					'<option value="5">5</option>' +
-					'<option value="10">10</option>' +
-					'<option value="20">20</option>' +
-					'<option value="50">50</option>' +
-					'<option value="100">100</option>' +
-					'<option value="-1">All</option>' +
-					'</select></div>'
-				},
-				dom: 'frtlipB',
-				buttons: [['csv', 'print']]
-			});
-
-			// add materialize CSS to print buttons
-			$('.buttons-csv').addClass('waves-effect waves-light btn');
-			$('.buttons-print').addClass('waves-effect waves-light btn');
-
-			$('#ORFanGenes').on('click', 'td', function() {
-                // find the row of the table
-                var geneid = $(this).closest('tr').find("td:first").html();
-								console.log(geneid);
-								// get selected orfan gene id
-								$('#selectedgeneid').html(geneid);
-								// filter the blast results based on the gene id selected by the user
-									$('#blastresults').dataTable().fnFilter(geneid);
-								//
-								// // blastTable = $('#blastresults').dataTable();
-								// $('#blastresults').append(filteredBlastResults(geneid));
-								// // blastTable.fnAddData(filteredBlastResults(geneid));
-								// // blastTable.fnDraw();
-			});
-
-			// function filteredBlastResults(geneid){
-			//  $.getJSON( 'users/'+ userid +'/blastresults.json', function( data ) {
-			// 		selectedBlastResults = $.grep(data.data, function(element) {
-			// 			console.log( element[1]+" == "+geneid);
-			// 			return element[1] == geneid;
-			// 		});
-			// 		console.log("selectedBlastResults: "+  selectedBlastResults);
-			// 	});
-			//
-			// 	return selectedBlastResults;
-			// }
-
-		});
-
-
-// Save Resutls CODE
-
+            $('#ResultViewTable tbody').on( 'click', 'button', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var sessionid = data.sessionid;
+                window.location.href = "/result?sessionid=" + sessionid;
+            });
+        },
+        error: function (error) {
+            console.log("Error occurred while fetching results: "+ error);
+        }
+    });
+});
