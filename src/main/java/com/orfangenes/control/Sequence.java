@@ -186,21 +186,25 @@ public class Sequence {
 
         String currentSequence = "";
         int fileNo = 1;
-        for (double i = 0; i < (sequences.length - 1); i++) {
-            if (((i % SEQUENCE_SLICE_SIZE) == 0) && (i > 0)) {
-                createSequenceFile(out, currentSequence, fileNo);
-                currentSequence = "";
-                fileNo++;
-            }
+        if (sequences.length > 1) {
+            for (double i = 0; i < (sequences.length - 1); i++) {
+                if (((i % SEQUENCE_SLICE_SIZE) == 0) && (i > 0)) {
+                    createSequenceFile(out, currentSequence, fileNo);
+                    currentSequence = "";
+                    fileNo++;
+                }
 
-            if (i%SEQUENCE_SLICE_SIZE == (SEQUENCE_SLICE_SIZE - 1.0)) {
-                currentSequence += sequences[(int)i] + "\n";
-            } else {
-                currentSequence += sequences[(int) i] + "\n\n";
+                if (i%SEQUENCE_SLICE_SIZE == (SEQUENCE_SLICE_SIZE - 1.0)) {
+                    currentSequence += sequences[(int)i] + "\n";
+                } else {
+                    currentSequence += sequences[(int) i] + "\n\n";
+                }
             }
-        }
-        if (!currentSequence.equals("")) {
-            createSequenceFile(out, currentSequence, fileNo);
+            if (!currentSequence.equals("")) {
+                createSequenceFile(out, currentSequence, fileNo);
+            }
+        } else {
+            createSequenceFile(out, inputSequence, fileNo);
         }
         return fileNo;
     }
