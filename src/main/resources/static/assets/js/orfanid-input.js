@@ -212,29 +212,6 @@ $(document).ready(function () {
     "Xiphophorus maculatus(8083)":'http://www.ensembl.org/i/species/Xiphophorus_maculatus.png',
         },
     });
-    organismElement.change(function () {
-        var selectedOrganism = $('#organismName').val();
-        if(!selectedOrganism) {
-        var regularExpr = /\((.*)\)/;
-        var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
-            var image;
-            switch (selectedOrganismTaxID) {
-                case 511145:
-                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"L\"></i></span>";
-                    break;
-                case 9606:
-                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"H\"></i></span>";
-                    break;
-                case 6239:
-                    image = "<span><i class=\"icon icon-species medium\" data-icon=\"W\"></i></span>";
-                    break;
-                default:
-                    image = "<span></span>"
-            }
-            $('#organismIcon').append(image);
-        }
-
-    });
 
     $('#submit').click(function () {
         $('#input_progressbar').modal('open');
@@ -261,7 +238,6 @@ $(document).ready(function () {
     });
 
     $('#load-example-data').click(function () {
-        console.log('#example link clicked');
         $('#genesequence').load('assets/data/Ecoli_511145.fasta');
         $('#genesequence').addClass('active');
         $('#organismName').val('Escherichia coli str. K-12 substr. MG1655 (511145)');
