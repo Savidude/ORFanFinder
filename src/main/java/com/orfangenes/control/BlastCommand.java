@@ -29,7 +29,7 @@ public class BlastCommand extends Thread {
                 "/usr/local/ncbi/blast/bin/" + programme,
                 "-query", out + "/" + SEQUENCE + this.fileNumber + FASTA_EXT,
                 "-db", "nr",
-                "-outfmt", "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxids",
+                "-outfmt", "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore staxid",
                 "-max_target_seqs", this.max_target_seqs,
                 "-evalue", this.evalue,
                 "-out", this.out + "/" + BLAST_RESULTS + this.fileNumber + BLAST_EXT,

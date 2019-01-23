@@ -43,7 +43,7 @@
                             <div class="input-field">
                                 <input type="text" id="ncbi_accession_input" class="validate" name="accession">
                                 <label for="ncbi_accession_input">NCBI Accession</label>
-                                <span class="helper-text" data-error="wrong" style="font-size: small">Eg: 16128551,226524729,16127995</span>
+                                <span class="helper-text" data-error="wrong" style="font-size: small; color: #818181">Eg: 16128551,226524729,16127995</span>
                             </div>
                         </div>
                         <div class="col s2 bottom">
