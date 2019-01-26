@@ -104,6 +104,9 @@ public class Sequence {
     ArrayList<Gene> genes = new ArrayList<>();
 
     for (String sequence : sequences) {
+      if (sequence.equals(LINE_SEPARATOR)) {
+        continue;
+      }
       Gene gene = new Gene();
       String[] lines = sequence.split(LINE_SEPARATOR);
 
