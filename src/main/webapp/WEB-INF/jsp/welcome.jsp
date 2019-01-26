@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-    <title>ORFanID</title>
+    <title>ORFanGenes</title>
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="assets/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -12,7 +12,7 @@
 <body>
 <nav class="white" role="navigation">
     <div class="nav-wrapper container">
-        <a id="logo-container" href="#" class="brand-logo">ORFanID</a>
+        <a id="logo-container" href="#" class="brand-logo">ORFanGenes</a>
         <ul class="right hide-on-med-and-down">
             <!--<li><a href="input.jsp">Login</a></li>-->
         </ul>
@@ -26,7 +26,7 @@
     <div class="section no-pad-bot">
         <div class="container">
             <br><br>
-            <h1 class="header center white-text text-lighten-2">ORFanID</h1>
+            <h1 class="header center white-text text-lighten-2">ORFanGenes</h1>
             <div class="row center">
                 <h5 class="header col s12 light">Identifying Orfan Genes</h5>
             </div>
@@ -44,8 +44,8 @@
         <div class="row">
             <div class="col s12 center">
                 <h3><i class="mdi-content-send brown-text"></i></h3>
-                <h4>ORFanID</h4>
-                <p>ORFanID is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.
+                <h4>ORFanGenes</h4>
+                <p>ORFanGenes is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.
                 </p>
             </div>
         </div>
