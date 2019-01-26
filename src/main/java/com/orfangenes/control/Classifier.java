@@ -5,10 +5,13 @@ import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxTree;
 import com.orfangenes.util.Constants;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import static com.orfangenes.util.Constants.*;
 
 import java.util.*;
 
+@Slf4j
 @AllArgsConstructor
 public class Classifier {
 
@@ -35,7 +38,7 @@ public class Classifier {
                             hierarchies.add(taxHierarchy);
                         }
                     } catch (NullPointerException e) {
-                        // Do nothing
+                        log.warn("Taxonomy cannot find" + e.getMessage());
                     }
                 }
             }
@@ -146,10 +149,10 @@ public class Classifier {
         return rankInfo;
     }
 
-    private Set<Integer> getBlastTaxonomies(List<BlastResult> blastResults, int gid) {
+    private Set<Integer> getBlastTaxonomies(List<BlastResult> blastResults, String gid) {
         Set<Integer> taxIDs = new LinkedHashSet<>();
         for (BlastResult result : blastResults) {
-            if (result.getQueryid() == gid) {
+            if (result.getQueryid().equals(gid)) {
                 taxIDs.add(result.getStaxid());
             }
         }

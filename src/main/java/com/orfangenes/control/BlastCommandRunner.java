@@ -14,7 +14,7 @@ import static com.orfangenes.util.Constants.*;
  */
 @Slf4j
 @Builder
-public class BlastCommand extends Thread {
+public class BlastCommandRunner extends Thread {
 
     private String fileNumber;
     private String sequenceType;
@@ -41,7 +41,7 @@ public class BlastCommand extends Thread {
 
             // wait until the command get executed
             if (process.waitFor() != 0) {
-                throw new RuntimeException("BLAST error occured");
+                throw new RuntimeException("BLAST error occurred");
             } else {
                 log.info("BLAST successfully completed!!");
             }

@@ -50,7 +50,7 @@ public class BlastResultsProcessor {
             // Getting tax IDs for the gene
             Set<Integer> taxIDs = new LinkedHashSet<>();
             for (BlastResult result : blastResults) {
-                if (result.getQueryid() == gene.getGeneID()) {
+                if (result.getQueryid().equals(gene.getGeneID())) {
                     taxIDs.add(result.getStaxid());
                 }
             }

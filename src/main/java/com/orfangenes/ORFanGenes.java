@@ -4,6 +4,7 @@ import com.orfangenes.control.ResultsGenerator;
 import com.orfangenes.control.BlastResultsProcessor;
 import com.orfangenes.control.Classifier;
 import com.orfangenes.control.Sequence;
+import com.orfangenes.model.BlastResult;
 import com.orfangenes.model.Gene;
 import com.orfangenes.model.taxonomy.TaxTree;
 import lombok.extern.slf4j.Slf4j;
@@ -34,19 +35,32 @@ public class ORFanGenes {
         }
     }
 
+    public static CommandLine parseArgs(String[] args) throws ParseException {
+        Options options = new Options();
+        options.addOption(ARG_QUERY,true, "Input Sequence file in FASTA format");
+        options.addOption(ARG_TYPE,true, "Input Sequence type(protein/dna)");
+        options.addOption(ARG_TAX,true, "NCBI taxonomy ID of the species");
+        options.addOption(ARG_MAX_TARGET_SEQS,true, "Number of target sequences");
+        options.addOption(ARG_EVALUE,true, "BLAST E-Value Threshold");
+        options.addOption(ARG_OUT,true, "Output directory");
+        CommandLineParser parser = new DefaultParser();
+        return parser.parse(options, args);
+    }
+
     public static void run(String query, String outputdir, int organismTaxID, String blastType, String max_target_seqs, String evalue) {
 
         final String namesFile = getFilePath("names.dmp");
         final String nodesFile = getFilePath("nodes.dmp");
 
+        TaxTree taxTree = new TaxTree(nodesFile, namesFile);
+
         // Generating BLAST file
         Sequence sequence = new Sequence(blastType, query, outputdir, organismTaxID);
         sequence.generateBlastFile(outputdir, max_target_seqs, evalue);
-
-        TaxTree taxTree = new TaxTree(nodesFile, namesFile);
         BlastResultsProcessor processor = new BlastResultsProcessor(outputdir);
+        List<BlastResult> blastResults = processor.getBlastResults();
         Classifier classifier = new Classifier(sequence, taxTree, organismTaxID);
-        Map<Gene, String> geneClassification = classifier.getGeneClassification(processor.getBlastResults());
+        Map<Gene, String> geneClassification = classifier.getGeneClassification(blastResults);
         ResultsGenerator.generateResult(geneClassification, outputdir, processor, taxTree, sequence.getGenes());
     }
 
@@ -64,15 +78,5 @@ public class ORFanGenes {
         return filepath;
     }
 
-    public static CommandLine parseArgs(String[] args) throws ParseException {
-        Options options = new Options();
-        options.addOption(ARG_QUERY,true, "Input Sequence file in FASTA format");
-        options.addOption(ARG_TYPE,true, "Input Sequence type(protein/dna)");
-        options.addOption(ARG_TAX,true, "NCBI taxonomy ID of the species");
-        options.addOption(ARG_MAX_TARGET_SEQS,true, "Number of target sequences");
-        options.addOption(ARG_EVALUE,true, "BLAST E-Value Threshold");
-        options.addOption(ARG_OUT,true, "Output directory");
-        CommandLineParser parser = new DefaultParser();
-        return parser.parse(options, args);
-    }
+
 }

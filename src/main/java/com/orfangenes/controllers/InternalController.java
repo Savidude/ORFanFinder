@@ -121,8 +121,6 @@ public class InternalController {
         return new ResponseEntity<Authenticator.Success>(HttpStatus.CREATED);
     }
 
-
-
     @PostMapping("/results")
     @ResponseBody
     public String getResults() {
@@ -139,7 +137,6 @@ public class InternalController {
                 results.add(metadata);
             }
         }
-
         return results.toString();
     }
 }

@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ORFGene {
-    private int id;
+    private String id;
     private String description;
     private String level;
     private String taxonomy;
