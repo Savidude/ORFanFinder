@@ -96,18 +96,16 @@ public class FileHandler {
         }
     }
 
-    public static String blastToJSON(String filePath, int blastID) {
+    public static String blastToJSON(String filePath, String geneID) {
         JSONParser parser = new JSONParser();
-        Long geneID = Long.valueOf(blastID);
-
         try {
             Object obj = parser.parse(new FileReader(filePath));
             JSONArray results = (JSONArray) obj;
             for (Object singleResult : results) {
                 if (singleResult instanceof JSONObject) {
                     JSONObject result = (JSONObject) singleResult;
-                    long id = (Long) result.get("id");
-                    if (id == geneID) {
+                    String id = (String)result.get("id");
+                    if (id.equals(geneID)) {
                         return result.toString();
                     }
                 }
@@ -129,8 +127,9 @@ public class FileHandler {
             PrintWriter printWriter = new PrintWriter(outputFile, "UTF-8");
             printWriter.println(contentString);
             printWriter.close();
+            log.info("JSON file saved: " + outputFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("JSON file saving error: " + e.getMessage());
         }
     }
 
@@ -142,8 +141,9 @@ public class FileHandler {
             PrintWriter printWriter = new PrintWriter(outputFile, "UTF-8");
             printWriter.println(contentString);
             printWriter.close();
+            log.info("JSON file saved: " + outputFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("JSON file saving error: " + e.getMessage());
         }
     }
 }

@@ -77,6 +77,7 @@ public class InternalController {
     @PostMapping("/data/genes")
     @ResponseBody
     public String getOrfanGenes(@RequestBody Map<String, Object> payload) {
+        log.info("/data/genes endpoint called");
         final String sessionID = (String) payload.get("sessionid");
         String output = outputdir + sessionID;
         return FileHandler.readJSONAsString(output + "/" + FILE_OUTPUT_ORFAN_GENES);
@@ -85,8 +86,10 @@ public class InternalController {
     @PostMapping("/data/blast")
     @ResponseBody
     public String getBlast(@RequestBody Map<String, Object> payload) {
+        log.info("/data/blast endpoint called");
         final String sessionID = (String) payload.get("sessionid");
-        final int id = (Integer) payload.get("id");
+        final String id = (String) payload.get("id");
+        log.info("id" + id);
         String output = outputdir + sessionID;
         return FileHandler.blastToJSON(output + "/" + FILE_OUTPUT_BLAST_RESULTS, id);
     }

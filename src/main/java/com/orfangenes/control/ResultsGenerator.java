@@ -5,6 +5,7 @@ import com.orfangenes.model.ORFGene;
 import com.orfangenes.model.taxonomy.TaxTree;
 import com.orfangenes.util.Constants;
 import com.orfangenes.util.FileHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -17,6 +18,7 @@ import static com.orfangenes.util.Constants.*;
 /**
  * @author Suresh Hewapathirana
  */
+@Slf4j
 public class ResultsGenerator {
 
   public static void generateResult (Map<Gene, String> geneClassification, String out,
@@ -30,6 +32,7 @@ public class ResultsGenerator {
     // Writing blast results to JSON file
     JSONArray blastTrees = blastResultsProcessor.generateBlastResultsTrees(tree, inputGenes);
     FileHandler.saveOutputFiles(blastTrees, out + "/" + FILE_OUTPUT_BLAST_RESULTS);
+    log.info("JSON files generated");
   }
 
   private static Map<String, Integer>  generateORFanGenesFrequency(Map<Gene, String> geneClassification, String out){

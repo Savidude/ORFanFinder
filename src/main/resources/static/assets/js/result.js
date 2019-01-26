@@ -110,7 +110,7 @@ $(document).ready(function() {
 
             $('#orfanGenes tbody').on( 'click', 'button', function () {
                 var data = table.row( $(this).parents('tr') ).data();
-
+                console.log(data);
                 //Getting BLAST Results
                 $.ajax({
                     type: "POST",
@@ -119,12 +119,19 @@ $(document).ready(function() {
                     url: "/data/blast",
                     data: '{"sessionid":"' + sessionid + '", "id" : ' + data["geneid"] + '}',
                     success: function (result) {
-                        var blastResult = JSON.parse(result);
+                        var blastResult;
+                        try {
+                            blastResult = JSON.parse(result);
+                        }
+                        catch(err) {
+                            console.error("blastResult passing error")
+                        }
+                        console.log(blastResult);
                         var treeData = blastResult["tree"];
+                        console.log(treeData);
 
                         var myChart = echarts.init(document.getElementById('blastResults'));
                         myChart.showLoading();
-
                         myChart.hideLoading();
                         myChart.setOption(option = {
                             tooltip: {
@@ -173,6 +180,9 @@ $(document).ready(function() {
 
                         $('#blastDescription').html(blastResult["description"]);
                         $('#blastResultModal').modal();
+                    },
+                    error: function (error) {
+                        console.log("error occurred in fetching blast results  for " + data["geneid"] + " : " + error.toString());
                     }
                 });
             });
