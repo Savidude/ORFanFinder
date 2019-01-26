@@ -111,13 +111,14 @@ $(document).ready(function() {
             $('#orfanGenes tbody').on( 'click', 'button', function () {
                 var data = table.row( $(this).parents('tr') ).data();
                 console.log(data);
+                console.log(data["geneid"]);
                 //Getting BLAST Results
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json',
                     dataType: "text",
                     url: "/data/blast",
-                    data: '{"sessionid":"' + sessionid + '", "id" : ' + data["geneid"] + '}',
+                    data: '{"sessionid":"' + sessionid + '", "id" : "' + data["geneid"] + '"}',
                     success: function (result) {
                         var blastResult;
                         try {
