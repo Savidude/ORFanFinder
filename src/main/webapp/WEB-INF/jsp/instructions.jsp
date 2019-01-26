@@ -10,7 +10,6 @@
     <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="assets/css/orfanid-input.css">
     <link type="text/css" rel="stylesheet" href="assets/css/orfan_styles.css">
-    <link type="text/css" rel="stylesheet" href="https://ebi.emblstatic.net/web_guidelines/EBI-Icon-fonts/v1.2/fonts.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
