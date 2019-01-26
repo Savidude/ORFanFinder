@@ -78,7 +78,14 @@ $(document).ready(function() {
             var table = $('#orfanGenes').DataTable({
                 "data":orfanGenes,
                 "columns": [
-                    {"data" : "geneid"},
+                    {"data" : "geneid",
+                        "render": function(data, type, row, meta){
+                            if(type === 'display'){
+                                data = '<a href=https://www.ncbi.nlm.nih.gov/search/all/?term="' + data + '">' + data + '</a>';
+                            }
+                            return data;
+                        }
+                    },
                     {"data" : "description"},
                     {"data" : "orfanLevel"},
                     {"data" : "taxonomyLevel"},
@@ -110,7 +117,6 @@ $(document).ready(function() {
 
             $('#orfanGenes tbody').on( 'click', 'button', function () {
                 var data = table.row( $(this).parents('tr') ).data();
-                console.log(data);
                 console.log(data["geneid"]);
                 //Getting BLAST Results
                 $.ajax({

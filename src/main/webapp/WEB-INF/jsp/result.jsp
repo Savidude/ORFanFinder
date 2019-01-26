@@ -69,7 +69,7 @@
                         <th>Description</th>
                         <th>ORFan Gene Level</th>
                         <th>Taxonomy Level</th>
-                        <th>BLAST Result</th>
+                        <th>Homology Evidences</th>
                     </tr>
                     </thead>
                 </table>
