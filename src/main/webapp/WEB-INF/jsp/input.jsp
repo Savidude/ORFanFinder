@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="col s2 bottom">
-                            <a class="waves-effect waves-light btn btn-large" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
+                            <a class="waves-effect waves-light btn btn-large modal-trigger" href="#input_progressbar" type="button" id="findsequence" name="findsequence"><i class="large material-icons">search</i></a>
                         </div>
                     </div>
                 </div>
@@ -120,8 +120,10 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
             </div>
         </div>
+
         <div class="row">
             <div class="col offset-s10 s2">
                 <button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit

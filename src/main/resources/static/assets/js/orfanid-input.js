@@ -6,55 +6,6 @@ $(document).ready(function () {
     $('#genesequence').trigger('autoresize');
     $('.modal').modal();
     $('select').material_select();
-    var organisms = [];
-
-    // $.ajax({
-    //     url: 'assets/data/TaxData.json',
-    //     async: false,
-    //     dataType: 'json',
-    //     success: function (response) {
-    //         organisms["All()"] = "null";
-    //         $.each(response, function (key, val) {
-    //             var options = "";
-    //             options = val.SpeciesName + '(' + val.NCBITaxID + ')';
-    //             organisms[options] = "null";
-    //         });
-    //     }
-    // });
-    // // console.log(organisms);
-    // $('input.autocomplete').autocomplete({
-    //     data: organisms,
-    //     limit: 10 // The max amount of results that can be shown at once. Default: Infinity.
-    // });
-    //
-    // var taxonomy = [];
-
-    // $("#organismName").change(function () {
-        // $.ajax({
-        //     url: 'assets/data/TaxData.json',
-        //     async: false,
-        //     dataType: 'json',
-        //     success: function (response) {
-        //         var selectedOrganism = $('#organismName').val();
-        //         var regularExpr = /\((.*)\)/;
-        //         var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
-        //         $.each(response, function (key, val) {
-        //             if (val.NCBITaxID == selectedOrganismTaxID) {
-        //                 $('select').empty().html(' ');
-        //                 $.each(val.Taxonomy, function (key, val) {
-        //                     var value = val.substr(9, val.length);
-        //                     $('select').append($("<option></option>").attr("value", value).text(value));
-        //                 });
-        //                 // re-initialize (update)
-        //                 $('select').material_select();
-        //             }
-        //         });
-        //     },
-        //     error: function (error) {
-        //         alert(error);
-        //     }
-        // });
-    // });
 
     var organismElement = $('#organismName');
     organismElement.autocomplete({
@@ -213,10 +164,6 @@ $(document).ready(function () {
         },
     });
 
-    $('#submit').click(function () {
-        $('#input_progressbar').modal('open');
-    });
-
     $('#findsequence').click(function () {
         var ncbi_accession_input = $('#ncbi_accession_input').val(); // 16128551,226524729,16127995
         if (!ncbi_accession_input){
@@ -228,8 +175,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (response) {
                     $('#genesequence').val(response);
-                },
-                error: function (error) {
+                }, error: function (error) {
                     console.log(error);
                     $('#genesequence').val(error.responseText);
                 }
@@ -284,7 +230,7 @@ $(document).ready(function () {
 $('body').on('change focus', '#genesequence', function () {
     $('#genesequence').css('overflow-y', 'auto');
     $('#genesequence').trigger('autoresize');
-    //resizeTextArea($(this));
+    resizeTextArea($(this));
 });
 
 //Optional but keep for future
@@ -299,45 +245,45 @@ function setFileContent(val) {
 
 }
 
-// function resizeTextArea($textarea) {
-//
-//     var hiddenDiv = $('.hiddendiv').first();
-//     if (!hiddenDiv.length) {
-//         hiddenDiv = $('<div class="hiddendiv common"></div>');
-//         $('body').append(hiddenDiv);
-//     }
-//
-//     var fontFamily = $textarea.css('font-family');
-//     var fontSize = $textarea.css('font-size');
-//
-//     if (fontSize) {
-//         hiddenDiv.css('font-size', fontSize);
-//     }
-//     if (fontFamily) {
-//         hiddenDiv.css('font-family', fontFamily);
-//     }
-//
-//     if ($textarea.attr('wrap') === "off") {
-//         hiddenDiv.css('overflow-wrap', "normal")
-//             .css('white-space', "pre");
-//     }
-//
-//     hiddenDiv.text($textarea.val() + '\n');
-//     var content = hiddenDiv.html().replace(/\n/g, '<br>');
-//     hiddenDiv.html(content);
-//     console.log($textarea.val());
-//
-//     // When textarea is hidden, width goes crazy.
-//     // Approximate with half of window size
-//
-//     if ($textarea.is(':visible')) {
-//         hiddenDiv.css('width', $textarea.width());
-//     }
-//     else {
-//         hiddenDiv.css('width', $(window).width() / 2);
-//     }
-//
-//     $textarea.css('height', hiddenDiv.height());
-//     console.log(hiddenDiv.height());
-// }
-//
+function resizeTextArea($textarea) {
+
+    var hiddenDiv = $('.hiddendiv').first();
+    if (!hiddenDiv.length) {
+        hiddenDiv = $('<div class="hiddendiv common"></div>');
+        $('body').append(hiddenDiv);
+    }
+
+    var fontFamily = $textarea.css('font-family');
+    var fontSize = $textarea.css('font-size');
+
+    if (fontSize) {
+        hiddenDiv.css('font-size', fontSize);
+    }
+    if (fontFamily) {
+        hiddenDiv.css('font-family', fontFamily);
+    }
+
+    if ($textarea.attr('wrap') === "off") {
+        hiddenDiv.css('overflow-wrap', "normal")
+            .css('white-space', "pre");
+    }
+
+    hiddenDiv.text($textarea.val() + '\n');
+    var content = hiddenDiv.html().replace(/\n/g, '<br>');
+    hiddenDiv.html(content);
+    console.log($textarea.val());
+
+    // When textarea is hidden, width goes crazy.
+    // Approximate with half of window size
+
+    if ($textarea.is(':visible')) {
+        hiddenDiv.css('width', $textarea.width());
+    }
+    else {
+        hiddenDiv.css('width', $(window).width() / 2);
+    }
+
+    $textarea.css('height', hiddenDiv.height());
+    console.log(hiddenDiv.height());
+}
+
